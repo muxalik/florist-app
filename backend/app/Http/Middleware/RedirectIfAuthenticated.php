@@ -21,6 +21,8 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
+                abort_if($request->wantsJson(), 403);
+
                 return redirect(RouteServiceProvider::HOME);
             }
         }

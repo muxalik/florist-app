@@ -3,7 +3,11 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\User;
+use App\Enums\Roles;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -12,11 +16,31 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
+        $adminRole = Role::create(['name' => Roles::Admin->value]);
+        $managerRole = Role::create(['name' => Roles::Manager->value]);
+        $employeeRole = Role::create(['name' => Roles::Employee->value]);
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $admin = User::factory()->create([
+            'first_name' => fake()->firstName(),
+            'last_name' => fake()->lastName(),
+            'patronymic' => null,
+            'email' => 'admin@gmail.com',
+            'phone' => '7 777 777 77 77',
+            'password' => 'admin',
+        ]);
+
+        $admin->assignRole($adminRole);
+
+        $managers = User::factory(5)->create();
+
+        $managers->each(function (User $manager) use ($managerRole) {
+            $manager->assignRole($managerRole);
+        });
+
+        $employees = User::factory(45)->create();
+
+        $employees->each(function (User $employee) use ($employeeRole) {
+            $employee->assignRole($employeeRole);
+        });
     }
 }

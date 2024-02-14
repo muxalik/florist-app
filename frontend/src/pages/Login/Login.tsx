@@ -37,8 +37,10 @@ const formSchema = z.object({
 })
 
 const Login = () => {
-  const { login } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const { login } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,6 +52,7 @@ const Login = () => {
 
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
+    setError('')
 
     api
       .post('login', data)
@@ -59,7 +62,9 @@ const Login = () => {
           token: res.data.token,
         })
       )
-      .catch(console.log)
+      .catch((err) => {
+        setError(err.response.data?.message)
+      })
       .finally(() => setIsLoading(false))
   }
 
@@ -76,6 +81,11 @@ const Login = () => {
             </CardHeader>
             <CardContent>
               <div className='grid w-full items-center gap-4'>
+                {error.length > 0 && (
+                  <div className='px-4 py-2 bg-destructive text-destructive-foreground rounded-md'>
+                    {error}
+                  </div>
+                )}
                 <FormField
                   control={form.control}
                   name='email'

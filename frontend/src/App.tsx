@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Dashboard from './pages/Dashboard/Dashboard'
 import Login from './pages/Login/Login'
 import Register from './pages/Register/Register'
@@ -10,7 +10,7 @@ const App = () => {
       <Routes>
         {/* Authenticated routes */}
         <Route element={<ProtectedRoutes only='auth' />}>
-          <Route path='/' element={<Dashboard />} />
+          <Route path='/dashboard' element={<Dashboard />} />
         </Route>
 
         {/* Guest routes */}
@@ -18,6 +18,9 @@ const App = () => {
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
         </Route>
+
+        {/* Fallback */}
+        <Route path='*' element={<Navigate to='/dashboard' />} />
       </Routes>
     </div>
   )

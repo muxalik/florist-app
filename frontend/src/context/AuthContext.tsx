@@ -32,8 +32,7 @@ const AuthProvider: FC<props> = ({ children }) => {
   const logout = () => {
     api
       .get('logout')
-      .then((res) => {
-        console.log(res)
+      .then(() => {
         setUser(null)
         api.defaults.headers.common['Authorization'] = `Bearer`
       })

@@ -19,36 +19,38 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { useAuth } from '@/context/AuthContext'
-// import api from '@/utils/api'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Icons from '@/components/Icons'
 import { api } from '@/utils/api'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import useLocalStorage from '@/hooks/useLocalStorage'
+import { passwordData } from '@/types'
+import { CanceledError } from 'axios'
 
-const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: 'Заполните поле' })
-    .max(50)
-    .email('Некорректная почта'),
-  password: z
-    .string()
-    .min(1, { message: 'Заполните поле' })
-    .max(50, { message: 'Слишком длинный пароль' }),
-})
+const formSchema = z
+  .object({
+    password: z.string().min(10, 'Минимум 10 символов').max(50),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Пароли не совпадают',
+    path: ['confirmPassword'],
+  })
 
-const Login = () => {
+const UpdatePassword = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-
-  const { login, logout } = useAuth()
+  const [passwordData, setPasswordData] = useLocalStorage<passwordData | null>(
+    'passwordData',
+    null
+  )
+  const controller = useRef<AbortController | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
       password: '',
+      confirmPassword: '',
     },
   })
 
@@ -58,34 +60,47 @@ const Login = () => {
     setIsLoading(true)
     setError('')
 
-    api
-      .post('login', data)
-      .then((res) => {
-        login({
-          ...res.data.user,
-          token: res.data.token,
-        })
+    controller.current = new AbortController()
+    const signal = controller.current.signal
 
-        navigate('/dashboard')
+    api
+      .patch(
+        'reset-password',
+        {
+          code: passwordData?.code,
+          email: passwordData?.email,
+          password: data.password,
+        },
+        { signal }
+      )
+      .then(() => {
+        setPasswordData(null)
+        navigate('/login')
       })
       .catch((err) => {
-        setError(err.response.data?.message)
+        if (!(err instanceof CanceledError)) {
+          setError(err.response.data?.message)
+        }
       })
       .finally(() => setIsLoading(false))
   }
 
+  const onBack = () => {
+    controller.current?.abort()
+  }
+
   return (
     <div className='min-h-screen py-[150px] px-[40px] flex items-center justify-center'>
-      <Button className='bg-red-600 rounded-md' onClick={() => logout()}>
-        Logout
-      </Button>
       <Card className='w-[350px]'>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
+            <input type='email' value={passwordData?.email || ''} hidden />
             <CardHeader className='text-center'>
-              <CardTitle className='text-3xl'>Войти</CardTitle>
+              <CardTitle className='text-3xl mb-2'>Обновить пароль</CardTitle>
               <CardDescription className='text-md'>
-                Введите вашу почту и пароль, чтобы войти в систему
+                Последний шаг!
+                <br />
+                Придумайте новый пароль
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -97,13 +112,13 @@ const Login = () => {
                 )}
                 <FormField
                   control={form.control}
-                  name='email'
+                  name='password'
                   render={({ field }) => (
                     <FormItem className='flex flex-col space-y-1.5'>
-                      <FormLabel>Почта</FormLabel>
+                      <FormLabel>Пароль</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder='example@mail.com'
+                          placeholder='Введите новый пароль'
                           disabled={isLoading}
                           {...field}
                         />
@@ -114,14 +129,13 @@ const Login = () => {
                 />
                 <FormField
                   control={form.control}
-                  name='password'
+                  name='confirmPassword'
                   render={({ field }) => (
                     <FormItem className='flex flex-col space-y-1.5'>
-                      <FormLabel>Пароль</FormLabel>
+                      <FormLabel>Подтвердите пароль</FormLabel>
                       <FormControl>
                         <Input
-                          type='password'
-                          placeholder='Введите пароль'
+                          placeholder='Введите пароль еще раз'
                           disabled={isLoading}
                           {...field}
                         />
@@ -132,7 +146,7 @@ const Login = () => {
                 />
               </div>
             </CardContent>
-            <CardFooter>
+            <CardFooter className='flex-col gap-2'>
               <Button
                 type='submit'
                 className='w-full flex gap-2'
@@ -141,7 +155,10 @@ const Login = () => {
                 {isLoading && (
                   <Icons.spinner className='text-gray-200 animate-spin dark:text-gray-600 fill-blue-600' />
                 )}
-                Продолжить
+                Обновить пароль
+              </Button>
+              <Button variant={'link'} asChild onClick={onBack}>
+                <Link to='/login'>Отменить</Link>
               </Button>
             </CardFooter>
           </form>
@@ -151,4 +168,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default UpdatePassword

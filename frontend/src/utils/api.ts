@@ -10,7 +10,7 @@ const fetchCsrfToken = () => {
       },
     })
     .then(() => {
-      console.log('Succefully fetched CSRF token')
+      console.log('Successfully fetched CSRF token')
     })
     .catch((error) => {
       console.error('Error while fetching CSRF token: ', error)

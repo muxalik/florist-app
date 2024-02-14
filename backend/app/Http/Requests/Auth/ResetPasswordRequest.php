@@ -25,7 +25,7 @@ class ResetPasswordRequest extends FormRequest
     {
         return [
             'code' => ['required', 'string', 'max:20'],
-            'password' => ['required', 'string', 'max:50', Password::defaults()],
+            'password' => ['required', 'string', 'between:10,50', Password::defaults()],
         ];
     }
 

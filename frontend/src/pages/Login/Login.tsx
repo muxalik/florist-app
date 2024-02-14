@@ -20,9 +20,11 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useAuth } from '@/context/AuthContext'
-import api from '@/utils/api'
+// import api from '@/utils/api'
 import { useState } from 'react'
 import Icons from '@/components/Icons'
+import { api } from '@/utils/api'
+import { useNavigate } from 'react-router-dom'
 
 const formSchema = z.object({
   email: z
@@ -40,7 +42,7 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const { login } = useAuth()
+  const { login, logout } = useAuth()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,18 +52,22 @@ const Login = () => {
     },
   })
 
+  const navigate = useNavigate()
+
   const onSubmit = (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     setError('')
 
     api
       .post('login', data)
-      .then((res) =>
+      .then((res) => {
         login({
           ...res.data.user,
           token: res.data.token,
         })
-      )
+
+        navigate('/dashboard')
+      })
       .catch((err) => {
         setError(err.response.data?.message)
       })
@@ -70,6 +76,9 @@ const Login = () => {
 
   return (
     <div className='min-h-screen py-[150px] px-[40px] flex items-center justify-center'>
+      <Button className='bg-red-600 rounded-md' onClick={() => logout()}>
+        Logout
+      </Button>
       <Card className='w-[350px]'>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>

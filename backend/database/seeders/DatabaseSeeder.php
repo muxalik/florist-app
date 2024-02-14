@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
         $employeeRole = Role::create(['name' => Roles::Employee->value]);
 
         $admin = User::factory()->create([
-            'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
+            'first_name' => 'Admin',
+            'last_name' => 'Admin',
             'patronymic' => null,
             'email' => 'admin@gmail.com',
             'phone' => '7 777 777 77 77',

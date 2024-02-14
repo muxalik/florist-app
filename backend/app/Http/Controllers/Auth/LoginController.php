@@ -13,7 +13,7 @@ class LoginController extends Controller
     {
         if (!$request->authenticate()) {
             return response()->json([
-                'session' => __('auth.failed'),
+                'message' => __('auth.failed'),
             ], 400);
         }
 

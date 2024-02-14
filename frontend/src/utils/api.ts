@@ -1,22 +1,29 @@
 import axios from 'axios'
 
-const api = axios.create()
-
-const init = async function () {
-  try {
-    const response = await axios.get('/sanctum/csrf-cookie', {
+const fetchCsrfToken = () => {
+  axios
+    .get('/sanctum/csrf-cookie', {
       baseURL: import.meta.env.VITE_BACKEND_URL,
+      withCredentials: true,
+      headers: {
+        Accept: 'application/json',
+      },
     })
-
-    api.defaults.baseURL = import.meta.env.VITE_API_URL
-    api.defaults.headers.common['X-CSRF-TOKEN'] = response.data.csrf_token
-  } catch (error) {
-    console.error('Error fetching CSRF token: ', error)
-  }
+    .then(() => {
+      console.log('Succefully fetched CSRF token')
+    })
+    .catch((error) => {
+      console.error('Error while fetching CSRF token: ', error)
+    })
 }
 
-init()
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    common: {
+      Accept: 'application/json',
+    },
+  },
+})
 
-api.defaults.baseURL = import.meta.env.VITE_API_URL
-
-export default api
+export { fetchCsrfToken, api }

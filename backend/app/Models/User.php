@@ -61,18 +61,18 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function scopeWithRoles(
-        Builder $query,
-        string | Roles ...$args
-    ) {
-        $roles = collect($args)->map(function (string | Roles $arg) {
-            return $arg instanceof Roles
-                ? $arg->value
-                : $arg;
-        })->toArray();
+    // public function scopeWithRoles(
+    //     Builder $query,
+    //     string | Roles ...$args
+    // ) {
+    //     $roles = collect($args)->map(function (string | Roles $arg) {
+    //         return $arg instanceof Roles
+    //             ? $arg->value
+    //             : $arg;
+    //     })->toArray();
 
-        return $query->whereHas('roles', function ($q) use ($roles) {
-            return $q->whereIn('name', $roles);
-        });
-    }
+    //     return $query->whereHas('roles', function ($q) use ($roles) {
+    //         return $q->whereIn('name', $roles);
+    //     });
+    // }
 }

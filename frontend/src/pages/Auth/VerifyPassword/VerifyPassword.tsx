@@ -14,13 +14,16 @@ import useLocalStorage from '@/hooks/useLocalStorage'
 import { passwordData } from '@/types'
 import VerificationInput from 'react-verification-input'
 import { cn } from '@/lib/utils'
+import Icons from '@/components/Icons'
 
 const CODE_LENGTH = 6
 
 const VerifyPassword = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [isResending, setIsResening] = useState(false)
   const [error, setError] = useState('')
   const [code, setCode] = useState('')
+  const [timeoutEnd, setTimeoutEnd] = useState<Date | null>(null)
 
   const [passwordData] = useLocalStorage<passwordData | null>(
     'passwordData',
@@ -28,6 +31,7 @@ const VerifyPassword = () => {
   )
 
   const controller = useRef<AbortController | null>(null)
+  const resendController = useRef<AbortController | null>(null)
 
   const navigate = useNavigate()
 
@@ -55,6 +59,8 @@ const VerifyPassword = () => {
           })
         )
 
+        resendController.current?.abort()
+
         navigate('/update-password')
       })
       .catch((err) => {
@@ -63,9 +69,69 @@ const VerifyPassword = () => {
       .finally(() => setIsLoading(false))
   }
 
+  const onResend = () => {
+    setIsResening(true)
+    setError('')
+
+    resendController.current = new AbortController()
+    const signal = resendController.current.signal
+
+    api
+      .post('/request-password', { email: passwordData?.email }, { signal })
+      .then(console.log)
+      .catch((err) => {
+        setError(err.response?.data?.message)
+        setTimeoutEnd(new Date(err.response?.data?.timeoutEnd))
+        setTimeLeft(calculateTimeLeft())
+        console.log(err)
+      })
+      .finally(() => setIsResening(false))
+  }
+
   const onBack = () => {
     controller.current?.abort()
+    resendController.current?.abort()
   }
+
+  const calculateTimeLeft = (): TimeLeft => {
+    let timeLeft: TimeLeft = {
+      minutes: 0,
+      seconds: 0,
+    }
+
+    if (!timeoutEnd) {
+      return timeLeft
+    }
+
+    const difference = +new Date(timeoutEnd) - +new Date()
+
+    if (difference > 0) {
+      timeLeft = {
+        minutes: Math.floor((difference / 1000 / 60) % 60),
+        seconds: Math.floor((difference / 1000) % 60),
+      }
+    }
+
+    return timeLeft
+  }
+
+  const [timeLeft, setTimeLeft] = useState(calculateTimeLeft())
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTimeLeft(calculateTimeLeft())
+    }, 0)
+
+    return () => clearTimeout(timer)
+  })
+
+  const formatTime = (time: number) => (time < 10 ? `0${time}` : time)
+
+  const isTimeout = timeLeft.minutes > 0 || timeLeft.seconds > 0
+
+  const formattedTime = isTimeout
+    ? `${formatTime(timeLeft.minutes)}:${formatTime(timeLeft.seconds)}`
+    : ''
 
   return (
     <div className='min-h-screen py-[150px] px-[40px] flex items-center justify-center'>
@@ -103,6 +169,22 @@ const VerifyPassword = () => {
           </div>
         </CardContent>
         <CardFooter className='flex-col gap-2'>
+          {isTimeout && (
+            <p className='text-sm font-medium text-gray-600'>
+              Запросить новый код можно через <span>{formattedTime}</span>
+            </p>
+          )}
+          <Button
+            variant={'outline'}
+            onClick={onResend}
+            disabled={isResending || isTimeout}
+            className='flex gap-2 text-gray-600'
+          >
+            {isResending && (
+              <Icons.spinner className='text-gray-200 animate-spin dark:text-gray-600' />
+            )}
+            Отправить еще раз
+          </Button>
           <Button variant={'link'} asChild onClick={onBack}>
             <Link to='/request-password'>Отправить на другую почту</Link>
           </Button>
@@ -110,6 +192,11 @@ const VerifyPassword = () => {
       </Card>
     </div>
   )
+}
+
+type TimeLeft = {
+  minutes: number
+  seconds: number
 }
 
 export default VerifyPassword

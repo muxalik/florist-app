@@ -36,6 +36,7 @@ const formSchema = z.object({
 const RequestPassword = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [codeCreatedAt, setCodeCreatedAt] = useState<Date | null>(null)
 
   const controller = useRef<AbortController | null>(null)
 
@@ -70,6 +71,10 @@ const RequestPassword = () => {
         navigate('/verify-password')
       })
       .catch((err) => {
+        if (err.data?.createdAt) {
+          setCodeCreatedAt(new Date(err.data.createdAt))
+        }
+
         if (!(err instanceof CanceledError)) {
           setError(err.response.data?.message)
         }
@@ -80,6 +85,8 @@ const RequestPassword = () => {
   const onBack = () => {
     controller.current?.abort()
   }
+
+  console.log(codeCreatedAt)
 
   return (
     <div className='min-h-screen py-[150px] px-[40px] flex items-center justify-center'>

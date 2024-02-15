@@ -13,6 +13,21 @@ class RequestPasswordController extends Controller
     {
         $user = $request->findUser();
 
+        $latestCode = $user->verificationCodes()
+            ->latest()
+            ->first();
+
+        if ($latestCode) {
+            $isRecentlyCreated = $latestCode->created_at >= now()->subSeconds(30);
+
+            if ($isRecentlyCreated) {
+                return response()->json([
+                    'message' => __('passwords.throttled'),
+                    'timeoutEnd' => $latestCode->created_at->addSeconds(30),
+                ], 429);
+            }
+        }
+
         $code = $user->verificationCodes()->create();
 
         $user->notify(new SendPasswordNotification($code));

@@ -1,7 +1,7 @@
 import useLocalStorage from '@/hooks/useLocalStorage'
 import { CurrentUser } from '@/types'
 import { api } from '@/utils/api'
-import { FC, ReactNode, createContext, useContext } from 'react'
+import { FC, ReactNode, createContext, useContext, useEffect } from 'react'
 
 interface IAuthContext {
   user: CurrentUser | null
@@ -21,22 +21,46 @@ interface props {
   children: ReactNode
 }
 
+let firstMount = true
+
 const AuthProvider: FC<props> = ({ children }) => {
   const [user, setUser] = useLocalStorage<CurrentUser | null>('user', null)
 
+  useEffect(() => {
+    if (user?.token && firstMount) {
+      firstMount = false
+
+      api
+        .post('token', { token: user.token })
+        .then((res) => {
+          console.log(res);
+          
+          login({
+            ...user,
+            token: res.data.token,
+          })
+          console.log('Updating token')
+        })
+        .catch((error) => {
+          console.log(error)
+          logout()
+        })
+    }
+  }, [user?.token])
+
   const login = (currentUser: CurrentUser) => {
+    firstMount = false
     setUser(currentUser)
-    api.defaults.headers.common['Authorization'] = `Bearer ${currentUser.token}`
+    api.defaults.headers.common['Authorization'] = `Bearer ${currentUser?.token}`
   }
 
   const logout = () => {
     api
       .get('logout')
-      .then(() => {
-        setUser(null)
-        api.defaults.headers.common['Authorization'] = `Bearer`
-      })
-      .catch((err) => console.log(err))
+      .then(() => setUser(null))
+      .catch(console.log)
+
+      api.defaults.headers.common['Authorization'] = `Bearer`
   }
 
   return (

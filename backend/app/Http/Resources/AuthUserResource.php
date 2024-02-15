@@ -18,7 +18,7 @@ class AuthUserResource extends JsonResource
             'firstName' => $this->first_name,
             'lastName' => $this->last_name,
             'email' => $this->email,
-            'avatar' => 'NO-IMAGE'
+            'avatar' => $this->avatar->full_path,
         ];
     }
 }

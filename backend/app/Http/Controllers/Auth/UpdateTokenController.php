@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\UpdateTokenRequest;
+use App\Http\Resources\AuthUserResource;
 use Illuminate\Http\JsonResponse;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -25,10 +26,15 @@ class UpdateTokenController extends Controller
 
         $token->delete();
 
+        if (!auth()->check()) {
+            auth()->login($user);
+        }
+
         $newToken = $user->createToken('accessToken')
             ->plainTextToken;
 
         return response()->json([
+            'user' => AuthUserResource::make($user),
             'token' => $newToken,
         ]);
     }

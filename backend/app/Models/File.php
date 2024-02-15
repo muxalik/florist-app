@@ -22,6 +22,6 @@ class File extends Model
 
     public function getFullPathAttribute(): string
     {
-        return public_path('storage/' . $this->path . '/' . $this->filename);
+        return asset('storage/' . $this->path . '/' . $this->filename);
     }
 }

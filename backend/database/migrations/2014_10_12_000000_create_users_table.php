@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('phone')->index()->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->foreignId('avatar_id')->nullable()->references('id')->on('files')->nullOnDelete();
             $table->rememberToken();
             $table->timestamps();
         });

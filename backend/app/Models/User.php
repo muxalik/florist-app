@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\Roles;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,6 +30,7 @@ class User extends Authenticatable
         'salary',
         'email',
         'password',
+        'avatar_id',
     ];
 
     /**
@@ -59,6 +61,11 @@ class User extends Authenticatable
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function avatar(): BelongsTo
+    {
+        return $this->belongsTo(File::class);
     }
 
     // public function scopeWithRoles(

@@ -51,8 +51,9 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border font-comfortaa;
   }
+
   body,
   #app {
     @apply bg-background 
@@ -61,5 +62,45 @@
       min-h-screen 
       overflow-x-hidden 
       relative;
-    }
+  }
+}
+
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 300;
+  src: url('./assets/fonts/comfortaa/Comfortaa-Light.ttf');
+}
+
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./assets/fonts/comfortaa/Comfortaa-Regular.ttf');
+}
+
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 500;
+  src: url('./assets/fonts/comfortaa/Comfortaa-Medium.ttf');
+}
+
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 600;
+  src: url('./assets/fonts/comfortaa/Comfortaa-SemiBold.ttf');
+}
+
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Comfortaa';
+  font-style: normal;
+  font-weight: 700;
+  src: url('./assets/fonts/comfortaa/Comfortaa-Bold.ttf');
 }

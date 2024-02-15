@@ -5,6 +5,7 @@ export type CurrentUser = {
   lastName: string
   avatar: string
   token: string
+  email: string
 }
 
 export type passwordData = {

@@ -33,13 +33,11 @@ const AuthProvider: FC<props> = ({ children }) => {
       api
         .post('token', { token: user.token })
         .then((res) => {
-          console.log(res);
-          
           login({
             ...user,
+            ...res.data.user,
             token: res.data.token,
           })
-          console.log('Updating token')
         })
         .catch((error) => {
           console.log(error)
@@ -51,7 +49,9 @@ const AuthProvider: FC<props> = ({ children }) => {
   const login = (currentUser: CurrentUser) => {
     firstMount = false
     setUser(currentUser)
-    api.defaults.headers.common['Authorization'] = `Bearer ${currentUser?.token}`
+    api.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${currentUser?.token}`
   }
 
   const logout = () => {
@@ -60,7 +60,7 @@ const AuthProvider: FC<props> = ({ children }) => {
       .then(() => setUser(null))
       .catch(console.log)
 
-      api.defaults.headers.common['Authorization'] = `Bearer`
+    api.defaults.headers.common['Authorization'] = `Bearer`
   }
 
   return (

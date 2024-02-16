@@ -4,27 +4,32 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { useAuth } from '@/context/AuthContext'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import sidebarLinks from '@/constants/sidebarLinks'
 import { NavLink, useLocation } from 'react-router-dom'
+import Icons from '@/components/Icons'
+import useTheme from '@/hooks/useTheme'
 
 const Sidebar = () => {
+  const [theme, _, toggleTheme] = useTheme()
+
   const { user, logout } = useAuth()
   const { pathname } = useLocation()
 
   return (
-    <div className='w-[250px] absolute top-0 left-0 bottom-0 h-screen z-20 bg-white border-r border-r-border'>
+    <div className='w-[250px] absolute top-0 left-0 bottom-0 h-screen z-20 bg-body border-r border-r-border'>
       <div className='relative w-full h-full overflow-y-hidden'>
         <ScrollArea className='rounded-md py-4 px-2 pb-[100px]'>
           <ul className='flex flex-col gap-2'>
             {sidebarLinks.map((link) => (
               <Button
-                variant={pathname === link.to ? 'default' : 'outline'}
+                variant={pathname === link.to ? 'default' : 'ghost'}
                 asChild
-                className='font-semibold justify-start gap-2 leading-[3px]'
+                className='font-bold justify-start gap-2 leading-[3px]'
               >
                 <NavLink to={link.to}>
                   <link.icon className='w-[20px] h-[20px]' />
@@ -48,7 +53,7 @@ const Sidebar = () => {
                     <AvatarFallback>MK</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className='text-md font-semibold'>
+                    <p className='text-md font-bold'>
                       {user?.firstName} {user?.lastName}
                     </p>
                     <p className='text-sm text-gray-400'>{user?.email}</p>
@@ -56,9 +61,24 @@ const Sidebar = () => {
                 </div>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className='w-56 font-medium mx-2' side='right'>
-              <DropdownMenuItem onSelect={logout} className='cursor-pointer'>
-                Выйти
+            <DropdownMenuContent
+              className='w-56 font-bold mx-3 mb-2'
+              side='right'
+            >
+              <DropdownMenuItem
+                onSelect={toggleTheme}
+                className='cursor-pointer flex items-center gap-2'
+              >
+                {theme === 'dark' ? <Icons.moon /> : <Icons.sun />}
+                <span>Сменить тему</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onSelect={logout}
+                className='cursor-pointer flex gap-2 items-center'
+              >
+                <Icons.logout />
+                <span>Выйти</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

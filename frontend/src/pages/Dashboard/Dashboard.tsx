@@ -1,9 +1,5 @@
-import Layout from '@/layouts/Layout'
-
 const Dashboard = () => {
-  return <Layout>
-    <></>
-  </Layout>
+  return null
 }
 
 export default Dashboard

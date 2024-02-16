@@ -12,3 +12,5 @@ export type passwordData = {
   email: string | null
   code: string | null
 }
+
+export type Theme = 'dark' | 'light'

@@ -1,16 +1,14 @@
-import { FC, ReactNode } from 'react'
+import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 
-interface props {
-  children: ReactNode
-}
-
-const Layout: FC<props> = ({ children }) => {
+const Layout = () => {
   return (
     <div className='w-full min-h-screen h-full relative'>
       <Sidebar />
       <main className='w-full min-h-screen pl-[250px]'>
-        <div className='py-8 px-6'>{children}</div>
+        <div className='py-8 px-6'>
+          <Outlet />
+        </div>
       </main>
     </div>
   )

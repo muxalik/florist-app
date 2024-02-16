@@ -7,6 +7,8 @@ import { fetchCsrfToken } from './utils/api'
 import RequestPassword from './pages/Auth/RequestPassword/RequestPassword'
 import VerifyPassword from './pages/Auth/VerifyPassword/VerifyPassword'
 import UpdatePassword from './pages/Auth/UpdatePassword/UpdatePassword'
+import Layout from './layouts/Layout'
+import Categories from './pages/Categories/Categories'
 
 const App = () => {
   useEffect(() => {
@@ -17,8 +19,11 @@ const App = () => {
     <div id='app'>
       <Routes>
         {/* Protected routes */}
-        <Route element={<ProtectedRoutes only='auth' />}>
-          <Route path='/dashboard' element={<Dashboard />} />
+        <Route element={<Layout />}>
+          <Route element={<ProtectedRoutes only='auth' />}>
+            <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/categories' element={<Categories />} />
+          </Route>
         </Route>
 
         {/* Guest routes */}

@@ -2,6 +2,9 @@
 
 namespace Database\Factories;
 
+use App\Enums\Files;
+use App\Models\Category;
+use App\Models\File;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +20,18 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->words(
+                fake()->numberBetween(2, 6),
+                true,
+            ),
+            'image_id' => File::factory()->create([
+                'path' => '',
+                'filename' => 'category.jpg',
+                'type' => Files::Image->value,
+            ])->id,
+            'parent_id' => fake()->boolean()
+                ? Category::inRandomOrder()->value('id')
+                : null,
         ];
     }
 }

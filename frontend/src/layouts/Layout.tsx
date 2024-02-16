@@ -6,7 +6,7 @@ const Layout = () => {
     <div className='w-full min-h-screen h-full relative'>
       <Sidebar />
       <main className='w-full min-h-screen pl-[250px]'>
-        <div className='py-8 px-6'>
+        <div className='py-8 pl-8 pr-12'>
           <Outlet />
         </div>
       </main>

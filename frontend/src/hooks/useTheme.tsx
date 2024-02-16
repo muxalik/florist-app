@@ -27,7 +27,7 @@ const useTheme = () => {
 
   const toggleTheme = () => setTheme(theme === 'dark' ? 'light' : 'dark')
 
-  return [theme, setTheme, toggleTheme] as const
+  return { theme, setTheme, toggleTheme }
 }
 
 export default useTheme

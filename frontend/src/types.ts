@@ -14,3 +14,13 @@ export type passwordData = {
 }
 
 export type Theme = 'dark' | 'light'
+
+export type Category = {
+  id: number
+  name: string
+  image: string
+  parentId: number | null
+  parentName: string | null
+  createdAt: string
+  updatedAt: string
+}

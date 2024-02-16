@@ -30,16 +30,16 @@ class Category extends Model
 
     public function image(): BelongsTo
     {
-        return $this->belongsTo(File::class, 'image_id');
+        return $this->belongsTo(File::class, 'image_id',);
     }
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(Category::class, 'parent_id');
+        return $this->belongsTo(Category::class, 'parent_id', 'id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(Category::class, 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id', 'id');
     }
 }

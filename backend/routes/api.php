@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RequestPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\UpdateTokenController;
 use App\Http\Controllers\Auth\VerifyPasswordController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,5 +32,7 @@ Route::middleware(['guest:sanctum'])->group(function () {
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    Route::apiResource('categories', CategoryController::class);
+
     Route::get('logout', LogoutController::class)->name('logout');
 });

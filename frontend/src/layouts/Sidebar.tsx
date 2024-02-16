@@ -15,13 +15,13 @@ import Icons from '@/components/Icons'
 import useTheme from '@/hooks/useTheme'
 
 const Sidebar = () => {
-  const [theme, _, toggleTheme] = useTheme()
+  const { theme, toggleTheme } = useTheme()
 
   const { user, logout } = useAuth()
   const { pathname } = useLocation()
 
   return (
-    <div className='w-[250px] absolute top-0 left-0 bottom-0 h-screen z-20 bg-body border-r border-r-border'>
+    <div className='w-[250px] fixed top-0 left-0 bottom-0 h-screen z-20 bg-background border-r border-r-border'>
       <div className='relative w-full h-full overflow-y-hidden'>
         <ScrollArea className='rounded-md py-4 px-2 pb-[100px]'>
           <ul className='flex flex-col gap-2'>

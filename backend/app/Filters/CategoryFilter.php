@@ -3,6 +3,7 @@
 namespace App\Filters;
 
 use App\Models\Category;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
@@ -31,22 +32,21 @@ class CategoryFilter
       $this->query = Category::with('image', 'parent');
    }
 
-   public function apply(): Builder
+   public function apply(): LengthAwarePaginator
    {
       return $this
          ->search()
          // ->filter()
-         // ->paginate()
-      ;
+         ->paginate();
    }
 
-   private function search(): Builder
+   private function search(): self
    {
       if (!$this->q) {
-         return $this->query;
+         return $this;
       }
 
-      return $this->query
+      $this->query
          ->where(function (Builder $q): Builder {
             return $q
                ->where('id', 'LIKE', "%$this->q%")
@@ -57,5 +57,15 @@ class CategoryFilter
                      ->orWhere('name', 'LIKE', "%$this->q%");
                });
          });
+
+      return $this;
+   }
+
+   private function paginate(): LengthAwarePaginator
+   {
+      return $this->query->paginate(
+         perPage: $this->perPage,
+         page: $this->page
+      );
    }
 }

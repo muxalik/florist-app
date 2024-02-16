@@ -8,13 +8,18 @@ import { useSearchParams } from 'react-router-dom'
 const Categories = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [categories, setCategories] = useState<Category[]>([])
+  
+  
   const timerRef = useRef<NodeJS.Timeout | null>(null)
 
   useEffect(() => {
     const timer = setTimeout(() => {
       api
         .get('categories?' + searchParams.toString())
-        .then((res) => setCategories(res.data))
+        .then((res) => {
+          setCategories(res.data.data)
+          console.log(res.data)
+        })
         .catch(console.log)
     }, 200)
 
@@ -24,7 +29,7 @@ const Categories = () => {
       clearTimeout(timer)
       timerRef.current = null
     }
-  }, [searchParams.get('q')])
+  }, [searchParams])
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value

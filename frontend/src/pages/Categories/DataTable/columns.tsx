@@ -7,6 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Task } from '@/constants/categories/schema'
 import { DataTableColumnHeader } from './ColumnHeader'
 import { DataTableRowActions } from './RowActions'
+import { categoryCols } from '@/constants/categories/columns'
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -36,14 +37,20 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Категория' />
+      <DataTableColumnHeader
+        column={column}
+        title={categoryCols.find((col) => col.id === 'id')?.title!}
+      />
     ),
     cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
   },
   {
     accessorKey: 'image',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Изображение' />
+      <DataTableColumnHeader
+        column={column}
+        title={categoryCols.find((col) => col.id === 'image')?.title!}
+      />
     ),
     cell: ({ row }) => {
       return (
@@ -59,12 +66,14 @@ export const columns: ColumnDef<Task>[] = [
       )
     },
     enableSorting: false,
-    enableHiding: false,
   },
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Название' />
+      <DataTableColumnHeader
+        column={column}
+        title={categoryCols.find((col) => col.id === 'name')?.title!}
+      />
     ),
     cell: ({ row }) => {
       return (
@@ -79,7 +88,10 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'parentName',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Род. категория' />
+      <DataTableColumnHeader
+        column={column}
+        title={categoryCols.find((col) => col.id === 'parentName')?.title!}
+      />
     ),
     cell: ({ row }) => {
       const parentId = row.original.parentId
@@ -103,7 +115,10 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Создание' />
+      <DataTableColumnHeader
+        column={column}
+        title={categoryCols.find((col) => col.id === 'createdAt')?.title!}
+      />
     ),
     cell: ({ row }) => {
       return (
@@ -119,7 +134,10 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'updatedAt',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Обновление' />
+      <DataTableColumnHeader
+        column={column}
+        title={categoryCols.find((col) => col.id === 'updatedAt')?.title!}
+      />
     ),
     cell: ({ row }) => {
       return (

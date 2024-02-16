@@ -14,10 +14,8 @@ class CategoryController extends Controller
      */
     public function index(Request $request): AnonymousResourceCollection
     {
-        $query = (new CategoryFilter($request))->apply();
-
         return CategoryResource::collection(
-            $query->get(),
+            (new CategoryFilter($request))->apply()
         );
     }
 

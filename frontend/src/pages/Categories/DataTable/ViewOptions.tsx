@@ -10,6 +10,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
+import { categoryCols } from '@/constants/categories/columns'
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -30,7 +31,7 @@ export function DataTableViewOptions<TData>({
           Просмотр
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[150px]'>
+      <DropdownMenuContent align='end' className='w-[175px]'>
         <DropdownMenuLabel>Переключить видимость</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table
@@ -47,7 +48,7 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {categoryCols.find((col) => col.id === column.id)?.title}
               </DropdownMenuCheckboxItem>
             )
           })}

@@ -47,6 +47,15 @@ class CategoryFilter
       }
 
       return $this->query
-         ->where('id', 'LIKE', "%{$this->q}%");
+         ->where(function (Builder $q): Builder {
+            return $q
+               ->where('id', 'LIKE', "%$this->q%")
+               ->orWhere('name', 'LIKE', "%$this->q%")
+               ->orWhereHas('parent', function (Builder $q): Builder {
+                  return $q
+                     ->where('id', 'LIKE', "%$this->q%")
+                     ->orWhere('name', 'LIKE', "%$this->q%");
+               });
+         });
    }
 }

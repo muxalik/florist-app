@@ -24,3 +24,11 @@ export type Category = {
   createdAt: string
   updatedAt: string
 }
+
+export type CategoryFilters = {
+  page?: string
+  per_page?: string
+  q?: string
+  has_children?: boolean
+  has_image?: boolean
+}

@@ -52,7 +52,7 @@ export const columns: ColumnDef<Task>[] = [
             <img
               src={`${row.getValue('image')}`}
               alt='Preview'
-              className='h-12'
+              className='h-12 rounded-sm'
             />
           </div>
         </div>

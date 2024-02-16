@@ -6,13 +6,18 @@ import { Input } from '@/components/ui/input'
 
 // import { DataTableFacetedFilter } from './FacetedFilter'
 import { DataTableViewOptions } from './ViewOptions'
+import { ChangeEvent } from 'react'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+  onSearch: (e: ChangeEvent<HTMLInputElement>) => void
+  search: string
 }
 
 export function DataTableToolbar<TData>({
   table,
+  onSearch,
+  search,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
@@ -21,10 +26,8 @@ export function DataTableToolbar<TData>({
       <div className='flex flex-1 items-center space-x-2'>
         <Input
           placeholder='Поиск...'
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
-          onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
-          }
+          value={search}
+          onChange={onSearch}
           className='h-8 w-[150px] lg:w-[250px]'
         />
         {/* {table.getColumn('status') && (

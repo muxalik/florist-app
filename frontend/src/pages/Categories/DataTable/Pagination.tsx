@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useCategories } from '@/context/CategoriesContext'
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>
@@ -22,11 +23,17 @@ interface DataTablePaginationProps<TData> {
 export function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
+  const {
+    pagination: { currentPage, lastPage, total },
+    setPage,
+    setPerPage,
+  } = useCategories()
+
   return (
     <div className='flex items-center justify-between px-2'>
       <div className='flex-1 text-sm text-muted-foreground'>
-        {table.getFilteredSelectedRowModel().rows.length} из{' '}
-        {table.getFilteredRowModel().rows.length} записи(ей) выбрано.
+        {table.getFilteredSelectedRowModel().rows.length} из {total} записи(ей)
+        выбрано.
       </div>
       <div className='flex items-center space-x-6 lg:space-x-8'>
         <div className='flex items-center space-x-2'>
@@ -35,6 +42,7 @@ export function DataTablePagination<TData>({
             value={`${table.getState().pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value))
+              setPerPage(+value)
             }}
           >
             <SelectTrigger className='h-8 w-[70px]'>
@@ -50,15 +58,14 @@ export function DataTablePagination<TData>({
           </Select>
         </div>
         <div className='flex w-[150px] items-center justify-center text-sm font-medium'>
-          Страница {table.getState().pagination.pageIndex + 1} из{' '}
-          {table.getPageCount()}
+          Страница {currentPage} из {lastPage}
         </div>
         <div className='flex items-center space-x-2'>
           <Button
             variant='outline'
             className='hidden h-8 w-8 p-0 lg:flex'
-            onClick={() => table.setPageIndex(0)}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => setPage(1)}
+            disabled={currentPage === 1}
           >
             <span className='sr-only'>На первую страницу</span>
             <DoubleArrowLeftIcon className='h-4 w-4' />
@@ -66,8 +73,10 @@ export function DataTablePagination<TData>({
           <Button
             variant='outline'
             className='h-8 w-8 p-0'
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() =>
+              setPage(currentPage > 1 ? currentPage - 1 : currentPage)
+            }
+            disabled={currentPage === 1}
           >
             <span className='sr-only'>На предыдущую страницу</span>
             <ChevronLeftIcon className='h-4 w-4' />
@@ -75,8 +84,10 @@ export function DataTablePagination<TData>({
           <Button
             variant='outline'
             className='h-8 w-8 p-0'
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() =>
+              setPage(currentPage < lastPage ? currentPage + 1 : currentPage)
+            }
+            disabled={currentPage === lastPage}
           >
             <span className='sr-only'>На следущую страницу</span>
             <ChevronRightIcon className='h-4 w-4' />
@@ -84,8 +95,8 @@ export function DataTablePagination<TData>({
           <Button
             variant='outline'
             className='hidden h-8 w-8 p-0 lg:flex'
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-            disabled={!table.getCanNextPage()}
+            onClick={() => setPage(lastPage)}
+            disabled={currentPage === lastPage}
           >
             <span className='sr-only'>На последнюю страницу</span>
             <DoubleArrowRightIcon className='h-4 w-4' />

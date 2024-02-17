@@ -26,16 +26,18 @@ const Sidebar = () => {
         <ScrollArea className='rounded-md py-4 px-2 pb-[100px]'>
           <ul className='flex flex-col gap-2'>
             {sidebarLinks.map((link) => (
-              <Button
-                variant={pathname === link.to ? 'default' : 'ghost'}
-                asChild
-                className='font-bold justify-start gap-2 leading-[3px]'
-              >
-                <NavLink to={link.to}>
-                  <link.icon className='w-[20px] h-[20px]' />
-                  <span>{link.title}</span>
-                </NavLink>
-              </Button>
+              <li key={link.title + link.to}>
+                <Button
+                  variant={pathname === link.to ? 'default' : 'ghost'}
+                  asChild
+                  className='font-bold justify-start gap-2 leading-[3px] w-full'
+                >
+                  <NavLink to={link.to}>
+                    <link.icon className='w-[20px] h-[20px]' />
+                    <span>{link.title}</span>
+                  </NavLink>
+                </Button>
+              </li>
             ))}
           </ul>
         </ScrollArea>

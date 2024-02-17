@@ -6,20 +6,21 @@ import { Input } from '@/components/ui/input'
 
 // import { DataTableFacetedFilter } from './FacetedFilter'
 import { DataTableViewOptions } from './ViewOptions'
-import { ChangeEvent } from 'react'
+import { useCategories } from '@/context/CategoriesContext'
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
-  onSearch: (e: ChangeEvent<HTMLInputElement>) => void
-  search: string
 }
 
 export function DataTableToolbar<TData>({
   table,
-  onSearch,
-  search,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
+
+  const {
+    onSearch,
+    filters: { q: search },
+  } = useCategories()
 
   return (
     <div className='flex items-center justify-between'>

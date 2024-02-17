@@ -26,9 +26,16 @@ export type Category = {
 }
 
 export type CategoryFilters = {
-  page?: string
-  per_page?: string
   q?: string
   has_children?: boolean
   has_image?: boolean
+}
+
+export type Pagination = {
+  currentPage: number
+  from: number
+  lastPage: number
+  perPage: number
+  to: number
+  total: number
 }

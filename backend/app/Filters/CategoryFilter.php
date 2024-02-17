@@ -24,7 +24,7 @@ class CategoryFilter
    public function __construct(Request $request)
    {
       $this->page = $request->page;
-      $this->perPage = $request->per_page;
+      $this->perPage = $request->per_page ?? 10;
       $this->q = $request->q;
       $this->hasChldren = $request->boolean('children');
       $this->hasImage = $request->boolean('image');

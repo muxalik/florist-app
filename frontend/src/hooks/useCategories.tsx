@@ -1,26 +1,8 @@
 import useDebounce from '@/hooks/useDebounce'
 import { Category, CategoryFilters, Pagination } from '@/types'
 import { api } from '@/utils/api'
-import {
-  ChangeEvent,
-  FC,
-  ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-
-interface ICategoriesContext {
-  categories: Category[]
-  pagination: Pagination
-  filters: CategoryFilters
-  onSearch: (e: ChangeEvent<HTMLInputElement>) => void
-  setPage: (page: number) => void
-  setPerPage: (perPage: number) => void
-  isLoading: boolean
-}
 
 const initialPagination: Pagination = {
   currentPage: 1,
@@ -31,23 +13,7 @@ const initialPagination: Pagination = {
   total: 0,
 }
 
-const initialData: ICategoriesContext = {
-  categories: [],
-  pagination: initialPagination,
-  filters: {},
-  onSearch: () => {},
-  setPage: () => {},
-  setPerPage: () => {},
-  isLoading: false,
-}
-
-const CategoriesContext = createContext<ICategoriesContext>(initialData)
-
-interface props {
-  children: ReactNode
-}
-
-const CategoriesProvider: FC<props> = ({ children }) => {
+const useCategories = () => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const [pagination, setPagination] = useState<Pagination>(() => {
@@ -74,14 +40,25 @@ const CategoriesProvider: FC<props> = ({ children }) => {
       .then((res) => {
         setCategories(res.data.data)
 
+        const {
+          current_page: currentPage,
+          from,
+          last_page: lastPage,
+          per_page: perPage,
+          to,
+          total,
+        } = res.data.meta
+
         setPagination({
-          currentPage: res.data.meta.current_page,
-          from: res.data.meta.from,
-          lastPage: res.data.meta.last_page,
-          perPage: res.data.meta.per_page,
-          to: res.data.meta.to,
-          total: res.data.meta.total,
+          currentPage,
+          from,
+          lastPage,
+          perPage,
+          to,
+          total,
         })
+
+        window.scroll({ top: 0 })
       })
       .catch(console.log)
       .finally(() => setIsLoading(false))
@@ -156,26 +133,15 @@ const CategoriesProvider: FC<props> = ({ children }) => {
     fetchWithLoader()
   }
 
-  console.log(categories.length);
-  
-
-  return (
-    <CategoriesContext.Provider
-      value={{
-        categories,
-        filters,
-        pagination,
-        onSearch,
-        setPage,
-        setPerPage,
-        isLoading,
-      }}
-    >
-      {children}
-    </CategoriesContext.Provider>
-  )
+  return {
+    categories,
+    filters,
+    pagination,
+    onSearch,
+    setPage,
+    setPerPage,
+    isLoading,
+  }
 }
 
-const useCategories = () => useContext(CategoriesContext)
-
-export { CategoriesProvider, useCategories }
+export default useCategories

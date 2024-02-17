@@ -1,4 +1,4 @@
-import Icons from '@/components/Icons'
+import Icons from '@/components/ui/icons'
 import { IconProps } from '@/types'
 import { FC } from 'react'
 

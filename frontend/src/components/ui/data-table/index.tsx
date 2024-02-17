@@ -1,16 +1,11 @@
 import * as React from 'react'
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
   VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 
@@ -22,48 +17,50 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { DataTableToolbar } from './Toolbar'
-import { DataTablePagination } from './Pagination'
-import { useCategories } from '@/context/CategoriesContext'
-import Icons from '@/components/Icons'
+import { DataTableToolbar } from './toolbar'
+import Icons from '@/components/ui/icons'
+import { DataTablePagination } from './pagination'
 
-interface DataTableProps<TData, TValue> {
+interface BaseTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
 }
 
+type DataTableProps<TData, TValue> = {
+  currentPage: number
+  lastPage: number
+  setPage: (page: number) => void
+  perPage: number
+  setPerPage: (page: number) => void
+  isLoading: boolean
+} & BaseTableProps<TData, TValue>
+
 export function DataTable<TData, TValue>({
   columns,
   data,
+  currentPage,
+  lastPage,
+  setPage,
+  perPage,
+  setPerPage,
+  isLoading,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  )
-  const [sorting, setSorting] = React.useState<SortingState>([])
-
-  const { isLoading } = useCategories()
 
   const table = useReactTable({
     data,
     columns,
     state: {
-      sorting,
       columnVisibility,
       rowSelection,
-      columnFilters,
     },
     enableRowSelection: true,
+    manualPagination: true,
     onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
@@ -88,7 +85,7 @@ export function DataTable<TData, TValue>({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id} colSpan={header.colSpan}>
+                    <TableHead key={header.id}>
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -131,7 +128,14 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
+      <DataTablePagination
+        table={table}
+        currentPage={currentPage}
+        lastPage={lastPage}
+        setPage={setPage}
+        perPage={perPage}
+        setPerPage={setPerPage}
+      />
     </div>
   )
 }

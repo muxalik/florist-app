@@ -14,7 +14,7 @@ import useLocalStorage from '@/hooks/useLocalStorage'
 import { passwordData } from '@/types'
 import VerificationInput from 'react-verification-input'
 import { cn } from '@/lib/utils'
-import Icons from '@/components/Icons'
+import Icons from '@/components/ui/icons'
 
 const CODE_LENGTH = 6
 

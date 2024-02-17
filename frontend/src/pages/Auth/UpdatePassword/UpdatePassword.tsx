@@ -20,7 +20,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useRef, useState } from 'react'
-import Icons from '@/components/Icons'
+import Icons from '@/components/ui/icons'
 import { api } from '@/utils/api'
 import { Link, useNavigate } from 'react-router-dom'
 import useLocalStorage from '@/hooks/useLocalStorage'

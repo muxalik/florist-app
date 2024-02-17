@@ -11,7 +11,7 @@ import { useAuth } from '@/context/AuthContext'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import sidebarLinks from '@/constants/sidebarLinks'
 import { NavLink, useLocation } from 'react-router-dom'
-import Icons from '@/components/Icons'
+import Icons from '@/components/ui/icons'
 import useTheme from '@/hooks/useTheme'
 
 const Sidebar = () => {

@@ -1,15 +1,11 @@
+import { Category } from '@/types'
+import { Checkbox } from '@radix-ui/react-checkbox'
 import { ColumnDef } from '@tanstack/react-table'
-
+import DataTableRowActions from '@/components/ui/data-table/row-actions'
+import { DataTableColumnHeader } from '@/components/ui/data-table/column-header'
 import { Badge } from '@/components/ui/badge'
-import { Checkbox } from '@/components/ui/checkbox'
 
-// import { labels, priorities, statuses } from '@/constants/categories/data'
-import { Task } from '@/constants/categories/schema'
-import { DataTableColumnHeader } from './ColumnHeader'
-import { DataTableRowActions } from './RowActions'
-import { categoryCols } from '@/constants/categories/columns'
-
-export const columns: ColumnDef<Task>[] = [
+export const columns: ColumnDef<Category>[] = [
   {
     id: 'select',
     header: ({ table }) => (
@@ -37,20 +33,14 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title={categoryCols.find((col) => col.id === 'id')?.title!}
-      />
+      <DataTableColumnHeader column={column} title='Категория' />
     ),
     cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
   },
   {
     accessorKey: 'image',
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title={categoryCols.find((col) => col.id === 'image')?.title!}
-      />
+      <DataTableColumnHeader column={column} title='Изображение' />
     ),
     cell: ({ row }) => {
       return (
@@ -70,10 +60,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title={categoryCols.find((col) => col.id === 'name')?.title!}
-      />
+      <DataTableColumnHeader column={column} title='Название' />
     ),
     cell: ({ row }) => {
       return (
@@ -88,10 +75,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'parentName',
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title={categoryCols.find((col) => col.id === 'parentName')?.title!}
-      />
+      <DataTableColumnHeader column={column} title='Род. категория' />
     ),
     cell: ({ row }) => {
       const parentId = row.original.parentId
@@ -115,10 +99,7 @@ export const columns: ColumnDef<Task>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title={categoryCols.find((col) => col.id === 'createdAt')?.title!}
-      />
+      <DataTableColumnHeader column={column} title='Cоздание' />
     ),
     cell: ({ row }) => {
       return (
@@ -127,17 +108,11 @@ export const columns: ColumnDef<Task>[] = [
         </div>
       )
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
   },
   {
     accessorKey: 'updatedAt',
     header: ({ column }) => (
-      <DataTableColumnHeader
-        column={column}
-        title={categoryCols.find((col) => col.id === 'updatedAt')?.title!}
-      />
+      <DataTableColumnHeader column={column} title='Обновление' />
     ),
     cell: ({ row }) => {
       return (
@@ -146,37 +121,7 @@ export const columns: ColumnDef<Task>[] = [
         </div>
       )
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
   },
-  // {
-  //   accessorKey: 'priority',
-  //   header: ({ column }) => (
-  //     <DataTableColumnHeader column={column} title='Priority' />
-  //   ),
-  //   cell: ({ row }) => {
-  //     const priority = priorities.find(
-  //       (priority) => priority.value === row.getValue('priority')
-  //     )
-
-  //     if (!priority) {
-  //       return null
-  //     }
-
-  //     return (
-  //       <div className='flex items-center'>
-  //         {priority.icon && (
-  //           <priority.icon className='mr-2 h-4 w-4 text-muted-foreground' />
-  //         )}
-  //         <span>{priority.label}</span>
-  //       </div>
-  //     )
-  //   },
-  //   filterFn: (row, id, value) => {
-  //     return value.includes(row.getValue(id))
-  //   },
-  // },
   {
     id: 'actions',
     cell: ({ row }) => <DataTableRowActions row={row} />,

@@ -1,6 +1,7 @@
 import useCategories from '@/hooks/useCategories'
 import { columns } from './columns'
 import { DataTable } from '@/components/ui/data-table'
+import { categoryColumns } from '@/constants/categories/columns'
 
 const Categories = () => {
   const {
@@ -24,6 +25,7 @@ const Categories = () => {
           setPage={setPage}
           setPerPage={setPerPage}
           isLoading={isLoading}
+          columnNames={categoryColumns}
         />
       </div>
     </div>

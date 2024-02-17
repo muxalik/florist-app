@@ -18,8 +18,9 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { DataTableToolbar } from './toolbar'
-import Icons from '@/components/ui/icons'
 import { DataTablePagination } from './pagination'
+import Loader from './loader'
+import { ColNames } from '@/types'
 
 interface BaseTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -33,6 +34,7 @@ type DataTableProps<TData, TValue> = {
   perPage: number
   setPerPage: (page: number) => void
   isLoading: boolean
+  columnNames: ColNames
 } & BaseTableProps<TData, TValue>
 
 export function DataTable<TData, TValue>({
@@ -44,6 +46,7 @@ export function DataTable<TData, TValue>({
   perPage,
   setPerPage,
   isLoading,
+  columnNames,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -67,18 +70,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className='space-y-4 w-full'>
-      <DataTableToolbar table={table} />
+      <DataTableToolbar table={table} columnNames={columnNames} />
       <div className='rounded-md border relative'>
-        {isLoading && (
-          <div className='absolute inset-0 z-10'>
-            <div className='relative w-full h-full'>
-              <div className='w-full h-full bg-background opacity-75 rounded-sm' />
-              <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
-                <Icons.spinner className='text-primary animate-spin dark:text-gray-600 w-20 h-20' />
-              </div>
-            </div>
-          </div>
-        )}
+        {isLoading && <Loader />}
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

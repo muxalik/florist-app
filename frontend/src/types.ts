@@ -39,3 +39,7 @@ export type Pagination = {
   to: number
   total: number
 }
+
+export type ColNames = {
+  [key: string]: string
+}

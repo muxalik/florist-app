@@ -6,13 +6,19 @@ import { Input } from '@/components/ui/input'
 
 import { DataTableViewOptions } from './view-options'
 import useCategories from '@/hooks/useCategories'
+import { ColNames } from '@/types'
 
-interface DataTableToolbarProps<TData> {
+interface BaseDataTableToolbarProps<TData> {
   table: Table<TData>
 }
 
+type DataTableToolbarProps<TData> = {
+  columnNames: ColNames
+} & BaseDataTableToolbarProps<TData>
+
 export function DataTableToolbar<TData>({
   table,
+  columnNames,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
 
@@ -41,7 +47,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions table={table} />
+      <DataTableViewOptions table={table} columnNames={columnNames} />
     </div>
   )
 }

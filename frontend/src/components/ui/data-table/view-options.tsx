@@ -10,13 +10,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
+import { ColNames } from '@/types'
 
-interface DataTableViewOptionsProps<TData> {
+interface BaseDataTableViewOptionsProps<TData> {
   table: Table<TData>
 }
 
+type DataTableViewOptionsProps<TData> = {
+  columnNames: ColNames
+} & BaseDataTableViewOptionsProps<TData>
+
 export function DataTableViewOptions<TData>({
   table,
+  columnNames,
 }: DataTableViewOptionsProps<TData>) {
   return (
     <DropdownMenu>
@@ -47,7 +53,7 @@ export function DataTableViewOptions<TData>({
                 checked={column.getIsVisible()}
                 onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                {column.id}
+                {columnNames[column.id]}
               </DropdownMenuCheckboxItem>
             )
           })}

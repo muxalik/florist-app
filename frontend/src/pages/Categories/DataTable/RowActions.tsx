@@ -18,6 +18,7 @@ import {
 
 // import { labels } from '@/constants/categories/data'
 import { taskSchema } from '@/constants/categories/schema'
+import Icons from '@/components/Icons'
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -39,11 +40,13 @@ export function DataTableRowActions<TData>({
           <span className='sr-only'>Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[160px]'>
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuItem>Make a copy</DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
-        <DropdownMenuSeparator />
+      <DropdownMenuContent align='end' className='w-[190px] font-medium'>
+        <DropdownMenuItem className='flex gap-2 text-gray-700'>
+          <Icons.edit className='w-5 h-5' />
+          Изменить
+          <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
+        </DropdownMenuItem>
+        {/* <DropdownMenuItem>Make a copy</DropdownMenuItem> */}
         {/* <DropdownMenuSub>
           <DropdownMenuSubTrigger>Labels</DropdownMenuSubTrigger>
           <DropdownMenuSubContent>
@@ -57,8 +60,9 @@ export function DataTableRowActions<TData>({
           </DropdownMenuSubContent>
         </DropdownMenuSub> */}
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          Delete
+        <DropdownMenuItem className='flex gap-2 text-gray-700'>
+          <Icons.trash className='w-5 h-5' />
+          Удалить
           <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>

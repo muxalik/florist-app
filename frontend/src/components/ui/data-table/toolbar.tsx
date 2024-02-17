@@ -5,8 +5,8 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
 import { DataTableViewOptions } from './view-options'
-import useCategories from '@/hooks/useCategories'
 import { ColNames } from '@/types'
+import { ChangeEvent } from 'react'
 
 interface BaseDataTableToolbarProps<TData> {
   table: Table<TData>
@@ -14,18 +14,17 @@ interface BaseDataTableToolbarProps<TData> {
 
 type DataTableToolbarProps<TData> = {
   columnNames: ColNames
+  search: string
+  onSearch: (e: ChangeEvent<HTMLInputElement>) => void
 } & BaseDataTableToolbarProps<TData>
 
 export function DataTableToolbar<TData>({
   table,
   columnNames,
+  search,
+  onSearch,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
-
-  const {
-    onSearch,
-    filters: { q: search },
-  } = useCategories()
 
   return (
     <div className='flex items-center justify-between'>

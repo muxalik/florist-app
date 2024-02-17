@@ -35,6 +35,8 @@ type DataTableProps<TData, TValue> = {
   setPerPage: (page: number) => void
   isLoading: boolean
   columnNames: ColNames
+  search: string
+  onSearch: (e: React.ChangeEvent<HTMLInputElement>) => void
 } & BaseTableProps<TData, TValue>
 
 export function DataTable<TData, TValue>({
@@ -47,6 +49,8 @@ export function DataTable<TData, TValue>({
   setPerPage,
   isLoading,
   columnNames,
+  search,
+  onSearch,
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
@@ -70,7 +74,12 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className='space-y-4 w-full'>
-      <DataTableToolbar table={table} columnNames={columnNames} />
+      <DataTableToolbar
+        table={table}
+        columnNames={columnNames}
+        search={search}
+        onSearch={onSearch}
+      />
       <div className='rounded-md border relative'>
         {isLoading && <Loader />}
         <Table>

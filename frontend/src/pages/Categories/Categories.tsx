@@ -10,6 +10,8 @@ const Categories = () => {
     setPage,
     setPerPage,
     isLoading,
+    onSearch,
+    filters: { q: search },
   } = useCategories()
 
   return (
@@ -26,6 +28,8 @@ const Categories = () => {
           setPerPage={setPerPage}
           isLoading={isLoading}
           columnNames={categoryColumns}
+          onSearch={onSearch}
+          search={search || ''}
         />
       </div>
     </div>

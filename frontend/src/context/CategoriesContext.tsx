@@ -19,6 +19,7 @@ interface ICategoriesContext {
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void
   setPage: (page: number) => void
   setPerPage: (perPage: number) => void
+  isLoading: boolean
 }
 
 const initialPagination: Pagination = {
@@ -37,6 +38,7 @@ const initialData: ICategoriesContext = {
   onSearch: () => {},
   setPage: () => {},
   setPerPage: () => {},
+  isLoading: false,
 }
 
 const CategoriesContext = createContext<ICategoriesContext>(initialData)
@@ -46,20 +48,32 @@ interface props {
 }
 
 const CategoriesProvider: FC<props> = ({ children }) => {
-  const [pagination, setPagination] = useState<Pagination>(initialPagination)
+  const [searchParams, setSearchParams] = useSearchParams()
+
+  const [pagination, setPagination] = useState<Pagination>(() => {
+    const state = { ...initialPagination }
+
+    const page = searchParams.get('page')
+    const perPage = searchParams.get('per_page')
+
+    if (page) state.currentPage = +page
+    if (perPage) state.perPage = +perPage
+
+    return state
+  })
 
   const [categories, setCategories] = useState<Category[]>([])
 
   const [filters, setFilters] = useState<CategoryFilters>({})
 
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [isLoading, setIsLoading] = useState(false)
 
   const fetchCategories = useDebounce(() => {
     api
       .get('categories?' + searchParams.toString())
       .then((res) => {
         setCategories(res.data.data)
-        console.log(res.data)
+
         setPagination({
           currentPage: res.data.meta.current_page,
           from: res.data.meta.from,
@@ -70,9 +84,15 @@ const CategoriesProvider: FC<props> = ({ children }) => {
         })
       })
       .catch(console.log)
+      .finally(() => setIsLoading(false))
   }, 200)
 
-  useEffect(fetchCategories, [filters])
+  const fetchWithLoader = () => {
+    setIsLoading(true)
+    fetchCategories()
+  }
+
+  useEffect(fetchWithLoader, [filters])
 
   // Update filters
   useEffect(() => {
@@ -94,7 +114,7 @@ const CategoriesProvider: FC<props> = ({ children }) => {
     const { currentPage, perPage } = pagination
 
     setSearchParams((prev) => {
-      if (currentPage === initialPagination.currentPage) {
+      if (currentPage === 1) {
         prev.delete('page')
       } else {
         prev.set('page', currentPage.toString())
@@ -123,21 +143,33 @@ const CategoriesProvider: FC<props> = ({ children }) => {
       currentPage: page,
     }))
 
-    fetchCategories()
+    fetchWithLoader()
   }
 
   const setPerPage = (perPage: number) => {
     setPagination((prev) => ({
       ...prev,
+      currentPage: 1,
       perPage,
     }))
 
-    fetchCategories()
+    fetchWithLoader()
   }
+
+  console.log(categories.length);
+  
 
   return (
     <CategoriesContext.Provider
-      value={{ categories, filters, pagination, onSearch, setPage, setPerPage }}
+      value={{
+        categories,
+        filters,
+        pagination,
+        onSearch,
+        setPage,
+        setPerPage,
+        isLoading,
+      }}
     >
       {children}
     </CategoriesContext.Provider>

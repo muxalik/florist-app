@@ -70,7 +70,7 @@ const CategoriesProvider: FC<props> = ({ children }) => {
         })
       })
       .catch(console.log)
-  }, 100)
+  }, 200)
 
   useEffect(fetchCategories, [filters])
 

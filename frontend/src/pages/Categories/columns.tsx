@@ -1,4 +1,4 @@
-import { Category } from '@/types'
+import { Category, SortOrder } from '@/types'
 import { Checkbox } from '@radix-ui/react-checkbox'
 import { ColumnDef } from '@tanstack/react-table'
 import DataTableRowActions from '@/components/ui/data-table/row-actions'
@@ -6,7 +6,15 @@ import { DataTableColumnHeader } from '@/components/ui/data-table/column-header'
 import { Badge } from '@/components/ui/badge'
 import { categoryColumns } from '@/constants/categories/columns'
 
-export const columns: ColumnDef<Category>[] = [
+interface props {
+  onSort: (columnId: string) => void
+  setSortOrder: (order: SortOrder) => void
+}
+
+export const columns = ({
+  onSort,
+  setSortOrder,
+}: props): ColumnDef<Category>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -34,14 +42,24 @@ export const columns: ColumnDef<Category>[] = [
   {
     accessorKey: 'id',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={categoryColumns.id} />
+      <DataTableColumnHeader
+        onSort={onSort}
+        setSortOrder={setSortOrder}
+        column={column}
+        title={categoryColumns.id}
+      />
     ),
     cell: ({ row }) => <div className='w-[80px]'>{row.getValue('id')}</div>,
   },
   {
     accessorKey: 'image',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={categoryColumns.image} />
+      <DataTableColumnHeader
+        onSort={onSort}
+        setSortOrder={setSortOrder}
+        column={column}
+        title={categoryColumns.image}
+      />
     ),
     cell: ({ row }) => {
       return (
@@ -61,7 +79,12 @@ export const columns: ColumnDef<Category>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title={categoryColumns.name} />
+      <DataTableColumnHeader
+        setSortOrder={setSortOrder}
+        onSort={onSort}
+        column={column}
+        title={categoryColumns.name}
+      />
     ),
     cell: ({ row }) => {
       return (
@@ -77,6 +100,8 @@ export const columns: ColumnDef<Category>[] = [
     accessorKey: 'parentName',
     header: ({ column }) => (
       <DataTableColumnHeader
+        onSort={onSort}
+        setSortOrder={setSortOrder}
         column={column}
         title={categoryColumns.parentName}
       />
@@ -104,6 +129,8 @@ export const columns: ColumnDef<Category>[] = [
     accessorKey: 'createdAt',
     header: ({ column }) => (
       <DataTableColumnHeader
+        onSort={onSort}
+        setSortOrder={setSortOrder}
         column={column}
         title={categoryColumns.createdAt}
       />
@@ -120,6 +147,8 @@ export const columns: ColumnDef<Category>[] = [
     accessorKey: 'updatedAt',
     header: ({ column }) => (
       <DataTableColumnHeader
+        onSort={onSort}
+        setSortOrder={setSortOrder}
         column={column}
         title={categoryColumns.updatedAt}
       />

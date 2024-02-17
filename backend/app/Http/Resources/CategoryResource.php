@@ -17,10 +17,7 @@ class CategoryResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'image' => $this->whenLoaded(
-                'image',
-                $this->image->full_path
-            ),
+            'image' => $this->image?->full_path,
             'parentId' => $this->parent?->id,
             'parentName' => $this->parent?->name,
             'createdAt' => $this->created_at->format(config('app.date_format')),

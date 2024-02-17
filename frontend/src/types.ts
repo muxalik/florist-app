@@ -43,3 +43,18 @@ export type Pagination = {
 export type ColNames = {
   [key: string]: string
 }
+
+export type SortOrder = 'asc' | 'desc'
+
+export type PaginatedResponse = {
+  data: {
+    meta: {
+      current_page: number
+      from: number
+      last_page: number
+      per_page: number
+      to: number
+      total: number
+    }
+  }
+}

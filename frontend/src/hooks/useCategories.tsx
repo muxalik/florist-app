@@ -1,6 +1,7 @@
 import useDebounce from '@/hooks/useDebounce'
-import { Category, CategoryFilters, Pagination } from '@/types'
+import { Category, CategoryFilters, Pagination, SortOrder } from '@/types'
 import { api } from '@/utils/api'
+import paginationFromResponse from '@/utils/paginationFromResponse'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -34,29 +35,17 @@ const useCategories = () => {
 
   const [isLoading, setIsLoading] = useState(false)
 
+  const [sort, setSort] = useState<string | null>(null)
+
+  const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
+
   const fetchCategories = useDebounce(() => {
     api
       .get('categories?' + searchParams.toString())
       .then((res) => {
         setCategories(res.data.data)
 
-        const {
-          current_page: currentPage,
-          from,
-          last_page: lastPage,
-          per_page: perPage,
-          to,
-          total,
-        } = res.data.meta
-
-        setPagination({
-          currentPage,
-          from,
-          lastPage,
-          perPage,
-          to,
-          total,
-        })
+        setPagination(paginationFromResponse(res))
 
         window.scroll({ top: 0 })
       })
@@ -69,22 +58,22 @@ const useCategories = () => {
     fetchCategories()
   }
 
-  useEffect(fetchWithLoader, [filters])
+  useEffect(fetchWithLoader, [filters, sort, sortOrder])
 
-  // Update filters
-  useEffect(() => {
-    Object.entries(filters).forEach(([key, value]) => {
-      setSearchParams((prev) => {
-        if (value) {
-          prev.set(key, value.toString())
-        } else {
-          prev.delete(key)
-        }
+  // // Update filters
+  // useEffect(() => {
+  //   Object.entries(filters).forEach(([key, value]) => {
+  //     setSearchParams((prev) => {
+  //       if (value) {
+  //         prev.set(key, value.toString())
+  //       } else {
+  //         prev.delete(key)
+  //       }
 
-        return prev
-      })
-    })
-  }, [filters])
+  //       return prev
+  //     })
+  //   })
+  // }, [filters])
 
   // Update pagination & fetch new categories
   useEffect(() => {
@@ -103,9 +92,21 @@ const useCategories = () => {
         prev.set('per_page', perPage.toString())
       }
 
+      if (sort === null) {
+        prev.delete('sort')
+      } else {
+        prev.set('sort', sort)
+      }
+
+      if (sortOrder === 'asc') {
+        prev.delete('order')
+      } else {
+        prev.set('order', sortOrder)
+      }
+
       return prev
     })
-  }, [pagination.currentPage, pagination.perPage])
+  }, [pagination.currentPage, pagination.perPage, sort, sortOrder])
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setFilters((prev) => ({
@@ -133,6 +134,10 @@ const useCategories = () => {
     fetchWithLoader()
   }
 
+  const onSort = (columnId: string) => {
+    setSort(columnId)
+  }
+
   return {
     categories,
     filters,
@@ -141,6 +146,10 @@ const useCategories = () => {
     setPage,
     setPerPage,
     isLoading,
+    sort,
+    onSort,
+    sortOrder,
+    setSortOrder,
   }
 }
 

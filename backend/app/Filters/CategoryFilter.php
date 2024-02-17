@@ -19,6 +19,10 @@ class CategoryFilter
 
    protected readonly ?bool $hasImage;
 
+   protected readonly ?string $sort;
+
+   protected readonly ?string $order;
+
    protected Builder $query;
 
    public function __construct(Request $request)
@@ -28,6 +32,8 @@ class CategoryFilter
       $this->q = $request->q;
       $this->hasChldren = $request->boolean('children');
       $this->hasImage = $request->boolean('image');
+      $this->sort = $request->sort;
+      $this->order = $request->order ?? 'asc';
 
       $this->query = Category::with('image', 'parent');
    }
@@ -36,6 +42,7 @@ class CategoryFilter
    {
       return $this
          ->search()
+         ->sort()
          // ->filter()
          ->paginate();
    }
@@ -57,6 +64,26 @@ class CategoryFilter
                      ->orWhere('name', 'LIKE', "%$this->q%");
                });
          });
+
+      return $this;
+   }
+
+   private function sort(): self
+   {
+      if (!$this->sort) {
+         return $this;
+      }
+
+      if (in_array($this->sort, ['id', 'name', 'createdAt', 'updatedAt'])) {
+         $this->query->orderBy(
+            str($this->sort)->snake(),
+            $this->order
+         );
+      }
+
+      if ($this->sort === 'parentName') {
+         $this->query->orderBy('parent_id', $this->order);
+      }
 
       return $this;
    }

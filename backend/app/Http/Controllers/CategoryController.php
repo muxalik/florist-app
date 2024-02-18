@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Filters\CategoryFilter;
 use App\Http\Resources\CategoryResource;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CategoryController extends Controller
 {
@@ -46,8 +48,12 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Category $category): JsonResponse
     {
-        //
+        $category->delete();
+
+        return response()->json([
+            'message' => __('category.deleted'),
+        ]);
     }
 }

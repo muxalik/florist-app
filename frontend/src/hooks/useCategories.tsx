@@ -2,6 +2,7 @@ import useDebounce from '@/hooks/useDebounce'
 import { Category, CategoryFilters, Pagination, SortOrder } from '@/types'
 import { api } from '@/utils/api'
 import paginationFromResponse from '@/utils/paginationFromResponse'
+import { Row } from '@tanstack/react-table'
 import { ChangeEvent, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -138,6 +139,22 @@ const useCategories = () => {
     setSort(columnId)
   }
 
+  const onRowDelete = (row: Row<Category>) => {
+    setIsLoading(true)
+
+    api
+      .delete(`categories/${row.getValue('id')}`)
+      .then(() => {
+        console.log('Succeefully deleted')
+
+        fetchWithLoader()
+      })
+      .catch(console.log)
+      .finally(() => setIsLoading(false))
+  }
+
+  const onRowEdit = () => {}
+
   return {
     categories,
     filters,
@@ -150,6 +167,8 @@ const useCategories = () => {
     onSort,
     sortOrder,
     setSortOrder,
+    onRowDelete,
+    onRowEdit,
   }
 }
 

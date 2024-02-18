@@ -1,20 +1,24 @@
 import { Category, SortOrder } from '@/types'
 import { Checkbox } from '@radix-ui/react-checkbox'
-import { ColumnDef } from '@tanstack/react-table'
+import { ColumnDef, Row } from '@tanstack/react-table'
 import DataTableRowActions from '@/components/ui/data-table/row-actions'
 import { DataTableColumnHeader } from '@/components/ui/data-table/column-header'
 import { Badge } from '@/components/ui/badge'
 import { categoryColumns } from '@/constants/categories/columns'
 
-interface props {
+interface props<TData> {
   onSort: (columnId: string) => void
   setSortOrder: (order: SortOrder) => void
+  onRowDelete: (row: Row<TData>) => void
+  onRowEdit: (row: Row<TData>) => void
 }
 
 export const columns = ({
   onSort,
   setSortOrder,
-}: props): ColumnDef<Category>[] => [
+  onRowDelete,
+  onRowEdit,
+}: props<Category>): ColumnDef<Category>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -163,6 +167,12 @@ export const columns = ({
   },
   {
     id: 'actions',
-    cell: ({ row }) => <DataTableRowActions row={row} />,
+    cell: ({ row }) => (
+      <DataTableRowActions
+        row={row}
+        onDelete={onRowDelete}
+        onEdit={onRowEdit}
+      />
+    ),
   },
 ]

@@ -22,7 +22,7 @@ class UpdateImageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => ['nullable',  'mimes:png,jpeg,jpg,gif'],
+            'image' => ['nullable',  'mimes:png,jpeg,jpg,gif,webp'],
         ];
     }
 }

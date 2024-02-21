@@ -7,12 +7,14 @@ interface IAuthContext {
   user: CurrentUser | null
   login: (user: CurrentUser) => void
   logout: () => void
+  isLoading: boolean
 }
 
 const initialData: IAuthContext = {
   user: null,
   login: () => {},
   logout: () => {},
+  isLoading: true,
 }
 
 const AuthContext = createContext<IAuthContext>(initialData)
@@ -24,7 +26,10 @@ interface props {
 let firstMount = true
 
 const AuthProvider: FC<props> = ({ children }) => {
-  const [user, setUser] = useLocalStorage<CurrentUser | null>('user', null)
+  const [user, setUser, isLoading] = useLocalStorage<CurrentUser | null>(
+    'user',
+    null
+  )
 
   useEffect(() => {
     if (user?.token && firstMount) {
@@ -64,7 +69,7 @@ const AuthProvider: FC<props> = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
       {children}
     </AuthContext.Provider>
   )

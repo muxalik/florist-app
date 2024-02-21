@@ -8,7 +8,11 @@ interface props {
 }
 
 const ProtectedRoutes: FC<props> = ({ only = 'auth', redirectTo = '' }) => {
-  const { user } = useAuth()
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return null
+  }
 
   // Must be authenticated
   if (only === 'auth') {

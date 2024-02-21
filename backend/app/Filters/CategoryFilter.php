@@ -70,20 +70,22 @@ class CategoryFilter
 
    private function sort(): self
    {
-      if (!$this->sort) {
-         return $this;
-      }
-
       if (in_array($this->sort, ['id', 'name', 'createdAt', 'updatedAt'])) {
          $this->query->orderBy(
             str($this->sort)->snake(),
             $this->order
          );
+
+         return $this;
       }
 
       if ($this->sort === 'parentName') {
          $this->query->orderBy('parent_id', $this->order);
+
+         return $this;
       }
+
+      $this->query->latest('id');
 
       return $this;
    }

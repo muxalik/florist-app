@@ -32,6 +32,9 @@ Route::middleware(['guest:sanctum'])->group(function () {
 
 
 Route::middleware(['auth:sanctum'])->group(function () {
+    // Categories 
+    Route::post('categories/{category}/image', [CategoryController::class, 'updateImage']);
+    Route::get('categories/list', [CategoryController::class, 'list'])->name('categories.list');
     Route::apiResource('categories', CategoryController::class);
 
     Route::get('logout', LogoutController::class)->name('logout');

@@ -1,5 +1,12 @@
 import useDebounce from '@/hooks/useDebounce'
-import { Category, CategoryFilters, Pagination, SortOrder } from '@/types'
+import {
+  Category,
+  CategoryEditData,
+  CategoryFilters,
+  Pagination,
+  SimpleCategory,
+  SortOrder,
+} from '@/types'
 import { api } from '@/utils/api'
 import paginationFromResponse from '@/utils/paginationFromResponse'
 import { Row } from '@tanstack/react-table'
@@ -32,6 +39,8 @@ const useCategories = () => {
 
   const [categories, setCategories] = useState<Category[]>([])
 
+  const [categoryList, setCategoryList] = useState<SimpleCategory[]>([])
+
   const [filters, setFilters] = useState<CategoryFilters>({})
 
   const [isLoading, setIsLoading] = useState(false)
@@ -52,6 +61,13 @@ const useCategories = () => {
       })
       .catch(console.log)
       .finally(() => setIsLoading(false))
+
+    api
+      .get('categories/list')
+      .then((res) => {
+        setCategoryList(res.data)
+      })
+      .catch(console.log)
   }, 200)
 
   const fetchWithLoader = () => {
@@ -60,21 +76,6 @@ const useCategories = () => {
   }
 
   useEffect(fetchWithLoader, [filters, sort, sortOrder])
-
-  // // Update filters
-  // useEffect(() => {
-  //   Object.entries(filters).forEach(([key, value]) => {
-  //     setSearchParams((prev) => {
-  //       if (value) {
-  //         prev.set(key, value.toString())
-  //       } else {
-  //         prev.delete(key)
-  //       }
-
-  //       return prev
-  //     })
-  //   })
-  // }, [filters])
 
   // Update pagination & fetch new categories
   useEffect(() => {
@@ -145,7 +146,7 @@ const useCategories = () => {
     api
       .delete(`categories/${row.getValue('id')}`)
       .then(() => {
-        console.log('Succeefully deleted')
+        console.log('Successfully deleted')
 
         fetchWithLoader()
       })
@@ -153,7 +154,23 @@ const useCategories = () => {
       .finally(() => setIsLoading(false))
   }
 
-  const onRowEdit = () => {}
+  const onRowEdit = async (categoryId: number, data: CategoryEditData) => {
+    const formData = new FormData()
+
+    formData.append('image', data.image!)
+
+    const updateImage = api.post(`categories/${categoryId}/image`, formData, {
+      headers: { Accept: 'multipart/form-data' },
+    })
+
+    const updateBody = api.patch(`categories/${categoryId}`, data, {
+      headers: { Accept: 'multipart/form-data' },
+    })
+
+    Promise.all([updateImage, updateBody])
+      .then(fetchWithLoader)
+      .catch(console.log)
+  }
 
   return {
     categories,
@@ -169,6 +186,7 @@ const useCategories = () => {
     setSortOrder,
     onRowDelete,
     onRowEdit,
+    categoryList,
   }
 }
 

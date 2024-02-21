@@ -25,6 +25,17 @@ export type Category = {
   updatedAt: string
 }
 
+export type SimpleCategory = {
+  id: number
+  name: string
+}
+
+export type CategoryEditData = {
+  name: string
+  parentId: number | null
+  image: File | null
+}
+
 export type CategoryFilters = {
   q?: string
   has_children?: boolean

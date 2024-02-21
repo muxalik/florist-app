@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('image_id')->nullable()->references('id')->on('files')->nullOnDelete();
             $table->string('slug')->unique();
             $table->string('name');
-            $table->foreignId('parent_id')->nullable()->references('id')->on('categories')->cascadeOnDelete();
+            $table->foreignId('parent_id')->nullable()->references('id')->on('categories')->nullOnDelete();
             $table->timestamps();
         });
     }

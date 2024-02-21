@@ -1,16 +1,18 @@
-import { Category, SortOrder } from '@/types'
+import { Category, CategoryEditData, SimpleCategory, SortOrder } from '@/types'
 import { Checkbox } from '@radix-ui/react-checkbox'
 import { ColumnDef, Row } from '@tanstack/react-table'
-import DataTableRowActions from '@/components/ui/data-table/row-actions'
 import { DataTableColumnHeader } from '@/components/ui/data-table/column-header'
 import { Badge } from '@/components/ui/badge'
 import { categoryColumns } from '@/constants/categories/columns'
+import CategoriesRowActions from './RowActions'
+import { preview } from '@/assets'
 
 interface props<TData> {
   onSort: (columnId: string) => void
   setSortOrder: (order: SortOrder) => void
   onRowDelete: (row: Row<TData>) => void
-  onRowEdit: (row: Row<TData>) => void
+  onRowEdit: (rowId: number, data: CategoryEditData) => void
+  categoryList: SimpleCategory[]
 }
 
 export const columns = ({
@@ -18,6 +20,7 @@ export const columns = ({
   setSortOrder,
   onRowDelete,
   onRowEdit,
+  categoryList,
 }: props<Category>): ColumnDef<Category>[] => [
   {
     id: 'select',
@@ -66,13 +69,15 @@ export const columns = ({
       />
     ),
     cell: ({ row }) => {
+      const imageUrl = row.getValue('image')
+
       return (
         <div className='flex space-x-2'>
           <div className='max-w-[400px] truncate font-medium'>
             <img
-              src={`${row.getValue('image')}`}
+              src={imageUrl !== null ? imageUrl + '' : preview}
               alt='Preview'
-              className='h-12 rounded-sm'
+              className='h-10 rounded-sm'
             />
           </div>
         </div>
@@ -168,10 +173,11 @@ export const columns = ({
   {
     id: 'actions',
     cell: ({ row }) => (
-      <DataTableRowActions
+      <CategoriesRowActions
         row={row}
         onDelete={onRowDelete}
         onEdit={onRowEdit}
+        categoryList={categoryList}
       />
     ),
   },

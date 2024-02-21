@@ -16,6 +16,7 @@ const Categories = () => {
     setSortOrder,
     onRowDelete,
     onRowEdit,
+    categoryList,
   } = useCategories()
 
   return (
@@ -24,7 +25,7 @@ const Categories = () => {
       <div className='flex w-full'>
         <DataTable
           data={categories}
-          columns={columns({ onSort, setSortOrder, onRowDelete, onRowEdit })}
+          columns={columns({ onSort, setSortOrder, onRowDelete, onRowEdit, categoryList })}
           currentPage={currentPage}
           lastPage={lastPage}
           perPage={perPage}

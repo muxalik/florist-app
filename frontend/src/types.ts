@@ -1,3 +1,6 @@
+import { Table } from '@tanstack/react-table'
+import { ChangeEvent } from 'react'
+
 export type IconProps = React.HTMLAttributes<SVGElement>
 
 export type CurrentUser = {
@@ -68,4 +71,11 @@ export type PaginatedResponse = {
       total: number
     }
   }
+}
+
+export interface DataTableToolbarProps<TData> {
+  table: Table<TData>
+  columnNames: ColNames
+  search: string
+  onSearch: (e: ChangeEvent<HTMLInputElement>) => void
 }

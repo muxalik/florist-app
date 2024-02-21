@@ -2,6 +2,16 @@ import useCategories from '@/hooks/useCategories'
 import { columns } from './columns'
 import { DataTable } from '@/components/ui/data-table'
 import { categoryColumns } from '@/constants/categories/columns'
+import { Toolbar } from './Toolbar'
+import { useState } from 'react'
+import {
+  VisibilityState,
+  getCoreRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
+  useReactTable,
+} from '@tanstack/react-table'
+import { DataTablePagination } from '@/components/ui/data-table/pagination'
 
 const Categories = () => {
   const {
@@ -19,23 +29,50 @@ const Categories = () => {
     categoryList,
   } = useCategories()
 
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
+  const cols = columns({
+    onSort,
+    setSortOrder,
+    onRowDelete,
+    onRowEdit,
+    categoryList,
+  })
+
+  const table = useReactTable({
+    data: categories,
+    columns: cols,
+    state: {
+      columnVisibility,
+    },
+    manualPagination: true,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+  })
+
   return (
     <div className='w-full h-full'>
       <h1 className='text-4xl font-bold mb-6'>Категории</h1>
       <div className='flex w-full'>
-        <DataTable
-          data={categories}
-          columns={columns({ onSort, setSortOrder, onRowDelete, onRowEdit, categoryList })}
-          currentPage={currentPage}
-          lastPage={lastPage}
-          perPage={perPage}
-          setPage={setPage}
-          setPerPage={setPerPage}
-          isLoading={isLoading}
-          columnNames={categoryColumns}
-          onSearch={onSearch}
-          search={search || ''}
-        />
+        <div className='space-y-4 w-full'>
+          <Toolbar
+            table={table}
+            columnNames={categoryColumns}
+            search={search || ''}
+            onSearch={onSearch}
+          />
+          <DataTable columns={cols} table={table} isLoading={isLoading} />
+          <DataTablePagination
+            table={table}
+            currentPage={currentPage}
+            lastPage={lastPage}
+            setPage={setPage}
+            perPage={perPage}
+            setPerPage={setPerPage}
+          />
+        </div>
       </div>
     </div>
   )

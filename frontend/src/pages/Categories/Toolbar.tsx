@@ -1,24 +1,10 @@
+import { DataTableToolbarProps } from '@/types'
 import { Cross2Icon } from '@radix-ui/react-icons'
-import { Table } from '@tanstack/react-table'
-
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { DataTableViewOptions } from '@/components/ui/data-table/view-options'
 
-import { DataTableViewOptions } from './view-options'
-import { ColNames } from '@/types'
-import { ChangeEvent } from 'react'
-
-interface BaseDataTableToolbarProps<TData> {
-  table: Table<TData>
-}
-
-type DataTableToolbarProps<TData> = {
-  columnNames: ColNames
-  search: string
-  onSearch: (e: ChangeEvent<HTMLInputElement>) => void
-} & BaseDataTableToolbarProps<TData>
-
-export function DataTableToolbar<TData>({
+export function Toolbar<TData>({
   table,
   columnNames,
   search,

@@ -1,7 +1,14 @@
 import useLocalStorage from '@/hooks/useLocalStorage'
 import { CurrentUser } from '@/types'
 import { api } from '@/utils/api'
-import { FC, ReactNode, createContext, useContext, useEffect } from 'react'
+import {
+  FC,
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 
 interface IAuthContext {
   user: CurrentUser | null
@@ -23,37 +30,45 @@ interface props {
   children: ReactNode
 }
 
-let firstMount = true
-
 const AuthProvider: FC<props> = ({ children }) => {
   const [user, setUser, isLoading] = useLocalStorage<CurrentUser | null>(
     'user',
     null
   )
+  const [fullLoaded, setFullLoaded] = useState(false)
 
   useEffect(() => {
-    if (user?.token && firstMount) {
-      firstMount = false
-
-      api
-        .post('token', { token: user.token })
-        .then((res) => {
-          login({
-            ...user,
-            ...res.data.user,
-            token: res.data.token,
-          })
-        })
-        .catch((error) => {
-          console.log(error)
-          logout()
-        })
+    if (isLoading) {
+      return
     }
-  }, [user?.token])
+
+    if (!user?.token) {
+      setUser(null)
+      setFullLoaded(true)
+
+      return
+    }
+
+    api
+      .post('token', { token: user.token })
+      .then((res) => {
+        login({
+          ...user,
+          ...res.data.user,
+          token: res.data.token,
+        })
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          logout()
+        }
+      })
+      .finally(() => setFullLoaded(true))
+  }, [isLoading])
 
   const login = (currentUser: CurrentUser) => {
-    firstMount = false
     setUser(currentUser)
+
     api.defaults.headers.common[
       'Authorization'
     ] = `Bearer ${currentUser?.token}`
@@ -64,12 +79,15 @@ const AuthProvider: FC<props> = ({ children }) => {
       .get('logout')
       .then(() => setUser(null))
       .catch(console.log)
-
-    api.defaults.headers.common['Authorization'] = `Bearer`
+      .finally(() => {
+        api.defaults.headers.common['Authorization'] = `Bearer`
+      })
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider
+      value={{ user, login, logout, isLoading: !fullLoaded }}
+    >
       {children}
     </AuthContext.Provider>
   )

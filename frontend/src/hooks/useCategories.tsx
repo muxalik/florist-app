@@ -27,7 +27,7 @@ const useCategories = () => {
 
   const fetchCategories = useDebounce(() => {
     setIsLoading(true)
-    
+
     api
       .get('categories?' + window.location.search)
       .then((res) => {

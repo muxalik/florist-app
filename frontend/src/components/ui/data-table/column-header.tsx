@@ -21,7 +21,7 @@ interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
   column: Column<TData, TValue>
   title: string
-  onSort: (columnId: string) => void
+  setSort: (columnId: string) => void
   setSortOrder: (order: SortOrder) => void
 }
 
@@ -29,7 +29,7 @@ export function DataTableColumnHeader<TData, TValue>({
   column,
   title,
   className,
-  onSort,
+  setSort,
   setSortOrder,
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
@@ -59,7 +59,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuItem
             onClick={() => {
               column.toggleSorting(false)
-              onSort(column.id)
+              setSort(column.id)
               setSortOrder('asc')
             }}
           >
@@ -69,7 +69,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuItem
             onClick={() => {
               column.toggleSorting(true)
-              onSort(column.id)
+              setSort(column.id)
               setSortOrder('desc')
             }}
           >

@@ -8,7 +8,7 @@ import CategoriesRowActions from './RowActions'
 import { preview } from '@/assets'
 
 interface props<TData> {
-  onSort: (columnId: string) => void
+  setSort: (columnId: string) => void
   setSortOrder: (order: SortOrder) => void
   onRowDelete: (row: Row<TData>) => void
   onRowEdit: (rowId: number, data: CategoryEditData) => void
@@ -16,7 +16,7 @@ interface props<TData> {
 }
 
 export const columns = ({
-  onSort,
+  setSort,
   setSortOrder,
   onRowDelete,
   onRowEdit,
@@ -50,7 +50,7 @@ export const columns = ({
     accessorKey: 'id',
     header: ({ column }) => (
       <DataTableColumnHeader
-        onSort={onSort}
+        setSort={setSort}
         setSortOrder={setSortOrder}
         column={column}
         title={categoryColumns.id}
@@ -62,7 +62,7 @@ export const columns = ({
     accessorKey: 'image',
     header: ({ column }) => (
       <DataTableColumnHeader
-        onSort={onSort}
+        setSort={setSort}
         setSortOrder={setSortOrder}
         column={column}
         title={categoryColumns.image}
@@ -90,7 +90,7 @@ export const columns = ({
     header: ({ column }) => (
       <DataTableColumnHeader
         setSortOrder={setSortOrder}
-        onSort={onSort}
+        setSort={setSort}
         column={column}
         title={categoryColumns.name}
       />
@@ -109,7 +109,7 @@ export const columns = ({
     accessorKey: 'parentName',
     header: ({ column }) => (
       <DataTableColumnHeader
-        onSort={onSort}
+        setSort={setSort}
         setSortOrder={setSortOrder}
         column={column}
         title={categoryColumns.parentName}
@@ -138,7 +138,7 @@ export const columns = ({
     accessorKey: 'createdAt',
     header: ({ column }) => (
       <DataTableColumnHeader
-        onSort={onSort}
+        setSort={setSort}
         setSortOrder={setSortOrder}
         column={column}
         title={categoryColumns.createdAt}
@@ -156,7 +156,7 @@ export const columns = ({
     accessorKey: 'updatedAt',
     header: ({ column }) => (
       <DataTableColumnHeader
-        onSort={onSort}
+        setSort={setSort}
         setSortOrder={setSortOrder}
         column={column}
         title={categoryColumns.updatedAt}

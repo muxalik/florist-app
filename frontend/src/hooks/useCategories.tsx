@@ -3,39 +3,17 @@ import {
   Category,
   CategoryEditData,
   CategoryFilters,
-  Pagination,
   SimpleCategory,
-  SortOrder,
 } from '@/types'
 import { api } from '@/utils/api'
 import paginationFromResponse from '@/utils/paginationFromResponse'
 import { Row } from '@tanstack/react-table'
 import { ChangeEvent, useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
-
-const initialPagination: Pagination = {
-  currentPage: 1,
-  from: 0,
-  lastPage: 0,
-  perPage: 10,
-  to: 0,
-  total: 0,
-}
+import usePagination from './usePagination'
+import useSort from './useSort'
 
 const useCategories = () => {
-  const [searchParams, setSearchParams] = useSearchParams()
-
-  const [pagination, setPagination] = useState<Pagination>(() => {
-    const state = { ...initialPagination }
-
-    const page = searchParams.get('page')
-    const perPage = searchParams.get('per_page')
-
-    if (page) state.currentPage = +page
-    if (perPage) state.perPage = +perPage
-
-    return state
-  })
+  const { pagination, setPagination, setPage, setPerPage } = usePagination()
 
   const [categories, setCategories] = useState<Category[]>([])
 
@@ -45,13 +23,13 @@ const useCategories = () => {
 
   const [isLoading, setIsLoading] = useState(false)
 
-  const [sort, setSort] = useState<string | null>(null)
-
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc')
+  const { sort, setSort, sortOrder, setSortOrder } = useSort()
 
   const fetchCategories = useDebounce(() => {
+    setIsLoading(true)
+    
     api
-      .get('categories?' + searchParams.toString())
+      .get('categories?' + window.location.search)
       .then((res) => {
         setCategories(res.data.data)
 
@@ -70,45 +48,13 @@ const useCategories = () => {
       .catch(console.log)
   }, 200)
 
-  const fetchWithLoader = () => {
-    setIsLoading(true)
-    fetchCategories()
-  }
-
-  useEffect(fetchWithLoader, [filters, sort, sortOrder])
-
-  // Update pagination & fetch new categories
-  useEffect(() => {
-    const { currentPage, perPage } = pagination
-
-    setSearchParams((prev) => {
-      if (currentPage === 1) {
-        prev.delete('page')
-      } else {
-        prev.set('page', currentPage.toString())
-      }
-
-      if (perPage === initialPagination.perPage) {
-        prev.delete('per_page')
-      } else {
-        prev.set('per_page', perPage.toString())
-      }
-
-      if (sort === null) {
-        prev.delete('sort')
-      } else {
-        prev.set('sort', sort)
-      }
-
-      if (sortOrder === 'asc') {
-        prev.delete('order')
-      } else {
-        prev.set('order', sortOrder)
-      }
-
-      return prev
-    })
-  }, [pagination.currentPage, pagination.perPage, sort, sortOrder])
+  useEffect(fetchCategories, [
+    filters,
+    sort,
+    sortOrder,
+    pagination.currentPage,
+    pagination.perPage,
+  ])
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
     setFilters((prev) => ({
@@ -117,41 +63,13 @@ const useCategories = () => {
     }))
   }
 
-  const setPage = (page: number) => {
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: page,
-    }))
-
-    fetchWithLoader()
-  }
-
-  const setPerPage = (perPage: number) => {
-    setPagination((prev) => ({
-      ...prev,
-      currentPage: 1,
-      perPage,
-    }))
-
-    fetchWithLoader()
-  }
-
-  const onSort = (columnId: string) => {
-    setSort(columnId)
-  }
-
   const onRowDelete = (row: Row<Category>) => {
     setIsLoading(true)
 
     api
       .delete(`categories/${row.getValue('id')}`)
-      .then(() => {
-        console.log('Successfully deleted')
-
-        fetchWithLoader()
-      })
+      .then(fetchCategories)
       .catch(console.log)
-      .finally(() => setIsLoading(false))
   }
 
   const onRowEdit = async (categoryId: number, data: CategoryEditData) => {
@@ -163,12 +81,10 @@ const useCategories = () => {
       headers: { Accept: 'multipart/form-data' },
     })
 
-    const updateBody = api.patch(`categories/${categoryId}`, data, {
-      headers: { Accept: 'multipart/form-data' },
-    })
+    const updateBody = api.patch(`categories/${categoryId}`, data)
 
     Promise.all([updateImage, updateBody])
-      .then(fetchWithLoader)
+      .then(fetchCategories)
       .catch(console.log)
   }
 
@@ -181,7 +97,7 @@ const useCategories = () => {
     setPerPage,
     isLoading,
     sort,
-    onSort,
+    setSort,
     sortOrder,
     setSortOrder,
     onRowDelete,

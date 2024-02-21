@@ -22,7 +22,7 @@ const Categories = () => {
     isLoading,
     onSearch,
     filters: { q: search },
-    onSort,
+    setSort,
     setSortOrder,
     onRowDelete,
     onRowEdit,
@@ -32,7 +32,7 @@ const Categories = () => {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
   const cols = columns({
-    onSort,
+    setSort,
     setSortOrder,
     onRowDelete,
     onRowEdit,

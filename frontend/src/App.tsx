@@ -9,11 +9,19 @@ import VerifyPassword from './pages/Auth/VerifyPassword/VerifyPassword'
 import UpdatePassword from './pages/Auth/UpdatePassword/UpdatePassword'
 import Layout from './layouts/Layout'
 import Categories from './pages/Categories/Categories'
+import { useAuth } from './context/AuthContext'
+import Preloader from './components/Preloader'
 
 const App = () => {
+  const { isLoading } = useAuth()
+
   useEffect(() => {
     fetchCsrfToken()
   }, [])
+
+  if (isLoading) {
+    return <Preloader />
+  }
 
   return (
     <div id='app'>

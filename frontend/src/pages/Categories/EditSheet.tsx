@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { preview } from '@/assets'
-import { CategoryEditData, SimpleCategory } from '@/types'
+import { Category, CategoryEditData, SimpleCategory } from '@/types'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -58,8 +58,8 @@ const formSchema = z.object({
   parentId: z.number().nullable(),
 })
 
-interface EditSheetProps<TData> {
-  row: Row<TData>
+interface EditSheetProps {
+  row: Row<Category>
   open: boolean
   onOpenChange: (open: boolean) => void
   onSave: (rowId: number, data: CategoryEditData) => void
@@ -67,14 +67,14 @@ interface EditSheetProps<TData> {
   categoryList: SimpleCategory[]
 }
 
-function EditSheet<TData>({
+function EditSheet({
   row,
   open,
   onOpenChange,
   onSave,
   onCancel,
   categoryList,
-}: EditSheetProps<TData>) {
+}: EditSheetProps) {
   const [image, setImage] = useState<File | null>(null)
   const [isImageRemoved, setIsImageRemoved] = useState(!row.getValue('image'))
   const [openCategories, setOpenCategories] = useState(false)
@@ -110,7 +110,7 @@ function EditSheet<TData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: row.getValue('name'),
-      parentId: null,
+      parentId: row.original.parentId,
     },
   })
 
@@ -245,21 +245,24 @@ function EditSheet<TData>({
                                   !field.value && 'text-muted-foreground'
                                 )}
                               >
-                                {!!field.value && (
-                                  <Badge variant={'outline'} className='mr-2'>
-                                    {
-                                      categoryList.find(
+                                <div className='flex'>
+                                  {!!field.value && (
+                                    <Badge variant={'outline'} className='mr-2'>
+                                      {
+                                        categoryList.find(
+                                          (category) =>
+                                            category.id === field.value
+                                        )?.id
+                                      }
+                                    </Badge>
+                                  )}
+                                  {field.value
+                                    ? categoryList.find(
                                         (category) =>
                                           category.id === field.value
-                                      )?.id
-                                    }
-                                  </Badge>
-                                )}
-                                {field.value
-                                  ? categoryList.find(
-                                      (category) => category.id === field.value
-                                    )?.name
-                                  : 'Выберите категорию'}
+                                      )?.name
+                                    : 'Выберите категорию'}
+                                </div>
                                 <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                               </Button>
                             </FormControl>
@@ -315,6 +318,11 @@ function EditSheet<TData>({
                     onClick={(e) => {
                       e.preventDefault()
                       onCancel()
+
+                      setTimeout(() => {
+                        form.reset()
+                        setImage(null)
+                      }, 300)
                     }}
                   >
                     Отмена

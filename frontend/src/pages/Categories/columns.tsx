@@ -124,7 +124,7 @@ export const columns = ({
             <span>Нет</span>
           ) : (
             <>
-              <Badge variant='outline'>{row.original.parentId}</Badge>
+              <Badge variant='outline'>{parentId}</Badge>
               <span className='max-w-[500px] truncate font-medium'>
                 {row.getValue('parentName')}
               </span>

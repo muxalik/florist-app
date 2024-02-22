@@ -288,6 +288,11 @@ function AddSheet({ onSave, categoryList }: AddSheetProps) {
                     onClick={(e) => {
                       e.preventDefault()
                       setOpen(false)
+
+                      setTimeout(() => {
+                        form.reset()
+                        setImage(null)
+                      }, 300)
                     }}
                   >
                     Отмена

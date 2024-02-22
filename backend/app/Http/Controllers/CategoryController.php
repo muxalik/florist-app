@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\Files;
 use App\Filters\CategoryFilter;
-use App\Http\Requests\Category\UpdateRequest;
+use App\Http\Requests\Category\UpstoreRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ListCategoryResource;
 use App\Models\Category;
@@ -64,9 +64,32 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UpstoreRequest $request): JsonResponse
     {
-        //
+        $category = Category::create($request->validated());
+
+        if ($request->hasFile('image')) {
+            $path = 'categories';
+
+            $fullPath = $request->file('image')
+                ->store('public/' . $path);
+
+            $filename = str($fullPath)->afterLast('/');
+
+            $category->image()?->delete();
+
+            $file = File::create([
+                'path' => $path,
+                'filename' => $filename,
+                'type' => Files::Image->value,
+            ]);
+
+            $category->update(['image_id' => $file->id]);
+        }
+
+        return response()->json([
+            'message' => __('category.created'),
+        ]);
     }
 
     /**
@@ -81,7 +104,7 @@ class CategoryController extends Controller
      * Update the specified resource in storage.
      */
     public function update(
-        UpdateRequest $request,
+        UpstoreRequest $request,
         Category $category
     ): JsonResponse {
         $category->update($request->validated());

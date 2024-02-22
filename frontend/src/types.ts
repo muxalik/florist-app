@@ -39,10 +39,11 @@ export type CategoryEditData = {
   image: File | null
 }
 
+export type CategoryAddData = CategoryEditData
+
 export type CategoryFilters = {
-  q?: string
-  has_children?: boolean
-  has_image?: boolean
+  has_image: 'yes' | 'no' | 'any'
+  formats: ('jpg' | 'png' | 'webp')[]
 }
 
 export type Pagination = {

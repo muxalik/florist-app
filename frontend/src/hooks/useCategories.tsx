@@ -1,6 +1,7 @@
 import useDebounce from '@/hooks/useDebounce'
 import {
   Category,
+  CategoryAddData,
   CategoryEditData,
   CategoryFilters,
   SimpleCategory,
@@ -11,6 +12,7 @@ import { Row } from '@tanstack/react-table'
 import { ChangeEvent, useEffect, useState } from 'react'
 import usePagination from './usePagination'
 import useSort from './useSort'
+import { defaultCategoryFilters } from '@/constants/categories/filters'
 
 const useCategories = () => {
   const { pagination, setPagination, setPage, setPerPage } = usePagination()
@@ -19,7 +21,11 @@ const useCategories = () => {
 
   const [categoryList, setCategoryList] = useState<SimpleCategory[]>([])
 
-  const [filters, setFilters] = useState<CategoryFilters>({})
+  const [filters, setFilters] = useState<CategoryFilters>(
+    defaultCategoryFilters
+  )
+
+  const [search, setSearch] = useState('')
 
   const [isLoading, setIsLoading] = useState(false)
 
@@ -57,10 +63,7 @@ const useCategories = () => {
   ])
 
   const onSearch = (e: ChangeEvent<HTMLInputElement>) => {
-    setFilters((prev) => ({
-      ...prev,
-      q: e.target.value,
-    }))
+    setSearch(e.target.value)
   }
 
   const onRowDelete = (row: Row<Category>) => {
@@ -88,11 +91,30 @@ const useCategories = () => {
       .catch(console.log)
   }
 
+  const onAdd = (data: CategoryAddData) => {
+    const formData = new FormData()
+
+    formData.append('name', data.name)
+    formData.append('parentId', data.parentId + '')
+    formData.append('image', data.image!)
+
+    api
+      .post('categories', formData, {
+        headers: {
+          Accept: 'multipart/form-data',
+        },
+      })
+      .then(fetchCategories)
+      .catch(console.log)
+  }
+
   return {
     categories,
     filters,
+    setFilters,
     pagination,
     onSearch,
+    search,
     setPage,
     setPerPage,
     isLoading,
@@ -103,6 +125,7 @@ const useCategories = () => {
     onRowDelete,
     onRowEdit,
     categoryList,
+    onAdd,
   }
 }
 

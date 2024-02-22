@@ -1,17 +1,29 @@
-import { DataTableToolbarProps } from '@/types'
-import { Cross2Icon } from '@radix-ui/react-icons'
-import { Button } from '@/components/ui/button'
+import { CategoryAddData, CategoryFilters, DataTableToolbarProps, SimpleCategory } from '@/types'
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/ui/data-table/view-options'
+import { Dispatch, SetStateAction } from 'react'
+import ImageFilter from './Filters/ImageFilter'
+import { Button } from '@/components/ui/button'
+import Icons from '@/components/ui/icons'
+import AddSheet from './AddSheet'
+
+type ToolbarAdditionalProps = {
+  setFilters: Dispatch<SetStateAction<CategoryFilters>>
+  filters: CategoryFilters
+  categoryList: SimpleCategory[]
+  onSave: (data: CategoryAddData) => void
+}
 
 export function Toolbar<TData>({
   table,
   columnNames,
   search,
   onSearch,
-}: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0
-
+  setFilters,
+  filters,
+  categoryList,
+  onSave,
+}: DataTableToolbarProps<TData> & ToolbarAdditionalProps) {
   return (
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 items-center space-x-2'>
@@ -21,18 +33,16 @@ export function Toolbar<TData>({
           onChange={onSearch}
           className='h-8 w-[150px] lg:w-[250px]'
         />
-        {isFiltered && (
-          <Button
-            variant='ghost'
-            onClick={() => table.resetColumnFilters()}
-            className='h-8 px-2 lg:px-3'
-          >
-            Сбросить
-            <Cross2Icon className='ml-2 h-4 w-4' />
-          </Button>
-        )}
+        <ul className='flex gap-2'>
+          <li key='image'>
+            {/* <ImageFilter filters={filters} setFilters={setFilters} /> */}
+          </li>
+        </ul>
+        <DataTableViewOptions table={table} columnNames={columnNames} />
       </div>
-      <DataTableViewOptions table={table} columnNames={columnNames} />
+      <div className='flex flex-1 items-center space-x-2'>
+        <AddSheet categoryList={categoryList} onSave={onSave} />
+      </div>
     </div>
   )
 }

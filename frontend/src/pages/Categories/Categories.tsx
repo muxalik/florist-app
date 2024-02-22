@@ -21,12 +21,15 @@ const Categories = () => {
     setPerPage,
     isLoading,
     onSearch,
-    filters: { q: search },
+    search,
     setSort,
     setSortOrder,
     onRowDelete,
     onRowEdit,
+    onAdd,
     categoryList,
+    setFilters,
+    filters,
   } = useCategories()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -62,6 +65,10 @@ const Categories = () => {
             columnNames={categoryColumns}
             search={search || ''}
             onSearch={onSearch}
+            filters={filters}
+            setFilters={setFilters}
+            onSave={onAdd}
+            categoryList={categoryList}
           />
           <DataTable columns={cols} table={table} isLoading={isLoading} />
           <DataTablePagination

@@ -11,7 +11,7 @@ interface CommandLabelProps {
 }
 
 export const CommandLabel = ({ children }: CommandLabelProps) => (
-  <div className='py-1 px-3'>
+  <div className='py-2 px-3'>
     <p className='text-sm font-medium text-gray-700'>{children}</p>
   </div>
 )

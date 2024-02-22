@@ -23,21 +23,21 @@ import {
 } from '@/components/ui/dialog'
 import { useState } from 'react'
 import EditSheet from './EditSheet'
-import { CategoryEditData, SimpleCategory } from '@/types'
+import { Category, CategoryEditData, SimpleCategory } from '@/types/category'
 
-interface DataTableRowActionsProps<TData> {
-  onDelete: (row: Row<TData>) => void
+interface DataTableRowActionsProps {
+  onDelete: (row: Row<Category>) => void
   onEdit: (rowId: number, data: CategoryEditData) => void
-  row: Row<TData>
+  row: Row<Category>
   categoryList: SimpleCategory[]
 }
 
-export function CategoriesRowActions<TData>({
+export function CategoriesRowActions({
   row,
   onDelete,
   onEdit,
   categoryList,
-}: DataTableRowActionsProps<TData>) {
+}: DataTableRowActionsProps) {
   const [openEditSheet, setOpenEditSheet] = useState(false)
 
   const closeEditSheet = () => setOpenEditSheet(false)

@@ -18,34 +18,6 @@ export type passwordData = {
 
 export type Theme = 'dark' | 'light'
 
-export type Category = {
-  id: number
-  name: string
-  image: string
-  parentId: number | null
-  parentName: string | null
-  createdAt: string
-  updatedAt: string
-}
-
-export type SimpleCategory = {
-  id: number
-  name: string
-}
-
-export type CategoryEditData = {
-  name: string
-  parentId: number | null
-  image: File | null
-}
-
-export type CategoryAddData = CategoryEditData
-
-export type CategoryFilters = {
-  has_image: 'yes' | 'no' | 'any'
-  formats: ('jpg' | 'png' | 'webp')[]
-}
-
 export type Pagination = {
   currentPage: number
   from: number

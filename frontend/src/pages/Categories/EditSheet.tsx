@@ -25,7 +25,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { preview } from '@/assets'
-import { Category, CategoryEditData, SimpleCategory } from '@/types'
+import { Category, CategoryEditData, SimpleCategory } from '@/types/category'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'

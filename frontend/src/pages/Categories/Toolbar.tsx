@@ -1,11 +1,10 @@
-import { CategoryAddData, CategoryFilters, DataTableToolbarProps, SimpleCategory } from '@/types'
+import { CategoryAddData, CategoryFilters, SimpleCategory } from '@/types/category'
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/ui/data-table/view-options'
 import { Dispatch, SetStateAction } from 'react'
 import ImageFilter from './Filters/ImageFilter'
-import { Button } from '@/components/ui/button'
-import Icons from '@/components/ui/icons'
 import AddSheet from './AddSheet'
+import { DataTableToolbarProps } from '@/types'
 
 type ToolbarAdditionalProps = {
   setFilters: Dispatch<SetStateAction<CategoryFilters>>
@@ -35,7 +34,7 @@ export function Toolbar<TData>({
         />
         <ul className='flex gap-2'>
           <li key='image'>
-            {/* <ImageFilter filters={filters} setFilters={setFilters} /> */}
+            <ImageFilter filters={filters} setFilters={setFilters} />
           </li>
         </ul>
         <DataTableViewOptions table={table} columnNames={columnNames} />

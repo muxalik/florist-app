@@ -1,4 +1,4 @@
-import { Category, CategoryEditData, SimpleCategory, SortOrder } from '@/types'
+import { Category, CategoryEditData, SimpleCategory } from '@/types/category'
 import { Checkbox } from '@radix-ui/react-checkbox'
 import { ColumnDef, Row } from '@tanstack/react-table'
 import { DataTableColumnHeader } from '@/components/ui/data-table/column-header'
@@ -6,6 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { categoryColumns } from '@/constants/categories/columns'
 import CategoriesRowActions from './RowActions'
 import { preview } from '@/assets'
+import { SortOrder } from '@/types'
 
 interface props<TData> {
   setSort: (columnId: string) => void

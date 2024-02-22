@@ -5,7 +5,7 @@ import {
   CategoryEditData,
   CategoryFilters,
   SimpleCategory,
-} from '@/types'
+} from '@/types/category'
 import { api } from '@/utils/api'
 import paginationFromResponse from '@/utils/paginationFromResponse'
 import { Row } from '@tanstack/react-table'
@@ -52,7 +52,7 @@ const useCategories = () => {
         setCategoryList(res.data)
       })
       .catch(console.log)
-  }, 200)
+  }, 500)
 
   useEffect(fetchCategories, [
     filters,

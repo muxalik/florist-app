@@ -102,6 +102,10 @@ function AddSheet({ onSave, categoryList }: AddSheetProps) {
     })
 
     setOpen(false)
+    setTimeout(() => {
+      form.reset()
+      setImage(null)
+    }, 300)
   }
 
   const imageUrl = image ? URL.createObjectURL(image) : ''

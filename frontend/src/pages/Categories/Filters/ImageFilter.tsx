@@ -26,6 +26,7 @@ import {
   defaultCategoryFilters,
 } from '@/constants/categories/filters'
 import RadioFilterGroup from '@/components/filters/radio-filter-group'
+import CheckboxFilterGroup from '@/components/filters/checkbox-filter-group'
 
 interface ImageFilterProps {
   setFilters: (filters: Partial<CategoryFilters>) => void
@@ -76,42 +77,25 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
 
             <CommandSeparator />
 
-            <CommandGroup>
-              <CommandLabel>{categoryFilterNames.formats.title}</CommandLabel>
-              <CommandSeparator className='mb-1' />
-              {Object.entries(categoryFilterNames.formats.values).map(
-                ([key, value]) => {
-                  const castedKey = key as CategoryFilterFormats
-
-                  return (
-                    <CommandItem
-                      key={key}
-                      onSelect={() =>
-                        setFilters({
-                          formats: filters.formats.includes(castedKey)
-                            ? filters.formats.filter(
-                                (format) => format !== castedKey
-                              )
-                            : [...filters.formats, castedKey],
-                        })
-                      }
-                    >
-                      <div
-                        className={cn(
-                          'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
-                          filters.formats.includes(castedKey)
-                            ? 'bg-primary text-primary-foreground'
-                            : 'opacity-50 [&_svg]:invisible'
-                        )}
-                      >
-                        <CheckIcon className={cn('h-4 w-4')} />
-                      </div>
-                      <span>{value}</span>
-                    </CommandItem>
-                  )
-                }
-              )}
-            </CommandGroup>
+            <CheckboxFilterGroup
+              title={categoryFilterNames.formats.title}
+              options={[
+                {
+                  key: 'jpg',
+                  name: '.jpg',
+                },
+                {
+                  key: 'png',
+                  name: '.png',
+                },
+                {
+                  key: 'webp',
+                  name: '.webp',
+                },
+              ]}
+              selected={['jpg', 'png', 'webp']}
+              onSelect={(key: string) => ''}
+            />
 
             <CommandSeparator />
 

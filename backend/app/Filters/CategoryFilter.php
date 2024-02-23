@@ -106,6 +106,15 @@ class CategoryFilter
 
    private function filter(): self
    {
+      $this->idFilter();
+      $this->hasImageFilter();
+      $this->formatsFilter();
+
+      return $this;
+   }
+
+   private function idFilter(): void
+   {
       switch ($this->id) {
          case 'odd':
             $this->query->whereRaw('MOD(id, 2) <> 0');
@@ -115,7 +124,10 @@ class CategoryFilter
             $this->query->whereRaw('MOD(id, 2) = 0');
             break;
       }
+   }
 
+   private function hasImageFilter(): void
+   {
       switch ($this->hasImage) {
          case 'yes':
             $this->query->whereNotNull('image_id');
@@ -125,7 +137,10 @@ class CategoryFilter
             $this->query->whereNull('image_id');
             break;
       }
+   }
 
+   private function formatsFilter(): void
+   {
       if ($this->formats->isNotEmpty()) {
          $this->query->whereHas('image', function (Builder $q) {
             $q->where(function (Builder $q) {
@@ -135,8 +150,6 @@ class CategoryFilter
             });
          });
       }
-
-      return $this;
    }
 
    private function paginate(): LengthAwarePaginator

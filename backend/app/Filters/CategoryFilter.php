@@ -7,6 +7,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class CategoryFilter
 {
@@ -16,7 +17,7 @@ class CategoryFilter
 
    protected readonly ?string $q;
 
-   // protected readonly ?bool $hasChldren;
+   protected readonly ?string $id;
 
    protected readonly ?string $hasImage;
 
@@ -31,14 +32,21 @@ class CategoryFilter
    public function __construct(Request $request)
    {
       $this->page = $request->page;
+
       $this->perPage = $request->per_page ?? 10;
+
       $this->q = $request->q;
-      // $this->hasChldren = $request->boolean('children');
+
+      $this->id = $request->id;
+
       $this->hasImage = $request->has_image;
+
       $this->formats = collect($request->formats
          ? explode(',', $request->formats)
          : []);
+
       $this->sort = $request->sort;
+
       $this->order = $request->order ?? 'asc';
 
       $this->query = Category::with('image', 'parent');
@@ -98,6 +106,16 @@ class CategoryFilter
 
    private function filter(): self
    {
+      switch ($this->id) {
+         case 'odd':
+            $this->query->whereRaw('MOD(id, 2) <> 0');
+            break;
+
+         case 'even':
+            $this->query->whereRaw('MOD(id, 2) = 0');
+            break;
+      }
+
       switch ($this->hasImage) {
          case 'yes':
             $this->query->whereNotNull('image_id');

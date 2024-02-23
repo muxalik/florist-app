@@ -14,9 +14,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import {
-  CategoryFilterFormats,
-  CategoryFilterImage,
   CategoryFilters,
+  CategoryIdFilter as CategroyIdFilterType,
 } from '@/types/category'
 import { CheckIcon, MixerHorizontalIcon } from '@radix-ui/react-icons'
 import { categoryColumns } from '@/constants/categories/columns'
@@ -26,17 +25,16 @@ import {
   defaultCategoryFilters,
 } from '@/constants/categories/filters'
 
-interface ImageFilterProps {
+interface IdFilterProps {
   setFilters: (filters: Partial<CategoryFilters>) => void
   filters: CategoryFilters
 }
 
-const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
+const CategoryIdFilter = ({ filters, setFilters }: IdFilterProps) => {
   const onClear = () =>
     setFilters({
       ...filters,
-      has_image: defaultCategoryFilters.has_image,
-      formats: defaultCategoryFilters.formats,
+      id: defaultCategoryFilters.id,
     })
 
   return (
@@ -44,7 +42,7 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
       <PopoverTrigger asChild>
         <Button variant='outline' size='sm' className='h-8 border-dashed'>
           <MixerHorizontalIcon className='mr-2 h-4 w-4' />
-          {categoryColumns.image}
+          {categoryColumns.id}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-[200px] p-0' align='start'>
@@ -52,69 +50,30 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
           <CommandInput placeholder='Фильтр' />
           <CommandList className='max-h-none'>
             <CommandGroup>
-              <CommandLabel>{categoryFilterNames.has_image.title}</CommandLabel>
+              <CommandLabel>{categoryFilterNames.id.title}</CommandLabel>
               <CommandSeparator className='mb-1' />
-              {Object.entries(categoryFilterNames.has_image.values).map(
+              {Object.entries(categoryFilterNames.id.values).map(
                 ([key, value]) => {
-                  const castedKey = key as CategoryFilterImage
+                  const castedKey = key as CategroyIdFilterType
 
                   return (
                     <CommandItem
                       key={castedKey}
                       onSelect={() =>
                         setFilters({
-                          has_image: castedKey,
+                          id: castedKey,
                         })
                       }
                     >
                       <div
                         className={cn(
                           'mr-2 flex h-4 w-4 items-center justify-center rounded-full border border-primary',
-                          filters.has_image.includes(castedKey)
+                          filters.id.includes(castedKey)
                             ? 'text-primary-foreground'
                             : 'opacity-50 [&_svg]:invisible'
                         )}
                       >
                         <CheckIcon className={cn('h-4 w-4 text-primary')} />
-                      </div>
-                      <span>{value}</span>
-                    </CommandItem>
-                  )
-                }
-              )}
-            </CommandGroup>
-
-            <CommandSeparator />
-
-            <CommandGroup>
-              <CommandLabel>{categoryFilterNames.formats.title}</CommandLabel>
-              <CommandSeparator className='mb-1' />
-              {Object.entries(categoryFilterNames.formats.values).map(
-                ([key, value]) => {
-                  const castedKey = key as CategoryFilterFormats
-
-                  return (
-                    <CommandItem
-                      key={key}
-                      onSelect={() =>
-                        setFilters({
-                          formats: filters.formats.includes(castedKey)
-                            ? filters.formats.filter(
-                                (format) => format !== castedKey
-                              )
-                            : [...filters.formats, castedKey],
-                        })
-                      }
-                    >
-                      <div
-                        className={cn(
-                          'mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary',
-                          filters.formats.includes(castedKey)
-                            ? 'bg-primary text-primary-foreground'
-                            : 'opacity-50 [&_svg]:invisible'
-                        )}
-                      >
-                        <CheckIcon className={cn('h-4 w-4')} />
                       </div>
                       <span>{value}</span>
                     </CommandItem>
@@ -142,4 +101,4 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
   )
 }
 
-export default ImageFilter
+export default CategoryIdFilter

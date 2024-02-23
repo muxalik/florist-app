@@ -5,6 +5,7 @@ import AddSheet from './Actions/AddSheet'
 import { DataTableToolbarProps } from '@/types'
 import { useCategories } from './store'
 import Icons from '@/components/ui/icons'
+import CategoryIdFilter from './Filters/CategoryIdFilter'
 
 export function CategoriesToolbar<TData>({
   table,
@@ -29,6 +30,9 @@ export function CategoriesToolbar<TData>({
         </div>
         <DataTableViewOptions table={table} columnNames={columnNames} />
         <ul className='flex gap-2'>
+          <li key='id'>
+            <CategoryIdFilter filters={filters} setFilters={setFilters} />
+          </li>
           <li key='image'>
             <ImageFilter filters={filters} setFilters={setFilters} />
           </li>

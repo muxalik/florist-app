@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/ui/data-table/view-options'
-import ImageFilter from './Filters/ImageFilter'
+import CategoryImageFilter from './Filters/ImageFilter'
 import AddSheet from './Actions/AddSheet'
 import { DataTableToolbarProps } from '@/types'
 import { useCategories } from './store'
@@ -34,7 +34,7 @@ export function CategoriesToolbar<TData>({
             <CategoryIdFilter filters={filters} setFilters={setFilters} />
           </li>
           <li key='image'>
-            <ImageFilter filters={filters} setFilters={setFilters} />
+            <CategoryImageFilter filters={filters} setFilters={setFilters} />
           </li>
         </ul>
       </div>

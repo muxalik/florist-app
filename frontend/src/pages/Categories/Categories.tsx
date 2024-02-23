@@ -27,6 +27,7 @@ const Categories = () => {
   const sort = useCategories((state) => state.sort)
   const sortOrder = useCategories((state) => state.sortOrder)
   const fetchCategories = useCategories((state) => state.fetchCategories)
+  const search = useCategories((state) => state.search)
   const { currentPage, lastPage, perPage } = useCategories(
     (state) => state.pagination
   )
@@ -67,6 +68,10 @@ const Categories = () => {
         ? prev.delete('order')
         : prev.set('order', sortOrder.toString())
 
+      !search
+        ? prev.delete('q')
+        : prev.set('q', search.toString())
+
       Object.entries(filters).forEach(([key, value]) => {
         const defaultFilter = defaultCategoryFilters[key as CategoryFilter]
 
@@ -85,7 +90,7 @@ const Categories = () => {
 
       return prev
     })
-  }, [filters, sort, sortOrder, currentPage, perPage])
+  }, [filters, sort, sortOrder, currentPage, perPage, search])
 
   return (
     <div className='w-full h-full'>

@@ -6,6 +6,7 @@ use App\Models\Category;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class CategoryFilter
 {
@@ -15,9 +16,11 @@ class CategoryFilter
 
    protected readonly ?string $q;
 
-   protected readonly ?bool $hasChldren;
+   // protected readonly ?bool $hasChldren;
 
-   protected readonly ?bool $hasImage;
+   protected readonly ?string $hasImage;
+
+   protected readonly Collection $formats;
 
    protected readonly ?string $sort;
 
@@ -30,8 +33,11 @@ class CategoryFilter
       $this->page = $request->page;
       $this->perPage = $request->per_page ?? 10;
       $this->q = $request->q;
-      $this->hasChldren = $request->boolean('children');
-      $this->hasImage = $request->boolean('image');
+      // $this->hasChldren = $request->boolean('children');
+      $this->hasImage = $request->has_image;
+      $this->formats = collect($request->formats
+         ? explode(',', $request->formats)
+         : []);
       $this->sort = $request->sort;
       $this->order = $request->order ?? 'asc';
 
@@ -43,7 +49,7 @@ class CategoryFilter
       return $this
          ->search()
          ->sort()
-         // ->filter()
+         ->filter()
          ->paginate();
    }
 
@@ -86,6 +92,31 @@ class CategoryFilter
       }
 
       $this->query->latest('id');
+
+      return $this;
+   }
+
+   private function filter(): self
+   {
+      switch ($this->hasImage) {
+         case 'yes':
+            $this->query->whereNotNull('image_id');
+            break;
+
+         case 'no':
+            $this->query->whereNull('image_id');
+            break;
+      }
+
+      if ($this->formats->isNotEmpty()) {
+         $this->query->whereHas('image', function (Builder $q) {
+            $q->where(function (Builder $q) {
+               $this->formats->each(function (string $format) use ($q) {
+                  $q->orWhere('filename', 'LIKE', '%.' . $format);
+               });
+            });
+         });
+      }
 
       return $this;
    }

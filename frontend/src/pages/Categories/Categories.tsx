@@ -1,9 +1,8 @@
-import useCategories from '@/hooks/useCategories'
 import { columns } from './columns'
 import { DataTable } from '@/components/ui/data-table'
 import { categoryColumns } from '@/constants/categories/columns'
-import { Toolbar } from './Toolbar'
-import { useState } from 'react'
+import { CategoriesToolbar } from './Toolbar'
+import { useEffect, useState } from 'react'
 import {
   VisibilityState,
   getCoreRowModel,
@@ -12,35 +11,30 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { DataTablePagination } from '@/components/ui/data-table/pagination'
+import { useCategories } from './store'
+import { useSearchParams } from 'react-router-dom'
+import { initialPagination } from '@/constants/pagination'
+import { defaultCategoryFilters } from '@/constants/categories/filters'
+import { CategoryFilter } from '@/types/category'
+import _ from 'lodash'
 
 const Categories = () => {
-  const {
-    categories,
-    pagination: { currentPage, lastPage, perPage },
-    setPage,
-    setPerPage,
-    isLoading,
-    onSearch,
-    search,
-    setSort,
-    setSortOrder,
-    onRowDelete,
-    onRowEdit,
-    onAdd,
-    categoryList,
-    setFilters,
-    filters,
-  } = useCategories()
+  const categories = useCategories((state) => state.categories)
+  const isLoading = useCategories((state) => state.isLoading)
+  const setPage = useCategories((state) => state.setPage)
+  const setPerPage = useCategories((state) => state.setPerPage)
+  const filters = useCategories((state) => state.filters)
+  const sort = useCategories((state) => state.sort)
+  const sortOrder = useCategories((state) => state.sortOrder)
+  const fetchCategories = useCategories((state) => state.fetchCategories)
+  const { currentPage, lastPage, perPage } = useCategories(
+    (state) => state.pagination
+  )
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 
-  const cols = columns({
-    setSort,
-    setSortOrder,
-    onRowDelete,
-    onRowEdit,
-    categoryList,
-  })
+  const cols = columns()
 
   const table = useReactTable({
     data: categories,
@@ -55,21 +49,50 @@ const Categories = () => {
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
+  useEffect(() => {
+    fetchCategories()
+
+    setSearchParams((prev) => {
+      currentPage === initialPagination.currentPage
+        ? prev.delete('page')
+        : prev.set('page', currentPage.toString())
+
+      perPage === initialPagination.perPage
+        ? prev.delete('per_page')
+        : prev.set('per_page', perPage.toString())
+
+      sort === null ? prev.delete('sort') : prev.set('sort', sort.toString())
+
+      sortOrder === 'asc'
+        ? prev.delete('order')
+        : prev.set('order', sortOrder.toString())
+
+      Object.entries(filters).forEach(([key, value]) => {
+        const defaultFilter = defaultCategoryFilters[key as CategoryFilter]
+
+        if (Array.isArray(defaultFilter)) {
+          _.isEqual(value, defaultFilter) || value.length === 0
+            ? prev.delete(key)
+            : prev.set(key, value.toString())
+
+          return
+        }
+
+        value === defaultFilter
+          ? prev.delete(key)
+          : prev.set(key, value.toString())
+      })
+
+      return prev
+    })
+  }, [filters, sort, sortOrder, currentPage, perPage])
+
   return (
     <div className='w-full h-full'>
       <h1 className='text-4xl font-bold mb-6'>Категории</h1>
       <div className='flex w-full'>
         <div className='space-y-4 w-full'>
-          <Toolbar
-            table={table}
-            columnNames={categoryColumns}
-            search={search || ''}
-            onSearch={onSearch}
-            filters={filters}
-            setFilters={setFilters}
-            onSave={onAdd}
-            categoryList={categoryList}
-          />
+          <CategoriesToolbar table={table} columnNames={categoryColumns} />
           <DataTable columns={cols} table={table} isLoading={isLoading} />
           <DataTablePagination
             table={table}

@@ -62,6 +62,7 @@ const AuthProvider: FC<props> = ({ children }) => {
         if (error.response.status === 401) {
           logout()
         }
+        console.log(error)
       })
       .finally(() => setFullLoaded(true))
   }, [isLoading])

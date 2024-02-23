@@ -12,7 +12,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { Dispatch, SetStateAction } from 'react'
 import {
   CategoryFilterFormats,
   CategoryFilterImage,
@@ -27,7 +26,7 @@ import {
 } from '@/constants/categories/filters'
 
 interface ImageFilterProps {
-  setFilters: Dispatch<SetStateAction<CategoryFilters>>
+  setFilters: (filters: Partial<CategoryFilters>) => void
   filters: CategoryFilters
 }
 
@@ -56,10 +55,9 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
                     <CommandItem
                       key={castedKey}
                       onSelect={() =>
-                        setFilters((prev) => ({
-                          ...prev,
+                        setFilters({
                           has_image: castedKey,
-                        }))
+                        })
                       }
                     >
                       <div
@@ -92,14 +90,13 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
                     <CommandItem
                       key={key}
                       onSelect={() =>
-                        setFilters((prev) => ({
-                          ...prev,
-                          formats: prev.formats.includes(castedKey)
-                            ? prev.formats.filter(
+                        setFilters({
+                          formats: filters.formats.includes(castedKey)
+                            ? filters.formats.filter(
                                 (format) => format !== castedKey
                               )
-                            : [...prev.formats, castedKey],
-                        }))
+                            : [...filters.formats, castedKey],
+                        })
                       }
                     >
                       <div

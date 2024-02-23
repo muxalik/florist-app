@@ -22,25 +22,22 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { useState } from 'react'
-import EditSheet from './EditSheet'
-import { Category, CategoryEditData, SimpleCategory } from '@/types/category'
+import EditSheet from './Actions/EditSheet'
+import { Category } from '@/types/category'
+import { useCategories } from './store'
 
 interface DataTableRowActionsProps {
-  onDelete: (row: Row<Category>) => void
-  onEdit: (rowId: number, data: CategoryEditData) => void
   row: Row<Category>
-  categoryList: SimpleCategory[]
 }
 
-export function CategoriesRowActions({
-  row,
-  onDelete,
-  onEdit,
-  categoryList,
-}: DataTableRowActionsProps) {
+export function CategoriesRowActions({ row }: DataTableRowActionsProps) {
   const [openEditSheet, setOpenEditSheet] = useState(false)
 
   const closeEditSheet = () => setOpenEditSheet(false)
+
+  const onDelete = useCategories((state) => state.onDelete)
+  const onEdit = useCategories((state) => state.onEdit)
+  const simpleCategories = useCategories((state) => state.simpleCategories)
 
   return (
     <>
@@ -106,7 +103,7 @@ export function CategoriesRowActions({
         row={row}
         onSave={onEdit}
         onCancel={closeEditSheet}
-        categoryList={categoryList}
+        categoryList={simpleCategories}
       />
     </>
   )

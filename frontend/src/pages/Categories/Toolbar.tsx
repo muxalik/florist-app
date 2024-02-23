@@ -1,28 +1,19 @@
-import { CategoryAddData, CategoryFilters, SimpleCategory } from '@/types/category'
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/ui/data-table/view-options'
-import { Dispatch, SetStateAction } from 'react'
 import ImageFilter from './Filters/ImageFilter'
-import AddSheet from './AddSheet'
+import AddSheet from './Actions/AddSheet'
 import { DataTableToolbarProps } from '@/types'
+import { useCategories } from './store'
 
-type ToolbarAdditionalProps = {
-  setFilters: Dispatch<SetStateAction<CategoryFilters>>
-  filters: CategoryFilters
-  categoryList: SimpleCategory[]
-  onSave: (data: CategoryAddData) => void
-}
-
-export function Toolbar<TData>({
+export function CategoriesToolbar<TData>({
   table,
   columnNames,
-  search,
-  onSearch,
-  setFilters,
-  filters,
-  categoryList,
-  onSave,
-}: DataTableToolbarProps<TData> & ToolbarAdditionalProps) {
+}: DataTableToolbarProps<TData>) {
+  const filters = useCategories((state) => state.filters)
+  const setFilters = useCategories((state) => state.setFilters)
+  const search = useCategories((state) => state.search)
+  const onSearch = useCategories((state) => state.onSearch)
+
   return (
     <div className='flex items-center justify-between'>
       <div className='flex flex-1 items-center space-x-2'>
@@ -40,7 +31,7 @@ export function Toolbar<TData>({
         <DataTableViewOptions table={table} columnNames={columnNames} />
       </div>
       <div className='flex flex-1 items-center space-x-2'>
-        <AddSheet categoryList={categoryList} onSave={onSave} />
+        <AddSheet />
       </div>
     </div>
   )

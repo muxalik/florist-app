@@ -24,8 +24,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { preview } from '@/assets'
-import { CategoryAddData, SimpleCategory } from '@/types/category'
-
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -44,6 +42,7 @@ import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
+import { useCategories } from '../store'
 
 const formSchema = z.object({
   name: z
@@ -58,12 +57,10 @@ const formSchema = z.object({
   parentId: z.number().nullable(),
 })
 
-interface AddSheetProps {
-  onSave: (data: CategoryAddData) => void
-  categoryList: SimpleCategory[]
-}
+function AddSheet() {
+  const onAdd = useCategories((state) => state.onAdd)
+  const simpleCategories = useCategories((state) => state.simpleCategories)
 
-function AddSheet({ onSave, categoryList }: AddSheetProps) {
   const [open, setOpen] = useState(false)
   const [image, setImage] = useState<File | null>(null)
   const [openCategories, setOpenCategories] = useState(false)
@@ -96,7 +93,7 @@ function AddSheet({ onSave, categoryList }: AddSheetProps) {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onSave({
+    onAdd({
       ...values,
       image,
     })
@@ -219,7 +216,7 @@ function AddSheet({ onSave, categoryList }: AddSheetProps) {
                                   {!!field.value && (
                                     <Badge variant={'outline'}>
                                       {
-                                        categoryList.find(
+                                        simpleCategories.find(
                                           (category) =>
                                             category.id === field.value
                                         )?.id
@@ -227,7 +224,7 @@ function AddSheet({ onSave, categoryList }: AddSheetProps) {
                                     </Badge>
                                   )}
                                   {field.value
-                                    ? categoryList.find(
+                                    ? simpleCategories.find(
                                         (category) =>
                                           category.id === field.value
                                       )?.name
@@ -246,7 +243,7 @@ function AddSheet({ onSave, categoryList }: AddSheetProps) {
                               <CommandEmpty>Категория не найдена.</CommandEmpty>
                               <ScrollArea className='h-[190px] z-20'>
                                 <CommandGroup>
-                                  {categoryList.map((category) => (
+                                  {simpleCategories.map((category) => (
                                     <CommandItem
                                       value={category.name + category.id}
                                       key={category.name}

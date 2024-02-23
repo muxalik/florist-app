@@ -2,6 +2,7 @@ import { Button } from '@/components/ui/button'
 import {
   Command,
   CommandGroup,
+  CommandInput,
   CommandItem,
   CommandLabel,
   CommandList,
@@ -43,10 +44,12 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
       </PopoverTrigger>
       <PopoverContent className='w-[200px] p-0' align='start'>
         <Command>
+          <CommandInput placeholder='Фильтр' />
           <CommandList className='max-h-none'>
-            <CommandLabel>{categoryFilterNames.has_image.title}</CommandLabel>
-            <CommandSeparator />
             <CommandGroup>
+              <CommandLabel>{categoryFilterNames.has_image.title}</CommandLabel>
+              <CommandSeparator className='mb-1' />
+
               {Object.entries(categoryFilterNames.has_image.values).map(
                 ([key, value]) => {
                   const castedKey = key as CategoryFilterImage
@@ -79,9 +82,9 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
 
             <CommandSeparator />
 
-            <CommandLabel>{categoryFilterNames.formats.title}</CommandLabel>
-            <CommandSeparator />
             <CommandGroup>
+              <CommandLabel>{categoryFilterNames.formats.title}</CommandLabel>
+              <CommandSeparator className='mb-1' />
               {Object.entries(categoryFilterNames.formats.values).map(
                 ([key, value]) => {
                   const castedKey = key as CategoryFilterFormats

@@ -25,6 +25,7 @@ import {
   categoryFilterNames,
   defaultCategoryFilters,
 } from '@/constants/categories/filters'
+import RadioFilterGroup from '@/components/filters/radio-filter-group'
 
 interface ImageFilterProps {
   setFilters: (filters: Partial<CategoryFilters>) => void
@@ -51,38 +52,27 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
         <Command>
           <CommandInput placeholder='Фильтр' />
           <CommandList className='max-h-none'>
-            <CommandGroup>
-              <CommandLabel>{categoryFilterNames.has_image.title}</CommandLabel>
-              <CommandSeparator className='mb-1' />
-              {Object.entries(categoryFilterNames.has_image.values).map(
-                ([key, value]) => {
-                  const castedKey = key as CategoryFilterImage
-
-                  return (
-                    <CommandItem
-                      key={castedKey}
-                      onSelect={() =>
-                        setFilters({
-                          has_image: castedKey,
-                        })
-                      }
-                    >
-                      <div
-                        className={cn(
-                          'mr-2 flex h-4 w-4 items-center justify-center rounded-full border border-primary',
-                          filters.has_image.includes(castedKey)
-                            ? 'text-primary-foreground'
-                            : 'opacity-50 [&_svg]:invisible'
-                        )}
-                      >
-                        <CheckIcon className={cn('h-4 w-4 text-primary')} />
-                      </div>
-                      <span>{value}</span>
-                    </CommandItem>
-                  )
-                }
-              )}
-            </CommandGroup>
+            <RadioFilterGroup
+              title={categoryColumns.image}
+              selected={filters.has_image}
+              options={[
+                {
+                  key: 'yes',
+                  name: 'Есть',
+                },
+                {
+                  key: 'no',
+                  name: 'Нет',
+                },
+                {
+                  key: 'any',
+                  name: 'Неважно',
+                },
+              ]}
+              onSelect={(key: string) =>
+                setFilters({ has_image: key as CategoryFilterImage })
+              }
+            />
 
             <CommandSeparator />
 

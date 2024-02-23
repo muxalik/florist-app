@@ -31,6 +31,7 @@ type CategoriesStore = {
 
   filters: CategoryFilters
   setFilters: (filters: Partial<CategoryFilters>) => void
+  clearFilters: () => void
 
   search: string
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void
@@ -121,6 +122,7 @@ export const useCategories = create<CategoriesStore>((set) => ({
       },
     }))
   },
+  clearFilters: () => set({ filters: defaultCategoryFilters }),
 
   search: '',
   onSearch: (e: ChangeEvent<HTMLInputElement>) => {

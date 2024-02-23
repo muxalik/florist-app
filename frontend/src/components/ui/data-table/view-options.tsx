@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import { ColNames } from '@/types'
+import Icons from '../icons'
 
 interface BaseDataTableViewOptionsProps<TData> {
   table: Table<TData>
@@ -32,7 +33,7 @@ export function DataTableViewOptions<TData>({
           size='sm'
           className='ml-auto hidden h-8 lg:flex'
         >
-          <MixerHorizontalIcon className='mr-2 h-4 w-4' />
+          <Icons.eye className='mr-2 h-4 w-4' />
           Вид
         </Button>
       </DropdownMenuTrigger>

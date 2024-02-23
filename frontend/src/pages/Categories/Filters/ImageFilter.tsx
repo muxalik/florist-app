@@ -18,7 +18,7 @@ import {
   CategoryFilterImage,
   CategoryFilters,
 } from '@/types/category'
-import { CheckIcon, PlusCircledIcon } from '@radix-ui/react-icons'
+import { CheckIcon, MixerHorizontalIcon } from '@radix-ui/react-icons'
 import { categoryColumns } from '@/constants/categories/columns'
 import { cn } from '@/lib/utils'
 import {
@@ -32,13 +32,17 @@ interface ImageFilterProps {
 }
 
 const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
-  const onClear = () => setFilters(defaultCategoryFilters)
+  const onClear = () =>
+    setFilters({
+      ...filters,
+      has_image: defaultCategoryFilters.has_image,
+    })
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button variant='outline' size='sm' className='h-8 border-dashed'>
-          <PlusCircledIcon className='mr-2 h-4 w-4' />
+          <MixerHorizontalIcon className='mr-2 h-4 w-4' />
           {categoryColumns.image}
         </Button>
       </PopoverTrigger>
@@ -49,7 +53,6 @@ const ImageFilter = ({ filters, setFilters }: ImageFilterProps) => {
             <CommandGroup>
               <CommandLabel>{categoryFilterNames.has_image.title}</CommandLabel>
               <CommandSeparator className='mb-1' />
-
               {Object.entries(categoryFilterNames.has_image.values).map(
                 ([key, value]) => {
                   const castedKey = key as CategoryFilterImage

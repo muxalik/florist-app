@@ -1,9 +1,9 @@
-import { CommandGroup, CommandSeparator } from 'cmdk'
-import { CommandItem, CommandLabel } from '../ui/command'
+import { CommandGroup, CommandItem, CommandLabel, CommandSeparator } from '../ui/command'
 import { cn } from '@/lib/utils'
 import { CheckIcon } from '@radix-ui/react-icons'
 
 interface CheckboxFilterGroupProps {
+  id: string | number
   title: string
   options: {
     value: string
@@ -14,13 +14,14 @@ interface CheckboxFilterGroupProps {
 }
 
 const CheckboxFilterGroup = ({
+  id,
   title,
   options,
   selected,
   onSelect,
 }: CheckboxFilterGroupProps) => {
   return (
-    <CommandGroup>
+    <CommandGroup key={id}>
       <CommandLabel>{title}</CommandLabel>
       <CommandSeparator className='mb-1' />
       {options.map(({ value, name }) => (

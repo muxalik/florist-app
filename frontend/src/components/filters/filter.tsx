@@ -45,7 +45,7 @@ const Filter = ({ title, filters, onClear }: FilterProps) => {
                   <>
                     {type === 'radio' && (
                       <RadioFilterGroup
-                        id={index + title}
+                        id={index}
                         title={title}
                         selected={selected as string}
                         options={options}
@@ -55,7 +55,7 @@ const Filter = ({ title, filters, onClear }: FilterProps) => {
 
                     {type === 'checkbox' && (
                       <CheckboxFilterGroup
-                        key={index + title}
+                        id={index + title}
                         title={title}
                         options={options}
                         selected={selected as string[]}

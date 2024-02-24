@@ -7,7 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 interface SliderFilterGroupProps {
   id: string | number
@@ -55,10 +55,14 @@ interface SliderFilterProps {
 }
 
 const SliderFilter = ({ option, onChange }: SliderFilterProps) => {
-  const [value, setValue] = useState(option.defaultValue)
+  const [value, setValue] = useState(option.value)
+
+  useEffect(() => {
+    setValue(option.value)
+  }, [option.value])
 
   return (
-    <li key={option.key} className='space-y-2'>
+    <li key={option.key + option.name} className='space-y-2'>
       <p className='px-1'>{option.name}</p>
       <TooltipProvider delayDuration={100}>
         <Tooltip>

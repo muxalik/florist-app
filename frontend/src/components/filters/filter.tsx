@@ -15,11 +15,12 @@ import {
 import { MixerHorizontalIcon } from '@radix-ui/react-icons'
 import RadioFilterGroup from '@/components/filters/radio-filter-group'
 import CheckboxFilterGroup from '@/components/filters/checkbox-filter-group'
-import { BaseFilter } from '@/types'
+import { BaseFilter, SliderFilter } from '@/types'
+import SliderFilterGroup from './slider-filter-group'
 
 interface FilterProps {
   title: string
-  filters: BaseFilter[]
+  filters: (BaseFilter | SliderFilter)[]
   onClear: () => void
 }
 
@@ -36,38 +37,42 @@ const Filter = ({ title, filters, onClear }: FilterProps) => {
         <Command>
           <CommandInput placeholder='Поиск фильтра' />
           <CommandList className='max-h-none'>
-            {filters.map(
-              (
-                { type, title, selected, options, onSelect }: BaseFilter,
-                index: number
-              ) => {
-                return (
-                  <>
-                    {type === 'radio' && (
-                      <RadioFilterGroup
-                        id={index}
-                        title={title}
-                        selected={selected as string}
-                        options={options}
-                        onSelect={onSelect}
-                      />
-                    )}
+            {filters.map((filter: BaseFilter | SliderFilter, index: number) => {
+              return (
+                <>
+                  {filter.type === 'radio' && (
+                    <RadioFilterGroup
+                      id={index}
+                      title={title}
+                      selected={filter.selected as string}
+                      options={filter.options}
+                      onSelect={filter.onSelect}
+                    />
+                  )}
 
-                    {type === 'checkbox' && (
-                      <CheckboxFilterGroup
-                        id={index + title}
-                        title={title}
-                        options={options}
-                        selected={selected as string[]}
-                        onSelect={onSelect}
-                      />
-                    )}
+                  {filter.type === 'checkbox' && (
+                    <CheckboxFilterGroup
+                      id={index + title}
+                      title={title}
+                      options={filter.options}
+                      selected={filter.selected as string[]}
+                      onSelect={filter.onSelect}
+                    />
+                  )}
 
-                    <CommandSeparator />
-                  </>
-                )
-              }
-            )}
+                  {filter.type === 'slider' && (
+                    <SliderFilterGroup
+                      id={index + title}
+                      title={title}
+                      options={filter.options}
+                      onChange={filter.onChange}
+                    />
+                  )}
+
+                  <CommandSeparator />
+                </>
+              )
+            })}
 
             <CommandGroup>
               <Button asChild className='w-full'>

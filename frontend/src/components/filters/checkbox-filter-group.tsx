@@ -1,4 +1,9 @@
-import { CommandGroup, CommandItem, CommandLabel, CommandSeparator } from '../ui/command'
+import {
+  CommandGroup,
+  CommandItem,
+  CommandLabel,
+  CommandSeparator,
+} from '../ui/command'
 import { cn } from '@/lib/utils'
 import { CheckIcon } from '@radix-ui/react-icons'
 
@@ -34,7 +39,7 @@ const CheckboxFilterGroup = ({
                 : 'opacity-50 [&_svg]:invisible'
             )}
           >
-            <CheckIcon className={cn('h-4 w-4')} />
+            <CheckIcon className={cn('h-4 w-4 dark:text-foreground')} />
           </div>
           <span>{name}</span>
         </CommandItem>

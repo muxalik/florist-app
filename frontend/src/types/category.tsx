@@ -22,7 +22,7 @@ export type CategoryEditData = {
 export type CategoryAddData = CategoryEditData
 
 // Filters
-export type CategoryFilter = 'id' | 'has_image' | 'formats'
+export type CategoryFilter = 'id' | 'has_image' | 'formats' | 'min_name' | 'max_name'
 
 export type CategoryIdFilter = 'even' | 'odd' | 'any'
 
@@ -34,25 +34,6 @@ export type CategoryFilters = {
   id: CategoryIdFilter
   has_image: CategoryFilterImage
   formats: CategoryFilterFormats[]
-}
-
-export type CategoryFilterNames = {
-  id: {
-    title: string
-    values: {
-      [key in CategoryIdFilter]: string
-    }
-  }
-  has_image: {
-    title: string
-    values: {
-      [key in CategoryFilterImage]: string
-    }
-  }
-  formats: {
-    title: string
-    values: {
-      [key in CategoryFilterFormats]: string
-    }
-  }
+  min_name: number
+  max_name: number
 }

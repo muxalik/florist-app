@@ -13,10 +13,12 @@ type CategoryFiltersStore = {
   clearFilters: () => void
   clearImageFilters: () => void
   clearIdFilters: () => void
+  clearNameFilters: () => void
 
   onIdSelect: (value: string) => void
   onImageSelect: (value: string) => void
   onFormatsSelect: (value: string) => void
+  onNameChange: (key: string, value: number) => void
 }
 
 export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
@@ -47,6 +49,17 @@ export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
       },
     }))
   },
+
+  clearNameFilters: () => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        min_name: defaultCategoryFilters.min_name,
+        max_name: defaultCategoryFilters.max_name,
+      },
+    }))
+  },
+
   onIdSelect: (value: string) => {
     set((state) => ({
       filters: {
@@ -72,6 +85,14 @@ export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
         formats: state.filters.formats.includes(castedValue)
           ? state.filters.formats.filter((filter) => filter !== value)
           : [...state.filters.formats, castedValue],
+      },
+    }))
+  },
+  onNameChange: (key: string, value: number) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        [key]: value,
       },
     }))
   },

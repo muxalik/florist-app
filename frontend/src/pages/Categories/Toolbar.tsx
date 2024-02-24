@@ -10,6 +10,7 @@ import {
   categoryFormatsFilter,
   categoryHasImageFilter,
   categoryIdFilter,
+  categoryNameFilter,
 } from '@/constants/categories/filters'
 import { useCategoryFilters } from './store/useCategoryFilters'
 
@@ -25,9 +26,11 @@ export function CategoriesToolbar<TData>({
     (state) => state.clearImageFilters
   )
   const clearIdFilters = useCategoryFilters((state) => state.clearIdFilters)
+  const clearNameFilters = useCategoryFilters((state) => state.clearNameFilters)
   const onIdSelect = useCategoryFilters((state) => state.onIdSelect)
   const onImageSelect = useCategoryFilters((state) => state.onImageSelect)
   const onFormatsSelect = useCategoryFilters((state) => state.onFormatsSelect)
+  const onNameChange = useCategoryFilters((state) => state.onNameChange)
 
   return (
     <div className='flex items-center justify-between'>
@@ -58,6 +61,19 @@ export function CategoriesToolbar<TData>({
                 categoryFormatsFilter(filters.formats, onFormatsSelect),
               ]}
               onClear={clearImageFilters}
+            />
+          </li>
+          <li key='name'>
+            <Filter
+              title={categoryColumns.name}
+              filters={[
+                categoryNameFilter(
+                  filters.min_name,
+                  filters.max_name,
+                  onNameChange
+                ),
+              ]}
+              onClear={clearNameFilters}
             />
           </li>
         </ul>

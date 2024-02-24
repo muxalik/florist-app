@@ -60,3 +60,17 @@ export type BaseFilter = {
   }[]
   onSelect: (value: string) => void
 }
+
+export type SliderFilter = {
+  title: string
+  type: 'slider'
+  options: {
+    key: string
+    name: string
+    min: number
+    max: number
+    value: number
+    defaultValue: number
+  }[]
+  onChange: (key: string, value: number) => void
+}

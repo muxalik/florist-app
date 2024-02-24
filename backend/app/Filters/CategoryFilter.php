@@ -27,6 +27,10 @@ class CategoryFilter
 
    protected readonly ?string $order;
 
+   protected readonly ?int $minName;
+
+   protected readonly ?int $maxName;
+
    protected Builder $query;
 
    public function __construct(Request $request)
@@ -48,6 +52,10 @@ class CategoryFilter
       $this->sort = $request->sort;
 
       $this->order = $request->order ?? 'asc';
+
+      $this->minName = $request->min_name;
+
+      $this->maxName = $request->max_name;
 
       $this->query = Category::with('image', 'parent');
    }
@@ -109,6 +117,7 @@ class CategoryFilter
       $this->idFilter();
       $this->hasImageFilter();
       $this->formatsFilter();
+      $this->nameFilter();
 
       return $this;
    }
@@ -151,6 +160,26 @@ class CategoryFilter
          });
       }
    }
+
+   private function nameFilter(): void
+   {
+      // Minimal name length 
+      if ($this->minName) {
+         $this->query->whereRaw(
+            'LENGTH(name) >= ?',
+            $this->minName
+         );
+      }
+
+      // Maximum name length 
+      if ($this->maxName) {
+         $this->query->whereRaw(
+            'LENGTH(name) <= ?',
+            $this->maxName
+         );
+      }
+   }
+
 
    private function paginate(): LengthAwarePaginator
    {

@@ -75,7 +75,7 @@ const Categories = () => {
         const defaultFilter = defaultCategoryFilters[key as CategoryFilter]
 
         if (Array.isArray(defaultFilter)) {
-          _.isEqual(value, defaultFilter) || value.length === 0
+          _.isEqual(value, defaultFilter)
             ? prev.delete(key)
             : prev.set(key, value.toString())
 
@@ -90,9 +90,11 @@ const Categories = () => {
       return prev
     })
   }, [
-    filters.formats,
-    filters.has_image,
     filters.id,
+    filters.has_image,
+    filters.formats,
+    filters.min_name,
+    filters.max_name,
     sort,
     sortOrder,
     currentPage,

@@ -21,8 +21,28 @@ type CategoryFiltersStore = {
   onNameChange: (key: string, value: number) => void
 }
 
+const filtersFromUrl = (): CategoryFilters => {
+  const searchParams = new URLSearchParams(window.location.search)
+
+  const id = searchParams.get('id') || defaultCategoryFilters.id
+  const has_image =
+    searchParams.get('has_image') || defaultCategoryFilters.has_image
+  let formats = searchParams.getAll('formats') || defaultCategoryFilters.formats
+  formats = formats.length > 0 ? formats : defaultCategoryFilters.formats
+  const min_name = +(
+    searchParams.get('min_name') || defaultCategoryFilters.min_name
+  )
+  const max_name = +(
+    searchParams.get('max_name') || defaultCategoryFilters.max_name
+  )
+
+  return { id, has_image, formats, min_name, max_name } as CategoryFilters
+}
+
 export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
-  filters: defaultCategoryFilters,
+  filters: (() => {
+    return filtersFromUrl()
+  })(),
   setFilters: (filters: Partial<CategoryFilters>) => {
     set((state) => ({
       filters: {

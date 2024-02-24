@@ -1,13 +1,9 @@
-import { defaultCategoryFilters } from '@/constants/categories/filters'
 import { initialPagination } from '@/constants/pagination'
 import { Pagination, SortOrder } from '@/types'
 import {
   Category,
   CategoryAddData,
   CategoryEditData,
-  CategoryFilterFormats,
-  CategoryFilterImage,
-  CategoryFilters,
   SimpleCategory,
 } from '@/types/category'
 import { api } from '@/utils/api'
@@ -30,14 +26,6 @@ type CategoriesStore = {
 
   categories: Category[]
   simpleCategories: SimpleCategory[]
-
-  filters: CategoryFilters
-  setFilters: (filters: Partial<CategoryFilters>) => void
-  clearFilters: () => void
-  clearImageFilters: () => void
-
-  onFormatsSelect: (value: string) => void
-  onImageSelect: (value: string) => void
 
   search: string
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void
@@ -119,45 +107,7 @@ export const useCategories = create<CategoriesStore>((set) => ({
   categories: [],
   simpleCategories: [],
 
-  filters: defaultCategoryFilters,
-  setFilters: (filters: Partial<CategoryFilters>) => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        ...filters,
-      },
-    }))
-  },
-  clearFilters: () => set({ filters: defaultCategoryFilters }),
-  clearImageFilters: () => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        has_image: defaultCategoryFilters.has_image,
-        formats: defaultCategoryFilters.formats,
-      },
-    }))
-  },
-  onFormatsSelect: (value: string) => {
-    const castedValue = value as CategoryFilterFormats
-
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        formats: state.filters.formats.includes(castedValue)
-          ? state.filters.formats.filter((filter) => filter !== value)
-          : [...state.filters.formats, castedValue],
-      },
-    }))
-  },
-  onImageSelect: (value: string) => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        has_image: value as CategoryFilterImage,
-      },
-    }))
-  },
+  
   search: '',
   onSearch: (e: ChangeEvent<HTMLInputElement>) => {
     set({ search: e.target.value })

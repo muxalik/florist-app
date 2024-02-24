@@ -10,17 +10,21 @@ import {
   categoryFormatsFilter,
   categoryHasImageFilter,
 } from '@/constants/categories/filters'
+import { useCategoryFilters } from './store/useCategoryFilters'
 
 export function CategoriesToolbar<TData>({
   table,
   columnNames,
 }: DataTableToolbarProps<TData>) {
-  const filters = useCategories((state) => state.filters)
   const search = useCategories((state) => state.search)
   const onSearch = useCategories((state) => state.onSearch)
-  const clearImageFilters = useCategories((state) => state.clearImageFilters)
-  const onFormatsSelect = useCategories((state) => state.onFormatsSelect)
-  const onImageSelect = useCategories((state) => state.onImageSelect)
+
+  const filters = useCategoryFilters((state) => state.filters)
+  const clearImageFilters = useCategoryFilters(
+    (state) => state.clearImageFilters
+  )
+  const onFormatsSelect = useCategoryFilters((state) => state.onFormatsSelect)
+  const onImageSelect = useCategoryFilters((state) => state.onImageSelect)
 
   return (
     <div className='flex items-center justify-between'>

@@ -17,13 +17,14 @@ import { initialPagination } from '@/constants/pagination'
 import { defaultCategoryFilters } from '@/constants/categories/filters'
 import { CategoryFilter } from '@/types/category'
 import _ from 'lodash'
+import { useCategoryFilters } from './store/useCategoryFilters'
 
 const Categories = () => {
   const categories = useCategories((state) => state.categories)
   const isLoading = useCategories((state) => state.isLoading)
   const setPage = useCategories((state) => state.setPage)
   const setPerPage = useCategories((state) => state.setPerPage)
-  const filters = useCategories((state) => state.filters)
+  const filters = useCategoryFilters((state) => state.filters)
   const sort = useCategories((state) => state.sort)
   const sortOrder = useCategories((state) => state.sortOrder)
   const fetchCategories = useCategories((state) => state.fetchCategories)

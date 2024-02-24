@@ -9,37 +9,39 @@ import { CheckIcon } from '@radix-ui/react-icons'
 
 interface RadioFilterGroupProps {
   title: string
+  id: string | number
   selected: string
   options: {
-    key: string
+    value: string
     name: string
   }[]
-  onSelect: (key: string) => void
+  onSelect: (value: string) => void
 }
 
 const RadioFilterGroup = ({
+  id,
   title,
   selected,
   options,
   onSelect,
 }: RadioFilterGroupProps) => {
   return (
-    <CommandGroup>
+    <CommandGroup key={id}>
       <CommandLabel>{title}</CommandLabel>
       <CommandSeparator className='mb-1' />
-      {options.map(({ key, name }) => (
-        <CommandItem key={key} onSelect={() => onSelect(key)}>
+      {options.map((option) => (
+        <CommandItem key={option.value} onSelect={() => onSelect(option.value)}>
           <div
             className={cn(
               'mr-2 flex h-4 w-4 items-center justify-center rounded-full border border-primary',
-              selected === key
+              selected === option.value
                 ? 'text-primary-foreground'
                 : 'opacity-50 [&_svg]:invisible'
             )}
           >
             <CheckIcon className={cn('h-4 w-4 text-primary')} />
           </div>
-          <span>{name}</span>
+          <span>{option.name}</span>
         </CommandItem>
       ))}
     </CommandGroup>

@@ -1,4 +1,5 @@
-import { CategoryFilterNames, CategoryFilters } from '@/types/category'
+import { BaseFilter } from '@/types'
+import { CategoryFilters } from '@/types/category'
 
 export const defaultCategoryFilters: CategoryFilters = {
   id: 'any',
@@ -6,29 +7,54 @@ export const defaultCategoryFilters: CategoryFilters = {
   formats: ['jpg', 'png', 'webp'],
 } as const
 
-export const categoryFilterNames: CategoryFilterNames = {
-  id: {
-    title: 'Четность',
-    values: {
-      even: 'Четные',
-      odd: 'Нечетные',
-      any: 'Все',
-    },
-  },
-  has_image: {
+export const categoryHasImageFilter = (
+  selected: string,
+  onSelect: (value: string) => void
+): BaseFilter => {
+  return {
+    type: 'radio',
     title: 'Наличие',
-    values: {
-      yes: 'Есть',
-      no: 'Нет',
-      any: 'Неважно',
-    },
-  },
-  formats: {
+    selected: selected,
+    options: [
+      {
+        value: 'yes',
+        name: 'Есть',
+      },
+      {
+        value: 'no',
+        name: 'Нет',
+      },
+      {
+        value: 'any',
+        name: 'Неважно',
+      },
+    ],
+    onSelect: onSelect,
+  }
+}
+
+export const categoryFormatsFilter = (
+  selected: string[],
+  onSelect: (value: string) => void
+): BaseFilter => {
+  return {
+    type: 'checkbox',
     title: 'Форматы',
-    values: {
-      jpg: '.jpg',
-      png: '.png',
-      webp: '.webp',
-    },
-  },
-} as const
+    selected: selected,
+    options: [
+      {
+        value: 'jpg',
+        name: '.jpg',
+      },
+      {
+        value: 'png',
+        name: '.png',
+      },
+      {
+        value: 'webp',
+        name: '.webp',
+      },
+    ],
+    onSelect: onSelect,
+  }
+}

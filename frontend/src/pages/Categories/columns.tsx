@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge'
 import { categoryColumns } from '@/constants/categories/columns'
 import CategoriesRowActions from './RowActions'
 import { preview } from '@/assets'
-import { useCategories } from './store'
+import { useCategories } from './store/useCategories'
 
 export const columns = (): ColumnDef<Category>[] => {
   const setSort = useCategories((state) => state.setSort)

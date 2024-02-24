@@ -11,7 +11,7 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { DataTablePagination } from '@/components/ui/data-table/pagination'
-import { useCategories } from './store'
+import { useCategories } from './store/useCategories'
 import { useSearchParams } from 'react-router-dom'
 import { initialPagination } from '@/constants/pagination'
 import { defaultCategoryFilters } from '@/constants/categories/filters'
@@ -68,9 +68,7 @@ const Categories = () => {
         ? prev.delete('order')
         : prev.set('order', sortOrder.toString())
 
-      !search
-        ? prev.delete('q')
-        : prev.set('q', search.toString())
+      !search ? prev.delete('q') : prev.set('q', search.toString())
 
       Object.entries(filters).forEach(([key, value]) => {
         const defaultFilter = defaultCategoryFilters[key as CategoryFilter]
@@ -90,7 +88,16 @@ const Categories = () => {
 
       return prev
     })
-  }, [filters, sort, sortOrder, currentPage, perPage, search])
+  }, [
+    filters.formats,
+    filters.has_image,
+    filters.id,
+    sort,
+    sortOrder,
+    currentPage,
+    perPage,
+    search,
+  ])
 
   return (
     <div className='w-full h-full'>

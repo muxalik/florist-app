@@ -49,3 +49,14 @@ export interface DataTableToolbarProps<TData> {
   table: Table<TData>
   columnNames: ColNames
 }
+
+export type BaseFilter = {
+  type: 'checkbox' | 'radio'
+  title: string
+  selected: string | string[]
+  options: {
+    value: string
+    name: string
+  }[]
+  onSelect: (value: string) => void
+}

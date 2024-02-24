@@ -24,7 +24,7 @@ import {
 import { useState } from 'react'
 import EditSheet from './Actions/EditSheet'
 import { Category } from '@/types/category'
-import { useCategories } from './store'
+import { useCategories } from './store/useCategories'
 
 interface DataTableRowActionsProps {
   row: Row<Category>

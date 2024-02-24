@@ -1,20 +1,26 @@
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/ui/data-table/view-options'
-import CategoryImageFilter from './Filters/ImageFilter'
 import AddSheet from './Actions/AddSheet'
 import { DataTableToolbarProps } from '@/types'
-import { useCategories } from './store'
+import { useCategories } from './store/useCategories'
 import Icons from '@/components/ui/icons'
-import CategoryIdFilter from './Filters/CategoryIdFilter'
+import Filter from '../../components/filters/filter'
+import { categoryColumns } from '@/constants/categories/columns'
+import {
+  categoryFormatsFilter,
+  categoryHasImageFilter,
+} from '@/constants/categories/filters'
 
 export function CategoriesToolbar<TData>({
   table,
   columnNames,
 }: DataTableToolbarProps<TData>) {
   const filters = useCategories((state) => state.filters)
-  const setFilters = useCategories((state) => state.setFilters)
   const search = useCategories((state) => state.search)
   const onSearch = useCategories((state) => state.onSearch)
+  const clearImageFilters = useCategories((state) => state.clearImageFilters)
+  const onFormatsSelect = useCategories((state) => state.onFormatsSelect)
+  const onImageSelect = useCategories((state) => state.onImageSelect)
 
   return (
     <div className='flex items-center justify-between'>
@@ -30,11 +36,15 @@ export function CategoriesToolbar<TData>({
         </div>
         <DataTableViewOptions table={table} columnNames={columnNames} />
         <ul className='flex gap-2'>
-          <li key='id'>
-            <CategoryIdFilter filters={filters} setFilters={setFilters} />
-          </li>
           <li key='image'>
-            <CategoryImageFilter filters={filters} setFilters={setFilters} />
+            <Filter
+              title={categoryColumns.image}
+              filters={[
+                categoryHasImageFilter(filters.has_image, onImageSelect),
+                categoryFormatsFilter(filters.formats, onFormatsSelect),
+              ]}
+              onClear={clearImageFilters}
+            />
           </li>
         </ul>
       </div>

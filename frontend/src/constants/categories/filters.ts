@@ -7,6 +7,32 @@ export const defaultCategoryFilters: CategoryFilters = {
   formats: ['jpg', 'png', 'webp'],
 } as const
 
+export const categoryIdFilter = (
+  selected: string,
+  onSelect: (value: string) => void
+): BaseFilter => {
+  return {
+    type: 'radio',
+    title: 'Четность',
+    selected: selected,
+    options: [
+      {
+        value: 'even',
+        name: 'Четные',
+      },
+      {
+        value: 'odd',
+        name: 'Нечетные',
+      },
+      {
+        value: 'any',
+        name: 'Все',
+      },
+    ],
+    onSelect: onSelect,
+  }
+}
+
 export const categoryHasImageFilter = (
   selected: string,
   onSelect: (value: string) => void

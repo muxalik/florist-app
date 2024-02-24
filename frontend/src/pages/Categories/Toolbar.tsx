@@ -9,6 +9,7 @@ import { categoryColumns } from '@/constants/categories/columns'
 import {
   categoryFormatsFilter,
   categoryHasImageFilter,
+  categoryIdFilter,
 } from '@/constants/categories/filters'
 import { useCategoryFilters } from './store/useCategoryFilters'
 
@@ -23,8 +24,10 @@ export function CategoriesToolbar<TData>({
   const clearImageFilters = useCategoryFilters(
     (state) => state.clearImageFilters
   )
-  const onFormatsSelect = useCategoryFilters((state) => state.onFormatsSelect)
+  const clearIdFilters = useCategoryFilters((state) => state.clearIdFilters)
+  const onIdSelect = useCategoryFilters((state) => state.onIdSelect)
   const onImageSelect = useCategoryFilters((state) => state.onImageSelect)
+  const onFormatsSelect = useCategoryFilters((state) => state.onFormatsSelect)
 
   return (
     <div className='flex items-center justify-between'>
@@ -40,6 +43,13 @@ export function CategoriesToolbar<TData>({
         </div>
         <DataTableViewOptions table={table} columnNames={columnNames} />
         <ul className='flex gap-2'>
+          <li key='id'>
+            <Filter
+              title={categoryColumns.id}
+              filters={[categoryIdFilter(filters.id, onIdSelect)]}
+              onClear={clearIdFilters}
+            />
+          </li>
           <li key='image'>
             <Filter
               title={categoryColumns.image}

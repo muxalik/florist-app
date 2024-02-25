@@ -30,6 +30,8 @@ export type CategoryFilter =
   | 'max_name'
   | 'parent_min'
   | 'parent_max'
+  | 'updated_from'
+  | 'updated_to'
 
 export type CategoryIdFilter = 'even' | 'odd' | 'any'
 
@@ -45,4 +47,6 @@ export type CategoryFilters = {
   max_name: number
   parent_min: number
   parent_max: number
+  updated_from: string
+  updated_to: string
 }

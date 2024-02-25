@@ -3,6 +3,7 @@
 namespace App\Filters;
 
 use App\Models\Category;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -35,6 +36,10 @@ class CategoryFilter
 
    protected readonly ?int $parentMax;
 
+   protected readonly ?string $updatedFrom;
+
+   protected readonly ?string $updatedTo;
+
    protected Builder $query;
 
    public function __construct(Request $request)
@@ -64,6 +69,10 @@ class CategoryFilter
       $this->parentMin = $request->parent_min;
 
       $this->parentMax = $request->parent_max;
+
+      $this->updatedFrom = $request->updated_from;
+
+      $this->updatedTo = $request->updated_to;
 
       $this->query = Category::with('image', 'parent');
    }
@@ -127,6 +136,7 @@ class CategoryFilter
       $this->formatsFilter();
       $this->nameFilter();
       $this->parentNameFilter();
+      $this->updatedAtFilter();
 
       return $this;
    }
@@ -209,6 +219,17 @@ class CategoryFilter
                $this->parentMax
             );
          });
+      }
+   }
+
+   private function updatedAtFilter(): void
+   {
+      if ($this->updatedFrom) {
+         $date = Carbon::createFromFormat('m-d-Y', $this->updatedFrom);
+
+         Log::alert('FROM', [$date->toDateTimeString()]);
+
+         $this->query->where('updated_at', '>=', $date);
       }
    }
 

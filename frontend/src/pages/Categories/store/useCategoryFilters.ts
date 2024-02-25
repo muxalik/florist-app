@@ -5,6 +5,8 @@ import {
   CategoryFilters,
   CategoryIdFilter,
 } from '@/types/category'
+import { format } from 'date-fns'
+import { DateRange } from 'react-day-picker'
 import { create } from 'zustand'
 
 type CategoryFiltersStore = {
@@ -15,12 +17,14 @@ type CategoryFiltersStore = {
   clearIdFilters: () => void
   clearNameFilters: () => void
   clearParentFilters: () => void
+  clearUpdatedFilters: () => void
 
   onIdSelect: (value: string) => void
   onImageSelect: (value: string) => void
   onFormatsSelect: (value: string) => void
   onNameChange: (key: string, value: number) => void
   onParentChange: (key: string, value: number) => void
+  onUpdatedChange: (range: DateRange | undefined) => void
 }
 
 const filtersFromUrl = (): CategoryFilters => {
@@ -49,6 +53,12 @@ const filtersFromUrl = (): CategoryFilters => {
     searchParams.get('parent_max') || defaultCategoryFilters.parent_max
   )
 
+  const updated_from =
+    searchParams.get('updated_from') || defaultCategoryFilters.updated_from
+
+  const updated_to =
+    searchParams.get('updated_to') || defaultCategoryFilters.updated_to
+
   return {
     id,
     has_image,
@@ -57,6 +67,8 @@ const filtersFromUrl = (): CategoryFilters => {
     max_name,
     parent_min,
     parent_max,
+    updated_from,
+    updated_to,
   } as CategoryFilters
 }
 
@@ -115,6 +127,16 @@ export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
     }))
   },
 
+  clearUpdatedFilters: () => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        updated_from: defaultCategoryFilters.updated_from,
+        updated_to: defaultCategoryFilters.updated_to,
+      },
+    }))
+  },
+
   onIdSelect: (value: string) => {
     set((state) => ({
       filters: {
@@ -160,6 +182,16 @@ export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
       filters: {
         ...state.filters,
         [key]: value,
+      },
+    }))
+  },
+
+  onUpdatedChange: (range: DateRange | undefined) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        updated_from: range?.from ? format(range?.from, 'MM-dd-yyyy') : '',
+        updated_to: range?.to ? format(range?.to, 'MM-dd-yyyy') : '',
       },
     }))
   },

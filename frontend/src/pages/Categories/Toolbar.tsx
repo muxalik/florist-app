@@ -16,6 +16,7 @@ import {
 } from '@/constants/categories/filters'
 import { useCategoryFilters } from './store/useCategoryFilters'
 import _ from 'lodash'
+import DatePickerFilter from '@/components/filters/date-picker'
 
 export function CategoriesToolbar<TData>({
   table,
@@ -33,16 +34,20 @@ export function CategoriesToolbar<TData>({
   const clearParentFilters = useCategoryFilters(
     (state) => state.clearParentFilters
   )
+  const clearUpdatedFilters = useCategoryFilters(
+    (state) => state.clearUpdatedFilters
+  )
 
   const onIdSelect = useCategoryFilters((state) => state.onIdSelect)
   const onImageSelect = useCategoryFilters((state) => state.onImageSelect)
   const onFormatsSelect = useCategoryFilters((state) => state.onFormatsSelect)
   const onNameChange = useCategoryFilters((state) => state.onNameChange)
   const onParentChange = useCategoryFilters((state) => state.onParentChange)
+  const onUpdatedChange = useCategoryFilters((state) => state.onUpdatedChange)
 
   return (
-    <div className='flex items-center justify-between'>
-      <div className='flex flex-1 items-center space-x-2'>
+    <div className='flex items-end gap-2 justify-between'>
+      <div className='flex flex-1 flex-wrap gap-x-2 gap-y-3 items-start'>
         <div className='relative'>
           <Input
             placeholder='Поиск...'
@@ -110,9 +115,28 @@ export function CategoriesToolbar<TData>({
               }
             />
           </li>
+          <li key='updatedAt'>
+            <DatePickerFilter
+              label={categoryColumns.updatedAt}
+              date={{
+                from: filters.updated_from?.length
+                  ? new Date(Date.parse(filters.updated_from))
+                  : undefined,
+                to: filters.updated_to?.length
+                  ? new Date(Date.parse(filters.updated_to))
+                  : undefined,
+              }}
+              onSelect={onUpdatedChange}
+              onClear={clearUpdatedFilters}
+              hasChanged={
+                filters.updated_from !== defaultCategoryFilters.updated_from ||
+                filters.updated_to !== defaultCategoryFilters.updated_to
+              }
+            />
+          </li>
         </ul>
       </div>
-      <div className='flex flex-1 items-center space-x-2'>
+      <div className='flex flex-1 space-x-2'>
         <AddSheet />
       </div>
     </div>

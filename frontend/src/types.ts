@@ -70,7 +70,6 @@ export type SliderFilter = {
     min: number
     max: number
     value: number
-    defaultValue: number
   }[]
   onChange: (key: string, value: number) => void
 }

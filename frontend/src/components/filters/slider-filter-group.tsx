@@ -18,7 +18,6 @@ interface SliderFilterGroupProps {
     min: number
     max: number
     value: number
-    defaultValue: number
   }[]
   onChange: (key: string, value: number) => void
 }
@@ -34,8 +33,8 @@ const SliderFilterGroup = ({
       <CommandLabel>{title}</CommandLabel>
       <CommandSeparator className='mb-1' />
       <ul className='flex flex-col text-sm px-2 py-2 gap-4'>
-        {options.map((option) => (
-          <SliderFilter option={option} onChange={onChange} />
+        {options.map((option, index) => (
+          <SliderFilter id={index} option={option} onChange={onChange} />
         ))}
       </ul>
     </CommandGroup>
@@ -43,18 +42,18 @@ const SliderFilterGroup = ({
 }
 
 interface SliderFilterProps {
+  id: number
   option: {
     key: string
     name: string
     min: number
     max: number
     value: number
-    defaultValue: number
   }
   onChange: (key: string, value: number) => void
 }
 
-const SliderFilter = ({ option, onChange }: SliderFilterProps) => {
+const SliderFilter = ({ id, option, onChange }: SliderFilterProps) => {
   const [value, setValue] = useState(option.value)
 
   useEffect(() => {
@@ -62,13 +61,12 @@ const SliderFilter = ({ option, onChange }: SliderFilterProps) => {
   }, [option.value])
 
   return (
-    <li key={option.key + option.name} className='space-y-2'>
+    <li key={id} className='space-y-2'>
       <p className='px-1'>{option.name}</p>
       <TooltipProvider delayDuration={100}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Slider
-              defaultValue={[option.defaultValue]}
               min={option.min}
               max={option.max}
               step={1}

@@ -11,6 +11,7 @@ import {
   categoryHasImageFilter,
   categoryIdFilter,
   categoryNameFilter,
+  categoryParentFilter,
 } from '@/constants/categories/filters'
 import { useCategoryFilters } from './store/useCategoryFilters'
 
@@ -22,15 +23,20 @@ export function CategoriesToolbar<TData>({
   const onSearch = useCategories((state) => state.onSearch)
 
   const filters = useCategoryFilters((state) => state.filters)
+  const clearIdFilters = useCategoryFilters((state) => state.clearIdFilters)
   const clearImageFilters = useCategoryFilters(
     (state) => state.clearImageFilters
   )
-  const clearIdFilters = useCategoryFilters((state) => state.clearIdFilters)
   const clearNameFilters = useCategoryFilters((state) => state.clearNameFilters)
+  const clearParentFilters = useCategoryFilters(
+    (state) => state.clearParentFilters
+  )
+
   const onIdSelect = useCategoryFilters((state) => state.onIdSelect)
   const onImageSelect = useCategoryFilters((state) => state.onImageSelect)
   const onFormatsSelect = useCategoryFilters((state) => state.onFormatsSelect)
   const onNameChange = useCategoryFilters((state) => state.onNameChange)
+  const onParentChange = useCategoryFilters((state) => state.onParentChange)
 
   return (
     <div className='flex items-center justify-between'>
@@ -74,6 +80,19 @@ export function CategoriesToolbar<TData>({
                 ),
               ]}
               onClear={clearNameFilters}
+            />
+          </li>
+          <li key='parentName'>
+            <Filter
+              title={categoryColumns.parentName}
+              filters={[
+                categoryParentFilter(
+                  filters.parent_min,
+                  filters.parent_max,
+                  onParentChange
+                ),
+              ]}
+              onClear={clearParentFilters}
             />
           </li>
         </ul>

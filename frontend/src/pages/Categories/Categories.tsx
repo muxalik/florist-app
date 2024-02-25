@@ -95,6 +95,8 @@ const Categories = () => {
     filters.formats,
     filters.min_name,
     filters.max_name,
+    filters.parent_min,
+    filters.parent_max,
     sort,
     sortOrder,
     currentPage,

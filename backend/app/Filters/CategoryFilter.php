@@ -31,6 +31,10 @@ class CategoryFilter
 
    protected readonly ?int $maxName;
 
+   protected readonly ?int $parentMin;
+
+   protected readonly ?int $parentMax;
+
    protected Builder $query;
 
    public function __construct(Request $request)
@@ -56,6 +60,10 @@ class CategoryFilter
       $this->minName = $request->min_name;
 
       $this->maxName = $request->max_name;
+
+      $this->parentMin = $request->parent_min;
+
+      $this->parentMax = $request->parent_max;
 
       $this->query = Category::with('image', 'parent');
    }
@@ -118,6 +126,7 @@ class CategoryFilter
       $this->hasImageFilter();
       $this->formatsFilter();
       $this->nameFilter();
+      $this->parentNameFilter();
 
       return $this;
    }
@@ -180,6 +189,28 @@ class CategoryFilter
       }
    }
 
+   private function parentNameFilter(): void
+   {
+      // Minimal name length 
+      if ($this->parentMin) {
+         $this->query->whereHas('parent', function (Builder $q) {
+            $q->whereRaw(
+               'LENGTH(name) >= ?',
+               $this->parentMin
+            );
+         });
+      }
+
+      // Maximum name length 
+      if ($this->parentMax) {
+         $this->query->whereHas('parent', function (Builder $q) {
+            $q->whereRaw(
+               'LENGTH(name) <= ?',
+               $this->parentMax
+            );
+         });
+      }
+   }
 
    private function paginate(): LengthAwarePaginator
    {

@@ -17,6 +17,7 @@ import {
 import { useCategoryFilters } from './store/useCategoryFilters'
 import _ from 'lodash'
 import DatePickerFilter from '@/components/filters/date-picker'
+import { Button } from '@/components/ui/button'
 
 export function CategoriesToolbar<TData>({
   table,
@@ -37,7 +38,10 @@ export function CategoriesToolbar<TData>({
   const clearUpdatedFilters = useCategoryFilters(
     (state) => state.clearUpdatedFilters
   )
-
+  const clearFilters = useCategoryFilters(
+    (state) => state.clearFilters
+  )
+  
   const onIdSelect = useCategoryFilters((state) => state.onIdSelect)
   const onImageSelect = useCategoryFilters((state) => state.onImageSelect)
   const onFormatsSelect = useCategoryFilters((state) => state.onFormatsSelect)
@@ -58,7 +62,7 @@ export function CategoriesToolbar<TData>({
           <Icons.search className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-500 w-4 h-4' />
         </div>
         <DataTableViewOptions table={table} columnNames={columnNames} />
-        <ul className='flex gap-2'>
+        <ul className='flex gap-2 flex-wrap'>
           <li key='id'>
             <Filter
               title={categoryColumns.id}
@@ -135,8 +139,11 @@ export function CategoriesToolbar<TData>({
             />
           </li>
         </ul>
+        <Button variant={'link'} onClick={clearFilters} size={'sm'} className='underline'>
+          Сбросить все
+        </Button>
       </div>
-      <div className='flex flex-1 space-x-2'>
+      <div className='flex space-x-2'>
         <AddSheet />
       </div>
     </div>

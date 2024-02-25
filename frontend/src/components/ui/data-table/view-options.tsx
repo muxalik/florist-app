@@ -1,5 +1,4 @@
 import { DropdownMenuTrigger } from '@radix-ui/react-dropdown-menu'
-import { MixerHorizontalIcon } from '@radix-ui/react-icons'
 import { Table } from '@tanstack/react-table'
 
 import { Button } from '@/components/ui/button'
@@ -28,7 +27,7 @@ export function DataTableViewOptions<TData>({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant='outline' size='sm' className='hidden h-8 lg:flex'>
+        <Button variant='outline' size='sm' className='h-8 flex'>
           <Icons.eye className='mr-2 h-4 w-4' />
           Вид
         </Button>

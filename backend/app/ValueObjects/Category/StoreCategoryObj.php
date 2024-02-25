@@ -2,32 +2,23 @@
 
 namespace App\ValueObjects\Category;
 
-use App\Models\Category;
 use Illuminate\Http\UploadedFile;
 
-class UpdateImageObj
+class StoreCategoryObj
 {
    public function __construct(
-      public readonly Category $category,
+      public readonly array $fields,
       public readonly UploadedFile|null $image,
    ) {
    }
 
    public static function create(
-      Category $category,
+      array $fields,
       UploadedFile | null $image,
    ): self {
       return new self(
-         $category,
+         $fields,
          $image
       );
-   }
-
-   public function toArray(): array
-   {
-      return [
-         'category' => $this->category,
-         'image' => $this->image,
-      ];
    }
 }

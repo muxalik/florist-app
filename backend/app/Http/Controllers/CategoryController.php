@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\Files;
 use App\Filters\CategoryFilter;
 use App\Http\Requests\Category\UpstoreRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ListCategoryResource;
 use App\Models\Category;
-use App\Models\File;
 use App\Services\CategoryService;
-use App\ValueObjects\Category\UpdateImageObj;
+use App\ValueObjects\Category\StoreCategoryObj;
+use App\ValueObjects\Category\UpdateCategoryImageObj;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -41,13 +40,13 @@ class CategoryController extends Controller
         Category $category,
         CategoryService $service,
     ): Response {
-        $data = UpdateImageObj::create(
+        $obj = UpdateCategoryImageObj::create(
             category: $category,
             image: $request->file('image')
         );
 
         try {
-            $service::updateImage($data);
+            $service::updateImage($obj);
         } catch (Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
@@ -60,27 +59,21 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UpstoreRequest $request): JsonResponse
-    {
-        $category = Category::create($request->validated());
+    public function store(
+        UpstoreRequest $request,
+        CategoryService $service
+    ): JsonResponse {
+        $obj = StoreCategoryObj::create(
+            fields: $request->validated(),
+            image: $request->file('image'),
+        );
 
-        if ($request->hasFile('image')) {
-            $path = 'categories';
-
-            $fullPath = $request->file('image')
-                ->store('public/' . $path);
-
-            $filename = str($fullPath)->afterLast('/');
-
-            $category->image()?->delete();
-
-            $file = File::create([
-                'path' => $path,
-                'filename' => $filename,
-                'type' => Files::Image->value,
+        try {
+            $service::store($obj);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
             ]);
-
-            $category->update(['image_id' => $file->id]);
         }
 
         return response()->json([

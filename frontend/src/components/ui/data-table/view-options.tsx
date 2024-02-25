@@ -37,7 +37,7 @@ export function DataTableViewOptions<TData>({
           Вид
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end' className='w-[175px]'>
+      <DropdownMenuContent align='center' className='w-[175px]'>
         <DropdownMenuLabel>Переключить видимость</DropdownMenuLabel>
         <DropdownMenuSeparator />
         {table

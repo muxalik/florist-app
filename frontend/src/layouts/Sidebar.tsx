@@ -21,7 +21,7 @@ const Sidebar = () => {
   const { pathname } = useLocation()
 
   return (
-    <div className='w-[250px] fixed top-0 left-0 bottom-0 h-screen z-20 bg-background border-r border-r-border'>
+    <div className='w-[250px] fixed top-0 left-0 bottom-0 z-20 bg-background border-r border-r-border'>
       <div className='relative w-full h-full overflow-y-hidden'>
         <ScrollArea className='rounded-md pb-[100px]'>
           <ul className='flex flex-col gap-2 py-4 px-2'>

@@ -43,7 +43,7 @@ const Filter = ({ title, filters, onClear }: FilterProps) => {
                   {filter.type === 'radio' && (
                     <RadioFilterGroup
                       id={index}
-                      title={title}
+                      title={filter.title}
                       selected={filter.selected as string}
                       options={filter.options}
                       onSelect={filter.onSelect}
@@ -53,7 +53,7 @@ const Filter = ({ title, filters, onClear }: FilterProps) => {
                   {filter.type === 'checkbox' && (
                     <CheckboxFilterGroup
                       id={index + title}
-                      title={title}
+                      title={filter.title}
                       options={filter.options}
                       selected={filter.selected as string[]}
                       onSelect={filter.onSelect}
@@ -63,7 +63,7 @@ const Filter = ({ title, filters, onClear }: FilterProps) => {
                   {filter.type === 'slider' && (
                     <SliderFilterGroup
                       id={index + title}
-                      title={title}
+                      title={filter.title}
                       options={filter.options}
                       onChange={filter.onChange}
                     />

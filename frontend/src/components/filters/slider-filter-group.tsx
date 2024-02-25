@@ -7,19 +7,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { SliderFilterOption, SliderFilter as SliderFilterType } from '@/types'
 import { useEffect, useState } from 'react'
 
 interface SliderFilterGroupProps {
   id: string | number
-  title: string
-  options: {
-    key: string
-    name: string
-    min: number
-    max: number
-    value: number
-  }[]
-  onChange: (key: string, value: number) => void
 }
 
 const SliderFilterGroup = ({
@@ -27,7 +19,7 @@ const SliderFilterGroup = ({
   title,
   options,
   onChange,
-}: SliderFilterGroupProps) => {
+}: SliderFilterGroupProps & Omit<SliderFilterType, 'type'>) => {
   return (
     <CommandGroup key={id}>
       <CommandLabel>{title}</CommandLabel>
@@ -43,14 +35,8 @@ const SliderFilterGroup = ({
 
 interface SliderFilterProps {
   id: number
-  option: {
-    key: string
-    name: string
-    min: number
-    max: number
-    value: number
-  }
-  onChange: (key: string, value: number) => void
+  option: SliderFilterOption
+  onChange: SliderFilterType['onChange']
 }
 
 const SliderFilter = ({ id, option, onChange }: SliderFilterProps) => {

@@ -22,15 +22,23 @@ interface FilterProps {
   title: string
   filters: (BaseFilter | SliderFilter)[]
   onClear: () => void
+  hasChanged: boolean
 }
 
-const Filter = ({ title, filters, onClear }: FilterProps) => {
+const Filter = ({ title, filters, onClear, hasChanged }: FilterProps) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant='outline' size='sm' className='h-8 border-dashed'>
-          <MixerHorizontalIcon className='mr-2 h-4 w-4' />
+        <Button
+          variant='outline'
+          size='sm'
+          className='h-8 border-dashed flex gap-1.5'
+        >
+          <MixerHorizontalIcon className='h-4 w-4' />
           {title}
+          {hasChanged && (
+            <div className=' bg-primary rounded-full h-2 w-2'></div>
+          )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className='w-[200px] p-0' align='start'>

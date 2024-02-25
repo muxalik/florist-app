@@ -12,8 +12,10 @@ import {
   categoryIdFilter,
   categoryNameFilter,
   categoryParentFilter,
+  defaultCategoryFilters,
 } from '@/constants/categories/filters'
 import { useCategoryFilters } from './store/useCategoryFilters'
+import _ from 'lodash'
 
 export function CategoriesToolbar<TData>({
   table,
@@ -57,6 +59,7 @@ export function CategoriesToolbar<TData>({
               title={categoryColumns.id}
               filters={[categoryIdFilter(filters.id, onIdSelect)]}
               onClear={clearIdFilters}
+              hasChanged={filters.id !== defaultCategoryFilters.id}
             />
           </li>
           <li key='image'>
@@ -67,6 +70,10 @@ export function CategoriesToolbar<TData>({
                 categoryFormatsFilter(filters.formats, onFormatsSelect),
               ]}
               onClear={clearImageFilters}
+              hasChanged={
+                filters.has_image !== defaultCategoryFilters.has_image ||
+                !_.isEqual(filters.formats, defaultCategoryFilters.formats)
+              }
             />
           </li>
           <li key='name'>
@@ -80,6 +87,10 @@ export function CategoriesToolbar<TData>({
                 ),
               ]}
               onClear={clearNameFilters}
+              hasChanged={
+                filters.max_name !== defaultCategoryFilters.max_name ||
+                filters.min_name !== defaultCategoryFilters.min_name
+              }
             />
           </li>
           <li key='parentName'>
@@ -93,6 +104,10 @@ export function CategoriesToolbar<TData>({
                 ),
               ]}
               onClear={clearParentFilters}
+              hasChanged={
+                filters.parent_min !== defaultCategoryFilters.parent_min ||
+                filters.parent_max !== defaultCategoryFilters.parent_max
+              }
             />
           </li>
         </ul>

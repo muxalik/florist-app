@@ -9,6 +9,9 @@ use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ListCategoryResource;
 use App\Models\Category;
 use App\Models\File;
+use App\Services\CategoryService;
+use App\ValueObjects\Category\UpdateImageObj;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
@@ -16,34 +19,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CategoryController extends Controller
 {
-
-    public function updateImage(Request $request, Category $category): Response
-    {
-        if (!$request->hasFile('image')) {
-            $category->update(['image_id' => null]);
-
-            return response()->noContent();
-        }
-
-        $path = 'categories';
-
-        $fullPath = $request->file('image')
-            ->store('public/' . $path);
-
-        $filename = str($fullPath)->afterLast('/');
-
-        $category->image()?->delete();
-
-        $file = File::create([
-            'path' => $path,
-            'filename' => $filename,
-            'type' => Files::Image->value,
-        ]);
-
-        $category->update(['image_id' => $file->id]);
-
-        return response()->noContent();
-    }
     /**
      * Display a listing of the resource.
      */
@@ -59,6 +34,27 @@ class CategoryController extends Controller
         return ListCategoryResource::collection(
             Category::latest('id')->get(),
         );
+    }
+
+    public function updateImage(
+        Request $request,
+        Category $category,
+        CategoryService $service,
+    ): Response {
+        $data = UpdateImageObj::create(
+            category: $category,
+            image: $request->file('image')
+        );
+
+        try {
+            $service::updateImage($data);
+        } catch (Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ]);
+        }
+
+        return response()->noContent();
     }
 
     /**

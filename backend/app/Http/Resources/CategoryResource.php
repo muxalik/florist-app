@@ -20,8 +20,8 @@ class CategoryResource extends JsonResource
             'image' => $this->image?->full_path,
             'parentId' => $this->parent?->id,
             'parentName' => $this->parent?->name,
-            'createdAt' => $this->created_at->format(config('app.date_format')),
-            'updatedAt' => $this->updated_at->format(config('app.date_format')),
+            'createdAt' => $this->created_at->translatedFormat(config('app.date_format')),
+            'updatedAt' => $this->updated_at->translatedFormat(config('app.date_format')),
         ];
     }
 }

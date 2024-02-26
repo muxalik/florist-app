@@ -23,7 +23,10 @@ class UpdatedAtFilter
       }
 
       if ($to) {
-         $date = Carbon::createFromFormat('m-d-Y', $to);
+         $date = Carbon::createFromFormat('m-d-Y', $to)
+            ->setHours(23)
+            ->setMinutes(59)
+            ->setSeconds(59);
 
          $query->where('updated_at', '<=', $date);
       }

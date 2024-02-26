@@ -32,7 +32,7 @@ const Categories = () => {
   const { currentPage, lastPage, perPage } = useCategories(
     (state) => state.pagination
   )
-  const [searchParams, setSearchParams] = useSearchParams()
+  const [, setSearchParams] = useSearchParams()
 
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
 

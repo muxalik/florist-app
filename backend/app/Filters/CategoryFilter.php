@@ -3,7 +3,7 @@
 namespace App\Filters;
 
 use App\Actions\Filters\Category\CategoryHasImageFilter;
-use App\Actions\Filters\Category\CategoryIdFilter;
+use App\Actions\Filters\IdFilter;
 use App\Actions\Filters\Category\CategoryImageFormatsFilter;
 use App\Actions\Filters\Category\CategoryNameFilter;
 use App\Actions\Filters\Category\CategoryParentNameFilter;
@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 class CategoryFilter extends AbstractFilter
 {
    protected array $filters = [
-      CategoryIdFilter::class,
+      IdFilter::class,
       CategoryHasImageFilter::class,
       CategoryImageFormatsFilter::class,
       CategoryNameFilter::class,

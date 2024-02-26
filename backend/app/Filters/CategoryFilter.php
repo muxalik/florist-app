@@ -7,6 +7,7 @@ use App\Actions\Filters\IdFilter;
 use App\Actions\Filters\Category\CategoryImageFormatsFilter;
 use App\Actions\Filters\Category\CategoryNameFilter;
 use App\Actions\Filters\Category\CategoryParentNameFilter;
+use App\Actions\Filters\CreatedAtFilter;
 use App\Actions\Filters\UpdatedAtFilter;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Builder;
@@ -21,6 +22,7 @@ class CategoryFilter extends AbstractFilter
       CategoryNameFilter::class,
       CategoryParentNameFilter::class,
       UpdatedAtFilter::class,
+      CreatedAtFilter::class,
    ];
 
 

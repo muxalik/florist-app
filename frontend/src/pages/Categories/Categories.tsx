@@ -99,6 +99,8 @@ const Categories = () => {
     filters.parent_max,
     filters.updated_from,
     filters.updated_to,
+    filters.created_from,
+    filters.created_to,
     sort,
     sortOrder,
     currentPage,

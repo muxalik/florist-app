@@ -27,6 +27,8 @@ export function CategoriesToolbar<TData>({
   const onSearch = useCategories((state) => state.onSearch)
 
   const filters = useCategoryFilters((state) => state.filters)
+  const clearFilters = useCategoryFilters((state) => state.clearFilters)
+
   const clearIdFilters = useCategoryFilters((state) => state.clearIdFilters)
   const clearImageFilters = useCategoryFilters(
     (state) => state.clearImageFilters
@@ -38,16 +40,17 @@ export function CategoriesToolbar<TData>({
   const clearUpdatedFilters = useCategoryFilters(
     (state) => state.clearUpdatedFilters
   )
-  const clearFilters = useCategoryFilters(
-    (state) => state.clearFilters
+  const clearCreatedFilters = useCategoryFilters(
+    (state) => state.clearCreatedFilters
   )
-  
+
   const onIdSelect = useCategoryFilters((state) => state.onIdSelect)
   const onImageSelect = useCategoryFilters((state) => state.onImageSelect)
   const onFormatsSelect = useCategoryFilters((state) => state.onFormatsSelect)
   const onNameChange = useCategoryFilters((state) => state.onNameChange)
   const onParentChange = useCategoryFilters((state) => state.onParentChange)
   const onUpdatedChange = useCategoryFilters((state) => state.onUpdatedChange)
+  const onCreatedChange = useCategoryFilters((state) => state.onCreatedChange)
 
   return (
     <div className='flex items-end gap-2 justify-between'>
@@ -119,6 +122,25 @@ export function CategoriesToolbar<TData>({
               }
             />
           </li>
+          <li key='createdAt'>
+            <DatePickerFilter
+              label={categoryColumns.createdAt}
+              date={{
+                from: filters.created_from?.length
+                  ? new Date(Date.parse(filters.created_from))
+                  : undefined,
+                to: filters.created_to?.length
+                  ? new Date(Date.parse(filters.created_to))
+                  : undefined,
+              }}
+              onSelect={onCreatedChange}
+              onClear={clearCreatedFilters}
+              hasChanged={
+                filters.created_from !== defaultCategoryFilters.created_from ||
+                filters.created_to !== defaultCategoryFilters.created_to
+              }
+            />
+          </li>
           <li key='updatedAt'>
             <DatePickerFilter
               label={categoryColumns.updatedAt}
@@ -139,7 +161,12 @@ export function CategoriesToolbar<TData>({
             />
           </li>
         </ul>
-        <Button variant={'link'} onClick={clearFilters} size={'sm'} className='underline'>
+        <Button
+          variant={'link'}
+          onClick={clearFilters}
+          size={'sm'}
+          className='underline'
+        >
           Сбросить все
         </Button>
       </div>

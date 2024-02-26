@@ -18,6 +18,7 @@ type CategoryFiltersStore = {
   clearNameFilters: () => void
   clearParentFilters: () => void
   clearUpdatedFilters: () => void
+  clearCreatedFilters: () => void
 
   onIdSelect: (value: string) => void
   onImageSelect: (value: string) => void
@@ -25,6 +26,7 @@ type CategoryFiltersStore = {
   onNameChange: (key: string, value: number) => void
   onParentChange: (key: string, value: number) => void
   onUpdatedChange: (range: DateRange | undefined) => void
+  onCreatedChange: (range: DateRange | undefined) => void
 }
 
 const filtersFromUrl = (): CategoryFilters => {
@@ -59,6 +61,12 @@ const filtersFromUrl = (): CategoryFilters => {
   const updated_to =
     searchParams.get('updated_to') || defaultCategoryFilters.updated_to
 
+  const created_from =
+    searchParams.get('created_from') || defaultCategoryFilters.created_from
+
+  const created_to =
+    searchParams.get('created_to') || defaultCategoryFilters.created_to
+
   return {
     id,
     has_image,
@@ -69,6 +77,8 @@ const filtersFromUrl = (): CategoryFilters => {
     parent_max,
     updated_from,
     updated_to,
+    created_from,
+    created_to,
   } as CategoryFilters
 }
 
@@ -137,6 +147,16 @@ export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
     }))
   },
 
+  clearCreatedFilters: () => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        updated_from: defaultCategoryFilters.updated_from,
+        updated_to: defaultCategoryFilters.updated_to,
+      },
+    }))
+  },
+
   onIdSelect: (value: string) => {
     set((state) => ({
       filters: {
@@ -192,6 +212,16 @@ export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
         ...state.filters,
         updated_from: range?.from ? format(range?.from, 'MM-dd-yyyy') : '',
         updated_to: range?.to ? format(range?.to, 'MM-dd-yyyy') : '',
+      },
+    }))
+  },
+
+  onCreatedChange: (range: DateRange | undefined) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        created_from: range?.from ? format(range?.from, 'MM-dd-yyyy') : '',
+        created_to: range?.to ? format(range?.to, 'MM-dd-yyyy') : '',
       },
     }))
   },

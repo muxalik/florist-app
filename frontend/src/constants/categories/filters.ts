@@ -11,6 +11,8 @@ export const defaultCategoryFilters: CategoryFilters = {
   parent_max: 100,
   updated_from: '',
   updated_to: '',
+  created_from: '',
+  created_to: '',
 } as const
 
 export const categoryIdFilter = (

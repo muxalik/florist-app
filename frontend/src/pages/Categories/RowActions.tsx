@@ -11,20 +11,12 @@ import {
 } from '@/components/ui/dropdown-menu'
 import Icons from '@/components/ui/icons'
 import { Row } from '@tanstack/react-table'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
 import { useState } from 'react'
 import EditSheet from './Actions/EditSheet'
 import { Category } from '@/types/category'
 import { useCategories } from './store/useCategories'
+import DeleteModal from './Actions/DeleteModal'
+import ViewCategory from './Actions/ViewCategory'
 
 interface DataTableRowActionsProps {
   row: Row<Category>
@@ -32,10 +24,11 @@ interface DataTableRowActionsProps {
 
 export function CategoriesRowActions({ row }: DataTableRowActionsProps) {
   const [openEditSheet, setOpenEditSheet] = useState(false)
+  const [openViewSheet, setOpenViewSheet] = useState(false)
 
   const closeEditSheet = () => setOpenEditSheet(false)
+  const closeViewSheet = () => setOpenViewSheet(false)
 
-  const onDelete = useCategories((state) => state.onDelete)
   const onEdit = useCategories((state) => state.onEdit)
   const simpleCategories = useCategories((state) => state.simpleCategories)
 
@@ -51,7 +44,15 @@ export function CategoriesRowActions({ row }: DataTableRowActionsProps) {
             <span className='sr-only'>Открыть меню</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align='end' className='w-[190px] font-medium'>
+        <DropdownMenuContent align='end' className='w-[200px] font-medium'>
+          <DropdownMenuItem
+            className='flex gap-2 text-gray-700 mb-1'
+            onClick={() => setOpenViewSheet(true)}
+          >
+            <Icons.eye className='w-5 h-5' />
+            Посмотреть
+            <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
+          </DropdownMenuItem>
           <DropdownMenuItem
             className='flex gap-2 text-gray-700'
             onClick={() => setOpenEditSheet(true)}
@@ -63,40 +64,15 @@ export function CategoriesRowActions({ row }: DataTableRowActionsProps) {
 
           <DropdownMenuSeparator />
 
-          <Dialog>
-            <DialogTrigger asChild>
-              <DropdownMenuItem
-                className='flex gap-2 text-gray-700'
-                onSelect={(e) => e.preventDefault()}
-              >
-                <Icons.trash className='w-5 h-5' />
-                Удалить
-                <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DialogTrigger>
-
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle className='mb-6'>
-                  Вы абсолютно уверены?
-                </DialogTitle>
-                <DialogDescription>
-                  Это действие нельзя отменить! Вы уверены что хотите
-                  продолжить?
-                </DialogDescription>
-              </DialogHeader>
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button variant={'outline'}>Отмена</Button>
-                </DialogClose>
-                <Button variant={'destructive'} onClick={() => onDelete(row)}>
-                  Подтвердить
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <DeleteModal row={row} />
         </DropdownMenuContent>
       </DropdownMenu>
+      <ViewCategory
+        open={openViewSheet}
+        onOpenChange={closeViewSheet}
+        row={row}
+        categoryList={simpleCategories}
+      />
       <EditSheet
         open={openEditSheet}
         onOpenChange={closeEditSheet}

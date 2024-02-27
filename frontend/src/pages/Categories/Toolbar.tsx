@@ -18,6 +18,7 @@ import { useCategoryFilters } from './store/useCategoryFilters'
 import _ from 'lodash'
 import DatePickerFilter from '@/components/filters/date-picker'
 import { Button } from '@/components/ui/button'
+import downloadFromUrl from '@/utils/downloadFromUrl'
 
 export function CategoriesToolbar<TData>({
   table,
@@ -53,7 +54,7 @@ export function CategoriesToolbar<TData>({
   const onCreatedChange = useCategoryFilters((state) => state.onCreatedChange)
 
   return (
-    <div className='flex items-end gap-2 justify-between'>
+    <div className='flex items-end gap-10 justify-between'>
       <div className='flex flex-1 flex-wrap gap-x-2 gap-y-3 items-start'>
         <div className='relative'>
           <Input
@@ -171,6 +172,17 @@ export function CategoriesToolbar<TData>({
         </Button>
       </div>
       <div className='flex space-x-2'>
+        <Button
+          className='gap-2'
+          variant={'outline'}
+          size={'sm'}
+          onClick={() =>
+            downloadFromUrl('/categories/export/excel', 'Категории.xlsx')
+          }
+        >
+          <Icons.donwload className='w-4 h-4' />
+          <span>Скачать</span>
+        </Button>
         <AddSheet />
       </div>
     </div>

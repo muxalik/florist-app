@@ -6,7 +6,8 @@ use App\Http\Controllers\Auth\RequestPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\UpdateTokenController;
 use App\Http\Controllers\Auth\VerifyPasswordController;
-use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Category\CategoryExcelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -33,8 +34,12 @@ Route::middleware(['guest:sanctum'])->group(function () {
 
 Route::middleware(['auth:sanctum'])->group(function () {
     // Categories 
-    Route::post('categories/{category}/image', [CategoryController::class, 'updateImage']);
-    Route::get('categories/list', [CategoryController::class, 'list'])->name('categories.list');
+    Route::prefix('categories')->as('categories.')->group(function () {
+        Route::post('{category}/image', [CategoryController::class, 'updateImage'])->name('update-image');
+        Route::get('list', [CategoryController::class, 'list'])->name('list');
+        Route::get('export/excel', CategoryExcelController::class)->name('export-excel');
+    });
+
     Route::apiResource('categories', CategoryController::class);
 
     Route::get('logout', LogoutController::class)->name('logout');

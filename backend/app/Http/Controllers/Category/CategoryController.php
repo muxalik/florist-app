@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Category;
 
 use App\Filters\CategoryFilter;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\UpstoreRequest;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\ListCategoryResource;

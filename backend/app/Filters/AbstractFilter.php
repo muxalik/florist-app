@@ -49,13 +49,19 @@ abstract class AbstractFilter
    }
 
 
-   public function apply(): LengthAwarePaginator
-   {
-      return $this
+   public function apply(
+      $withoutPagination = false
+   ): LengthAwarePaginator | Builder {
+      $state = $this
          ->search()
          ->sort()
-         ->filter()
-         ->paginate();
+         ->filter();
+
+      if ($withoutPagination) {
+         return $state->query;
+      }
+
+      return $state->paginate();
    }
 
    abstract protected function search(): self;

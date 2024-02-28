@@ -12,25 +12,22 @@ import {
 import Icons from '@/components/ui/icons'
 import { Row } from '@tanstack/react-table'
 import { useState } from 'react'
-import EditSheet from './Actions/EditSheet'
+import EditCategory from './Actions/EditCategory'
 import { Category } from '@/types/category'
 import { useCategories } from './store/useCategories'
-import DeleteModal from './Actions/DeleteModal'
+import DeleteCategory from './Actions/DeleteCategory'
 import ViewCategory from './Actions/ViewCategory'
+import { CategoryRawActions } from '@/types'
 
 interface DataTableRowActionsProps {
   row: Row<Category>
 }
 
 export function CategoriesRowActions({ row }: DataTableRowActionsProps) {
-  const [openEditSheet, setOpenEditSheet] = useState(false)
-  const [openViewSheet, setOpenViewSheet] = useState(false)
-
-  const closeEditSheet = () => setOpenEditSheet(false)
-  const closeViewSheet = () => setOpenViewSheet(false)
-
   const onEdit = useCategories((state) => state.onEdit)
   const simpleCategories = useCategories((state) => state.simpleCategories)
+
+  const [open, setOpen] = useState<CategoryRawActions | null>(null)
 
   return (
     <>
@@ -47,7 +44,7 @@ export function CategoriesRowActions({ row }: DataTableRowActionsProps) {
         <DropdownMenuContent align='end' className='w-[200px] font-medium'>
           <DropdownMenuItem
             className='flex gap-2 text-gray-700 mb-1'
-            onClick={() => setOpenViewSheet(true)}
+            onSelect={() => setOpen('view')}
           >
             <Icons.eye className='w-5 h-5' />
             Посмотреть
@@ -55,30 +52,43 @@ export function CategoriesRowActions({ row }: DataTableRowActionsProps) {
           </DropdownMenuItem>
           <DropdownMenuItem
             className='flex gap-2 text-gray-700'
-            onClick={() => setOpenEditSheet(true)}
+            onSelect={() => setOpen('edit')}
           >
             <Icons.edit className='w-5 h-5' />
             Изменить
             <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
           </DropdownMenuItem>
-
           <DropdownMenuSeparator />
-
-          <DeleteModal row={row} />
+          <DropdownMenuItem
+            className='flex gap-2 text-gray-700'
+            onSelect={() => setOpen('delete')}
+          >
+            <Icons.trash className='w-5 h-5' />
+            Удалить
+            <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+
+      <DeleteCategory
+        row={row}
+        open={open === 'delete'}
+        onOpenChange={() => setOpen(open === 'delete' ? null : 'delete')}
+      />
+
       <ViewCategory
-        open={openViewSheet}
-        onOpenChange={closeViewSheet}
+        open={open === 'view'}
+        onOpenChange={() => setOpen(open === 'view' ? null : 'view')}
         row={row}
         categoryList={simpleCategories}
       />
-      <EditSheet
-        open={openEditSheet}
-        onOpenChange={closeEditSheet}
+
+      <EditCategory
+        open={open === 'edit'}
+        onOpenChange={() => setOpen(open === 'edit' ? null : 'edit')}
         row={row}
         onSave={onEdit}
-        onCancel={closeEditSheet}
+        onCancel={() => setOpen(null)}
         categoryList={simpleCategories}
       />
     </>

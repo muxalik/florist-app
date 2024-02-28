@@ -1,6 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { DataTableViewOptions } from '@/components/ui/data-table/view-options'
-import AddSheet from './Actions/AddSheet'
+import CreateCategory from './Actions/CreateCategory'
 import { DataTableToolbarProps } from '@/types'
 import { useCategories } from './store/useCategories'
 import Icons from '@/components/ui/icons'
@@ -183,7 +183,7 @@ export function CategoriesToolbar<TData>({
           <Icons.donwload className='w-4 h-4' />
           <span>Скачать</span>
         </Button>
-        <AddSheet />
+        <CreateCategory />
       </div>
     </div>
   )

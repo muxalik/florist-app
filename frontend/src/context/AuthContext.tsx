@@ -59,8 +59,10 @@ const AuthProvider: FC<props> = ({ children }) => {
         })
       })
       .catch((error) => {
-        if (error.response.status === 401) {
-          logout()
+        const status = error.response.status
+
+        if (status >= 400 && status < 500) {
+          setUser(null)
         }
         console.log(error)
       })

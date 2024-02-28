@@ -6,10 +6,11 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
 } from '@/components/ui/sheet'
+import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { categoryColumns } from '@/constants/categories/columns'
+import { Row } from '@tanstack/react-table'
 import Icons from '@/components/ui/icons'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,6 +25,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { preview } from '@/assets'
+import { Category, CategoryEditData, SimpleCategory } from '@/types/category'
+
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -41,8 +44,6 @@ import {
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
-import { Label } from '@/components/ui/label'
-import { useCategories } from '../store/useCategories'
 
 const formSchema = z.object({
   name: z
@@ -57,12 +58,25 @@ const formSchema = z.object({
   parentId: z.number().nullable(),
 })
 
-function AddSheet() {
-  const onAdd = useCategories((state) => state.onAdd)
-  const simpleCategories = useCategories((state) => state.simpleCategories)
+interface EditCategoryProps {
+  row: Row<Category>
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onSave: (rowId: number, data: CategoryEditData) => void
+  onCancel: () => void
+  categoryList: SimpleCategory[]
+}
 
-  const [open, setOpen] = useState(false)
+function EditCategory({
+  row,
+  open,
+  onOpenChange,
+  onSave,
+  onCancel,
+  categoryList,
+}: EditCategoryProps) {
   const [image, setImage] = useState<File | null>(null)
+  const [isImageRemoved, setIsImageRemoved] = useState(!row.getValue('image'))
   const [openCategories, setOpenCategories] = useState(false)
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -75,54 +89,57 @@ function AddSheet() {
     const selectedFile = event.target.files![0]
 
     setImage(selectedFile)
+    setIsImageRemoved(false)
   }
 
   const onCloseImage: MouseEventHandler = (e) => {
     e.stopPropagation()
 
     setImage(null)
+    setIsImageRemoved(true)
     fileInputRef.current!.value = ''
+  }
+
+  const onRefreshImage: MouseEventHandler = (e) => {
+    e.stopPropagation()
+
+    setImage(null)
   }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: '',
-      parentId: null,
+      name: row.getValue('name'),
+      parentId: row.original.parentId,
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAdd({
+    const data: CategoryEditData = {
       ...values,
       image,
-    })
+    }
 
-    setOpen(false)
-    setTimeout(() => {
-      form.reset()
-      setImage(null)
-    }, 300)
+    onSave(row.getValue('id'), data)
+    onOpenChange(false)
   }
 
   const imageUrl = image ? URL.createObjectURL(image) : ''
 
+  const filteredCategories = categoryList.filter(
+    (category) => category.id !== row.getValue('id')
+  )
+
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
-        <Button size='sm' className='ml-auto h-8 flex'>
-          <Icons.plusCircle className='mr-2 h-4 w-4' />
-          Добавить
-        </Button>
-      </SheetTrigger>
+    <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className='w-[400px] sm:w-[540px] p-0 pr-1'>
         <ScrollArea className='w-full h-full'>
           <div className='px-6 py-6 min-h-screen flex flex-col'>
             <SheetHeader className='mb-10'>
-              <SheetTitle className='mb-2'>Добавить новую категорию</SheetTitle>
+              <SheetTitle className='mb-2'>Редактировать категорию</SheetTitle>
               <SheetDescription>
-                Здесь вы можете создать категорию. Когда заполните все
-                необходимые поля, нажмите Добавить.
+                Здесь вы можете изменить категорию. Когда сделаете все
+                изменения, нажмите Сохранить.
               </SheetDescription>
             </SheetHeader>
             <Form {...form}>
@@ -131,6 +148,10 @@ function AddSheet() {
                 className='flex flex-col gap-6 pb-2 h-full flex-1 justify-between'
               >
                 <div className='flex flex-col gap-6 '>
+                  <div className='grid gap-2'>
+                    <Label htmlFor='id'>{categoryColumns.id}</Label>
+                    <Input id='id' value={row.getValue('id')} disabled />
+                  </div>
                   <FormField
                     control={form.control}
                     name='name'
@@ -165,19 +186,31 @@ function AddSheet() {
                       onClick={onImageClick}
                     >
                       <div className='absolute -right-2 -top-2 z-30 text-gray-600 flex gap-2'>
+                        {!!image ||
+                          (!!row.getValue('image') && !isImageRemoved && (
+                            <Button
+                              variant={'outline'}
+                              size={'icon'}
+                              onClick={onCloseImage}
+                            >
+                              <Icons.close />
+                            </Button>
+                          ))}
+
                         {!!image && (
                           <Button
                             variant={'outline'}
                             size={'icon'}
-                            onClick={onCloseImage}
+                            className='text-gray-600'
+                            onClick={onRefreshImage}
                           >
-                            <Icons.close />
+                            <Icons.refresh />
                           </Button>
                         )}
                       </div>
-                      {!!image ? (
+                      {!isImageRemoved ? (
                         <img
-                          src={imageUrl}
+                          src={imageUrl || row.getValue('image')}
                           alt='Превью'
                           className='rounded-sm'
                         />
@@ -208,15 +241,15 @@ function AddSheet() {
                                 variant='outline'
                                 role='combobox'
                                 className={cn(
-                                  'justify-between text-left gap-2 text-wrap h-auto min-h-9',
+                                  'justify-between text-wrap h-auto min-h-9',
                                   !field.value && 'text-muted-foreground'
                                 )}
                               >
-                                <div className='flex gap-2 items-center'>
+                                <div className='flex'>
                                   {!!field.value && (
-                                    <Badge variant={'outline'}>
+                                    <Badge variant={'outline'} className='mr-2'>
                                       {
-                                        simpleCategories.find(
+                                        categoryList.find(
                                           (category) =>
                                             category.id === field.value
                                         )?.id
@@ -224,7 +257,7 @@ function AddSheet() {
                                     </Badge>
                                   )}
                                   {field.value
-                                    ? simpleCategories.find(
+                                    ? categoryList.find(
                                         (category) =>
                                           category.id === field.value
                                       )?.name
@@ -243,7 +276,7 @@ function AddSheet() {
                               <CommandEmpty>Категория не найдена.</CommandEmpty>
                               <ScrollArea className='h-[190px] z-20'>
                                 <CommandGroup>
-                                  {simpleCategories.map((category) => (
+                                  {filteredCategories.map((category) => (
                                     <CommandItem
                                       value={category.name + category.id}
                                       key={category.name}
@@ -284,7 +317,7 @@ function AddSheet() {
                     className='flex-1'
                     onClick={(e) => {
                       e.preventDefault()
-                      setOpen(false)
+                      onCancel()
 
                       setTimeout(() => {
                         form.reset()
@@ -294,9 +327,7 @@ function AddSheet() {
                   >
                     Отмена
                   </Button>
-                  <Button type='submit' className='flex-1'>
-                    Добавить
-                  </Button>
+                  <Button className='flex-1'>Сохранить</Button>
                 </SheetFooter>
               </form>
             </Form>
@@ -307,4 +338,4 @@ function AddSheet() {
   )
 }
 
-export default AddSheet
+export default EditCategory

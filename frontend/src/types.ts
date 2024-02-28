@@ -75,3 +75,5 @@ export type SliderFilter = {
   options: SliderFilterOption[]
   onChange: (key: string, value: number) => void
 }
+
+export type CategoryRawActions = 'delete' | 'view' | 'edit'

@@ -1,7 +1,3 @@
-import {
-  DropdownMenuItem,
-  DropdownMenuShortcut,
-} from '@/components/ui/dropdown-menu'
 import { useCategories } from '../store/useCategories'
 import {
   Dialog,
@@ -11,37 +7,28 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog'
-import Icons from '@/components/ui/icons'
 import { Button } from '@/components/ui/button'
 import { Row } from '@tanstack/react-table'
 import { Category } from '@/types/category'
 
-interface DeleteModalProps {
+interface DeleteCategoryProps {
   row: Row<Category>
+  open: boolean
+  onOpenChange: (isOpened: boolean) => void
 }
 
-const DeleteModal = ({ row }: DeleteModalProps) => {
+const DeleteCategory = ({ row, open, onOpenChange }: DeleteCategoryProps) => {
   const onDelete = useCategories((state) => state.onDelete)
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <DropdownMenuItem
-          className='flex gap-2 text-gray-700'
-          onSelect={(e) => e.preventDefault()}
-        >
-          <Icons.trash className='w-5 h-5' />
-          Удалить
-          <DropdownMenuShortcut>⌘⌫</DropdownMenuShortcut>
-        </DropdownMenuItem>
-      </DialogTrigger>
-
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className='mb-6'>Вы абсолютно уверены?</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className='mb-6 leading-7'>
+            Вы абсолютно уверены, что хотите удалить выбранную категорию?
+          </DialogTitle>
+          <DialogDescription className='leading-6'>
             Это действие нельзя отменить! Вы уверены что хотите продолжить?
           </DialogDescription>
         </DialogHeader>
@@ -58,4 +45,4 @@ const DeleteModal = ({ row }: DeleteModalProps) => {
   )
 }
 
-export default DeleteModal
+export default DeleteCategory

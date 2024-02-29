@@ -1,4 +1,4 @@
-import { useCategories } from '../store/useCategories'
+import { useCategories } from '../store'
 import {
   Dialog,
   DialogClose,

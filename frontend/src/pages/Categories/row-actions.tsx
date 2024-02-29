@@ -12,18 +12,18 @@ import {
 import Icons from '@/components/ui/icons'
 import { Row } from '@tanstack/react-table'
 import { useState } from 'react'
-import EditCategory from './Actions/EditCategory'
+import EditCategory from './actions/edit-category'
 import { Category } from '@/types/category'
-import { useCategories } from './store/useCategories'
-import DeleteCategory from './Actions/DeleteCategory'
-import ViewCategory from './Actions/ViewCategory'
+import { useCategories } from './store'
+import DeleteCategory from './actions/delete-category'
+import ViewCategory from './actions/view-category'
 import { CategoryRawActions } from '@/types'
 
 interface DataTableRowActionsProps {
   row: Row<Category>
 }
 
-export function CategoriesRowActions({ row }: DataTableRowActionsProps) {
+export function CategoryRowActions({ row }: DataTableRowActionsProps) {
   const onEdit = useCategories((state) => state.onEdit)
   const simpleCategories = useCategories((state) => state.simpleCategories)
 
@@ -95,4 +95,4 @@ export function CategoriesRowActions({ row }: DataTableRowActionsProps) {
   )
 }
 
-export default CategoriesRowActions
+export default CategoryRowActions

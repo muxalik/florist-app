@@ -1,8 +1,14 @@
+import { useCategories } from './store'
+import { useSearchParams } from 'react-router-dom'
+import { categoriesPagination } from '@/constants/categories/pagination'
+import { defaultCategoryFilters } from '@/constants/categories/filters'
+import { CategoryFilter } from '@/types/category'
+import { useCategoryFilters } from './filters/store'
+import { useEffect } from 'react'
 import { columns } from './columns'
 import { DataTable } from '@/components/ui/data-table'
 import { categoryColumns } from '@/constants/categories/columns'
-import { CategoriesToolbar } from './Toolbar'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   VisibilityState,
   getCoreRowModel,
@@ -11,55 +17,35 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { DataTablePagination } from '@/components/ui/data-table/pagination'
-import { useCategories } from './store/useCategories'
-import { useSearchParams } from 'react-router-dom'
-import { initialPagination } from '@/constants/pagination'
-import { defaultCategoryFilters } from '@/constants/categories/filters'
-import { CategoryFilter } from '@/types/category'
 import _ from 'lodash'
-import { useCategoryFilters } from './store/useCategoryFilters'
+import { CategoryToolbar } from './toolbar'
 
 const Categories = () => {
-  const categories = useCategories((state) => state.categories)
-  const isLoading = useCategories((state) => state.isLoading)
-  const setPage = useCategories((state) => state.setPage)
-  const setPerPage = useCategories((state) => state.setPerPage)
+  const [, setSearchParams] = useSearchParams()
+
   const filters = useCategoryFilters((state) => state.filters)
   const sort = useCategories((state) => state.sort)
   const sortOrder = useCategories((state) => state.sortOrder)
-  const fetchCategories = useCategories((state) => state.fetchCategories)
   const search = useCategories((state) => state.search)
   const { currentPage, lastPage, perPage } = useCategories(
     (state) => state.pagination
   )
-  const [, setSearchParams] = useSearchParams()
 
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-
-  const cols = columns()
-
-  const table = useReactTable({
-    data: categories,
-    columns: cols,
-    state: {
-      columnVisibility,
-    },
-    manualPagination: true,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-  })
+  const categories = useCategories((state) => state.categories)
+  const isLoading = useCategories((state) => state.isLoading)
+  const setPage = useCategories((state) => state.setPage)
+  const setPerPage = useCategories((state) => state.setPerPage)
+  const fetchCategories = useCategories((state) => state.fetchCategories)
 
   useEffect(() => {
     fetchCategories()
 
     setSearchParams((prev) => {
-      currentPage === initialPagination.currentPage
+      currentPage === categoriesPagination.currentPage
         ? prev.delete('page')
         : prev.set('page', currentPage.toString())
 
-      perPage === initialPagination.perPage
+      perPage === categoriesPagination.perPage
         ? prev.delete('per_page')
         : prev.set('per_page', perPage.toString())
 
@@ -108,12 +94,29 @@ const Categories = () => {
     search,
   ])
 
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+
+  const cols = columns()
+
+  const table = useReactTable({
+    data: categories,
+    columns: cols,
+    state: {
+      columnVisibility,
+    },
+    manualPagination: true,
+    onColumnVisibilityChange: setColumnVisibility,
+    getCoreRowModel: getCoreRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+  })
+
   return (
     <div className='w-full h-full'>
       <h1 className='text-4xl font-bold mb-6'>Категории</h1>
       <div className='flex w-full'>
         <div className='space-y-4 w-full'>
-          <CategoriesToolbar table={table} columnNames={categoryColumns} />
+          <CategoryToolbar table={table} columnNames={categoryColumns} />
           <DataTable columns={cols} table={table} isLoading={isLoading} />
           <DataTablePagination
             table={table}

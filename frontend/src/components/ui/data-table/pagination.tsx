@@ -32,6 +32,10 @@ export function DataTablePagination<TData>({
   perPage,
   setPerPage,
 }: DataTablePaginationProps<TData>) {
+  const perPageOptions = Array.from({ length: 4 })
+    .fill(0)
+    .map((_, index) => perPage * (index + 1))
+
   return (
     <div className='flex items-center justify-between px-2'>
       <div className='flex items-center justify-between w-full space-x-6 lg:space-x-8'>
@@ -48,7 +52,7 @@ export function DataTablePagination<TData>({
               <SelectValue placeholder={perPage} />
             </SelectTrigger>
             <SelectContent side='top'>
-              {[10, 20, 30, 40, 50].map((pageSize) => (
+              {perPageOptions.map((pageSize) => (
                 <SelectItem key={pageSize} value={`${pageSize}`}>
                   {pageSize}
                 </SelectItem>

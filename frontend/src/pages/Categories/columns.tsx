@@ -1,42 +1,17 @@
 import { Category } from '@/types/category'
-import { Checkbox } from '@radix-ui/react-checkbox'
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from '@/components/ui/data-table/column-header'
 import { Badge } from '@/components/ui/badge'
 import { categoryColumns } from '@/constants/categories/columns'
-import CategoriesRowActions from './RowActions'
+import CategoryRowActions from './row-actions'
 import { preview } from '@/assets'
-import { useCategories } from './store/useCategories'
+import { useCategories } from './store'
 
 export const columns = (): ColumnDef<Category>[] => {
   const setSort = useCategories((state) => state.setSort)
   const setSortOrder = useCategories((state) => state.setSortOrder)
 
   return [
-    {
-      id: 'select',
-      header: ({ table }) => (
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && 'indeterminate')
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label='Выбрать все'
-          className='translate-y-[2px]'
-        />
-      ),
-      cell: ({ row }) => (
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label='Выбрать ряд'
-          className='translate-y-[2px]'
-        />
-      ),
-      enableSorting: false,
-      enableHiding: false,
-    },
     {
       accessorKey: 'id',
       header: ({ column }) => (
@@ -163,7 +138,7 @@ export const columns = (): ColumnDef<Category>[] => {
     },
     {
       id: 'actions',
-      cell: ({ row }) => <CategoriesRowActions row={row} />,
+      cell: ({ row }) => <CategoryRowActions row={row} />,
     },
   ]
 }

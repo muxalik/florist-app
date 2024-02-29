@@ -1,6 +1,6 @@
 import { Pagination } from "@/types";
 
-export const initialPagination: Pagination = {
+export const categoriesPagination: Pagination = {
   currentPage: 1,
   from: 0,
   lastPage: 0,

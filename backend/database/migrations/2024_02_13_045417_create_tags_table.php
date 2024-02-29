@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->foreignId('color_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('color_id')->nullable()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

@@ -8,7 +8,7 @@ import RequestPassword from './pages/Auth/RequestPassword/RequestPassword'
 import VerifyPassword from './pages/Auth/VerifyPassword/VerifyPassword'
 import UpdatePassword from './pages/Auth/UpdatePassword/UpdatePassword'
 import Layout from './layouts/Layout'
-import Categories from './pages/Categories/Categories'
+import Categories from './pages/Categories'
 import { useAuth } from './context/AuthContext'
 import Preloader from './components/Preloader'
 

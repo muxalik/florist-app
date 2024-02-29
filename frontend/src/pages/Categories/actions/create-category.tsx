@@ -42,7 +42,7 @@ import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
-import { useCategories } from '../store/useCategories'
+import { useCategories } from '../store'
 
 const formSchema = z.object({
   name: z

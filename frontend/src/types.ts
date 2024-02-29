@@ -77,3 +77,5 @@ export type SliderFilter = {
 }
 
 export type CategoryRawActions = 'delete' | 'view' | 'edit'
+
+export type TagRawActions = CategoryRawActions

@@ -1,4 +1,4 @@
-import { initialPagination } from '@/constants/pagination'
+import { categoriesPagination } from '@/constants/categories/pagination'
 import { Pagination, SortOrder } from '@/types'
 import {
   Category,
@@ -74,7 +74,7 @@ const fetchCategories = () => {
 const fetchCategoriesWithDebounce = debounce(fetchCategories, 200)
 
 export const useCategories = create<CategoriesStore>((set) => ({
-  pagination: initialPagination,
+  pagination: categoriesPagination,
   setPage: (page: number) => {
     set((state) => ({
       ...state,

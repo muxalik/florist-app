@@ -19,6 +19,8 @@ class ColorFactory extends Factory
         return [
             'hex' => fake()->hexColor(),
             'name' => fake()->word(),
+            'created_at' => random_date(),
+            'updated_at' => random_date(),
         ];
     }
 }

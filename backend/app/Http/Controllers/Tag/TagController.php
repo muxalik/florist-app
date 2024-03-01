@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tag;
 
 use App\Filters\CategoryFilter;
+use App\Filters\TagFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\UpstoreRequest;
 use App\Http\Resources\TagResource;
@@ -25,8 +26,7 @@ class TagController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         return TagResource::collection(
-            // (new CategoryFilter($request))->apply()
-            Tag::paginate(15)
+            (new TagFilter($request))->apply()
         );
     }
 

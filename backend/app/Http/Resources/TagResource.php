@@ -22,6 +22,7 @@ class TagResource extends JsonResource
                 'hex' => $this->color?->hex,
                 'name' => $this->color?->name,
             ] : null,
+            'productsCount' => $this->whenCounted('products', $this->products_count),
             'createdAt' => $this->created_at->translatedFormat(config('app.date_format')),
             'updatedAt' => $this->updated_at->translatedFormat(config('app.date_format')),
         ];

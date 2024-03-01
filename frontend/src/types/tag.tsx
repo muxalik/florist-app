@@ -1,30 +1,23 @@
+import { Color } from "@/types"
+
 export type Tag = {
   id: number
   name: string
-  color: {
-    id: number
-    hex: string
-    name: string | null
-  }
+  color: Color
+  productsCount: number
   createdAt: string
   updatedAt: string
 }
 
-export type SimpleCategory = {
-  id: number
+export type TagEditData = {
   name: string
+  colorId: number
 }
 
-export type CategoryEditData = {
-  name: string
-  parentId: number | null
-  image: File | null
-}
-
-export type CategoryAddData = CategoryEditData
+export type TagAddData = TagEditData
 
 // Filters
-export type CategoryFilter =
+export type TagFilter =
   | 'id'
   | 'has_image'
   | 'formats'
@@ -37,16 +30,16 @@ export type CategoryFilter =
   | 'created_from'
   | 'created_to'
 
-export type CategoryIdFilter = 'even' | 'odd' | 'any'
+export type TagIdFilter = 'even' | 'odd' | 'any'
 
-export type CategoryFilterImage = 'yes' | 'no' | 'any'
+export type TagFilterImage = 'yes' | 'no' | 'any'
 
-export type CategoryFilterFormats = 'jpg' | 'png' | 'webp'
+export type TagFilterFormats = 'jpg' | 'png' | 'webp'
 
-export type CategoryFilters = {
-  id: CategoryIdFilter
-  has_image: CategoryFilterImage
-  formats: CategoryFilterFormats[]
+export type TagFilters = {
+  id: TagIdFilter
+  has_image: TagFilterImage
+  formats: TagFilterFormats[]
   min_name: number
   max_name: number
   parent_min: number

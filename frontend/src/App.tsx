@@ -11,6 +11,7 @@ import Layout from './layouts/Layout'
 import Categories from './pages/Categories'
 import { useAuth } from './context/AuthContext'
 import Preloader from './components/Preloader'
+import Tags from './pages/Tags'
 
 const App = () => {
   const { isLoading } = useAuth()
@@ -31,6 +32,7 @@ const App = () => {
           <Route element={<ProtectedRoutes only='auth' />}>
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/categories' element={<Categories />} />
+            <Route path='/tags' element={<Tags />} />
           </Route>
         </Route>
 

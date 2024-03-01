@@ -2,25 +2,19 @@
 
 namespace App\Filters;
 
-use App\Actions\Filters\Category\CategoryHasImageFilter;
 use App\Actions\Filters\IdFilter;
-use App\Actions\Filters\Category\CategoryImageFormatsFilter;
-use App\Actions\Filters\NameFilter;
-use App\Actions\Filters\Category\CategoryParentNameFilter;
 use App\Actions\Filters\CreatedAtFilter;
+use App\Actions\Filters\NameFilter;
 use App\Actions\Filters\UpdatedAtFilter;
-use App\Models\Category;
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class CategoryFilter extends AbstractFilter
+class TagFilter extends AbstractFilter
 {
    protected array $filters = [
       IdFilter::class,
-      CategoryHasImageFilter::class,
-      CategoryImageFormatsFilter::class,
       NameFilter::class,
-      CategoryParentNameFilter::class,
       UpdatedAtFilter::class,
       CreatedAtFilter::class,
    ];
@@ -28,9 +22,9 @@ class CategoryFilter extends AbstractFilter
 
    public function __construct(Request $request)
    {
-      parent::__construct($request);
+      parent::__construct($request, perPage: 12);
 
-      $this->query = Category::with('image', 'parent');
+      $this->query = Tag::with('color')->withCount('products');
    }
 
    protected function search(): self
@@ -44,10 +38,11 @@ class CategoryFilter extends AbstractFilter
             return $q
                ->where('id', 'LIKE', "%$this->q%")
                ->orWhere('name', 'LIKE', "%$this->q%")
-               ->orWhereHas('parent', function (Builder $q): Builder {
+               ->orWhereHas('color', function (Builder $q): Builder {
                   return $q
                      ->where('id', 'LIKE', "%$this->q%")
-                     ->orWhere('name', 'LIKE', "%$this->q%");
+                     ->orWhere('name', 'LIKE', "%$this->q%")
+                     ->orWhere('hex', 'LIKE', "%$this->q%");
                });
          });
 

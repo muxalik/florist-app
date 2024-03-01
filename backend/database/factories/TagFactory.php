@@ -18,6 +18,8 @@ class TagFactory extends Factory
     {
         return [
             'name' => fake()->words(mt_rand(1, 3), true),
+            'created_at' => random_date(),
+            'updated_at' => random_date(),
         ];
     }
 }

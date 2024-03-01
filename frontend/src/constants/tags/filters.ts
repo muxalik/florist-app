@@ -1,7 +1,7 @@
 import { BaseFilter, SliderFilter } from '@/types'
-import { CategoryFilters } from '@/types/category'
+import { TagFilters } from '@/types/tag'
 
-export const defaultCategoryFilters: CategoryFilters = {
+export const defaultTagFilters: TagFilters = {
   id: 'any',
   has_image: 'any',
   formats: ['jpg', 'png', 'webp'],

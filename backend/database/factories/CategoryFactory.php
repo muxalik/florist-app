@@ -32,20 +32,8 @@ class CategoryFactory extends Factory
             'parent_id' => fake()->boolean()
                 ? Category::inRandomOrder()->value('id')
                 : null,
-            'created_at' => now()
-                ->subWeeks(mt_rand(0, 7))
-                ->subDays(mt_rand(0, 7))
-                ->subHours(mt_rand(0, 24))
-                ->subMinutes(mt_rand(0, 60))
-                ->subSeconds(mt_rand(0, 60))
-                ->toDateTimeString(),
-            'updated_at' => now()
-                ->subWeeks(mt_rand(0, 7))
-                ->subDays(mt_rand(0, 7))
-                ->subHours(mt_rand(0, 24))
-                ->subMinutes(mt_rand(0, 60))
-                ->subSeconds(mt_rand(0, 60))
-                ->toDateTimeString(),
+            'created_at' => random_date(),
+            'updated_at' => random_date(),
         ];
     }
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Actions\Filters\Category;
+namespace App\Actions\Filters;
 
 use App\ValueObjects\FilterResultObj;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class CategoryNameFilter
+class NameFilter
 {
    public static function handle(
       Request $request,

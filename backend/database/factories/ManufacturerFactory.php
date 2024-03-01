@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\Files;
+use App\Models\File;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,17 @@ class ManufacturerFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name' => fake()->words(
+                fake()->numberBetween(2, 6),
+                true,
+            ),
+            'image_id' => File::factory()->create([
+                'path' => '',
+                'filename' => 'nike.png',
+                'type' => Files::Image->value,
+            ])->id,
+            'created_at' => random_date(),
+            'updated_at' => random_date(),
         ];
     }
 }

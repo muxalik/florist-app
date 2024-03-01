@@ -87,12 +87,12 @@ class TagController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category): JsonResponse
+    public function destroy(Tag $tag): JsonResponse
     {
-        $category->delete();
+        $tag->delete();
 
         return response()->json([
-            'message' => __('category.deleted'),
+            'message' => __('tag.deleted'),
         ]);
     }
 }

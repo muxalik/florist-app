@@ -107,7 +107,6 @@ export const useCategories = create<CategoriesStore>((set) => ({
   categories: [],
   simpleCategories: [],
 
-  
   search: '',
   onSearch: (e: ChangeEvent<HTMLInputElement>) => {
     set({ search: e.target.value })
@@ -122,6 +121,7 @@ export const useCategories = create<CategoriesStore>((set) => ({
       .delete(`categories/${row.getValue('id')}`)
       .then(fetchCategoriesWithDebounce)
       .catch(console.log)
+      .finally(() => set({ isLoading: false }))
   },
   onEdit: (categoryId: number, data: CategoryEditData) => {
     const formData = new FormData()

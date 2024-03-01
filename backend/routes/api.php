@@ -43,6 +43,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::apiResource('categories', CategoryController::class);
 
+    // Tags
+    Route::prefix('tags')->as('tags.')->group(function () {
+        Route::get('export/excel', CategoryExcelController::class)->name('export-excel');
+    });
+
     Route::apiResource('tags', TagController::class);
 
     Route::get('logout', LogoutController::class)->name('logout');

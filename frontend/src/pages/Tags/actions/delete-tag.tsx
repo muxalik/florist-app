@@ -1,4 +1,4 @@
-import { useCategories } from '../store'
+import { useTags } from '../store'
 import {
   Dialog,
   DialogClose,
@@ -10,23 +10,23 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Row } from '@tanstack/react-table'
-import { Category } from '@/types/category'
+import { Tag } from '@/types/tag'
 
-interface DeleteCategoryProps {
-  row: Row<Category>
+interface DeleteTagProps {
+  row: Row<Tag>
   open: boolean
   onOpenChange: (isOpened: boolean) => void
 }
 
-const DeleteCategory = ({ row, open, onOpenChange }: DeleteCategoryProps) => {
-  const onDelete = useCategories((state) => state.onDelete)
+const DeleteTag = ({ row, open, onOpenChange }: DeleteTagProps) => {
+  const onDelete = useTags((state) => state.onDelete)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className='mb-6 leading-7'>
-            Вы абсолютно уверены, что хотите удалить выбранную категорию?
+            Вы абсолютно уверены, что хотите удалить выбранный тег?
           </DialogTitle>
           <DialogDescription className='leading-6'>
             Это действие нельзя отменить! Вы уверены что хотите продолжить?
@@ -45,4 +45,4 @@ const DeleteCategory = ({ row, open, onOpenChange }: DeleteCategoryProps) => {
   )
 }
 
-export default DeleteCategory
+export default DeleteTag

@@ -12,12 +12,12 @@ import {
 import Icons from '@/components/ui/icons'
 import { Row } from '@tanstack/react-table'
 import { useState } from 'react'
-import EditCategory from './actions/edit-category'
+import EditCategory from './actions/edit-tag'
 import { Tag } from '@/types/tag'
 import { useTags } from './store'
-import DeleteCategory from './actions/delete-category'
-import ViewCategory from './actions/view-category'
+import ViewCategory from './actions/view-tag'
 import { CategoryRawActions } from '@/types'
+import DeleteTag from './actions/delete-tag'
 
 interface DataTableRowActionsProps {
   row: Row<Tag>
@@ -69,12 +69,12 @@ export function TagRowActions({ row }: DataTableRowActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* <DeleteCategory
+      <DeleteTag
         row={row}
         open={open === 'delete'}
         onOpenChange={() => setOpen(open === 'delete' ? null : 'delete')}
       />
-
+{/* 
       <ViewCategory
         open={open === 'view'}
         onOpenChange={() => setOpen(open === 'view' ? null : 'view')}

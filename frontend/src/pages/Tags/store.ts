@@ -105,6 +105,7 @@ export const useTags = create<TagsStore>((set) => ({
       .delete(`tags/${row.getValue('id')}`)
       .then(fetchTagsWithDebounce)
       .catch(console.log)
+      .finally(() => set({ isLoading: false }))
   },
   onEdit: (tagId: number, data: TagEditData) => {
     // const updateImage = api.post(`tags/${categoryId}/image`, formData, {

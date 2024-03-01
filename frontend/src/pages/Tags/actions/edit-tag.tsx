@@ -58,7 +58,7 @@ const formSchema = z.object({
   parentId: z.number().nullable(),
 })
 
-interface EditCategoryProps {
+interface EditTagProps {
   row: Row<Category>
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -67,14 +67,14 @@ interface EditCategoryProps {
   categoryList: SimpleCategory[]
 }
 
-function EditCategory({
+function EditTag({
   row,
   open,
   onOpenChange,
   onSave,
   onCancel,
   categoryList,
-}: EditCategoryProps) {
+}: EditTagProps) {
   const [image, setImage] = useState<File | null>(null)
   const [isImageRemoved, setIsImageRemoved] = useState(!row.getValue('image'))
   const [openCategories, setOpenCategories] = useState(false)
@@ -338,4 +338,4 @@ function EditCategory({
   )
 }
 
-export default EditCategory
+export default EditTag

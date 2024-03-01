@@ -41,19 +41,19 @@ const formSchema = z.object({
   parentId: z.number().nullable(),
 })
 
-interface ViewCategoryProps {
+interface ViewTagProps {
   row: Row<Category>
   open: boolean
   onOpenChange: (open: boolean) => void
   categoryList: SimpleCategory[]
 }
 
-function ViewCategory({
+function ViewTag({
   row,
   open,
   onOpenChange,
   categoryList,
-}: ViewCategoryProps) {
+}: ViewTagProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -169,4 +169,4 @@ function ViewCategory({
   )
 }
 
-export default ViewCategory
+export default ViewTag

@@ -7,7 +7,9 @@ import Icons from '@/components/ui/icons'
 import _ from 'lodash'
 import { Button } from '@/components/ui/button'
 import downloadFromUrl from '@/utils/downloadFromUrl'
-import CategoryFilters from './filters'
+import TagFilters from './filters'
+import { defaultTagFilters } from '@/constants/tags/filters'
+import { useTagFilters } from './filters/store'
 
 export function TagToolbar<TData>({
   table,
@@ -16,10 +18,10 @@ export function TagToolbar<TData>({
   const search = useTags((state) => state.search)
   const onSearch = useTags((state) => state.onSearch)
 
-  // const clearFilters = useTagsFilters((state) => state.clearFilters)
-  // const filters = useTagsFilters((state) => state.filters)
+  const clearFilters = useTagFilters((state) => state.clearFilters)
+  const filters = useTagFilters((state) => state.filters)
 
-  // const hasFiltersChanged = !_.isEqual(filters, defaultCategoryFilters)
+  const hasFiltersChanged = !_.isEqual(filters, defaultTagFilters)
 
   return (
     <div className='flex items-end gap-10 justify-between'>
@@ -38,28 +40,28 @@ export function TagToolbar<TData>({
           <DataTableViewOptions table={table} columnNames={columnNames} />
         </div>
 
-        <CategoryFilters />
+        <div className='flex gap-x-2 gap-y-3'>
+          <TagFilters />
 
-        {/* {hasFiltersChanged && (
-          <Button
-            variant={'link'}
-            onClick={clearFilters}
-            size={'sm'}
-            className='underline'
-          >
-            <span>Сбросить все</span>
-            <Icons.close className='ml-1 w-4 h-4' />
-          </Button>
-        )} */}
+          {hasFiltersChanged && (
+            <Button
+              variant={'link'}
+              onClick={clearFilters}
+              size={'sm'}
+              className='underline'
+            >
+              <span>Сбросить все</span>
+              <Icons.close className='ml-1 w-4 h-4' />
+            </Button>
+          )}
+        </div>
       </div>
       <div className='flex space-x-2'>
         <Button
           className='gap-2'
           variant={'outline'}
           size={'sm'}
-          onClick={() =>
-            downloadFromUrl('/categories/export/excel', 'Категории.xlsx')
-          }
+          onClick={() => downloadFromUrl('/tags/export/excel', 'Теги.xlsx')}
         >
           <Icons.donwload className='w-4 h-4' />
           <span>Скачать</span>

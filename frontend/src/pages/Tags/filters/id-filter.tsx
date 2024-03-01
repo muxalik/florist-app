@@ -1,20 +1,20 @@
 import { idFilter } from '@/constants/filters'
-import { useCategoryFilters } from './store'
+import { useTagFilters } from './store'
 import Filter from '@/components/filters/filter'
-import { categoryColumns } from '@/constants/categories/columns'
-import { defaultCategoryFilters } from '@/constants/categories/filters'
+import { defaultTagFilters } from '@/constants/tags/filters'
+import { tagColumns } from '@/constants/tags/columns'
 
-const CategoryIdFilter = () => {  
-  const filters = useCategoryFilters((state) => state.filters)
-  const clearIdFilters = useCategoryFilters((state) => state.clearIdFilters)
-  const onIdSelect = useCategoryFilters((state) => state.onIdSelect)
+const CategoryIdFilter = () => {
+  const filters = useTagFilters((state) => state.filters)
+  const clearIdFilters = useTagFilters((state) => state.clearIdFilters)
+  const onIdSelect = useTagFilters((state) => state.onIdSelect)
 
   return (
     <Filter
-      title={categoryColumns.id}
+      title={tagColumns.id}
       filters={[idFilter(filters.id, onIdSelect)]}
       onClear={clearIdFilters}
-      hasChanged={filters.id !== defaultCategoryFilters.id}
+      hasChanged={filters.id !== defaultTagFilters.id}
     />
   )
 }

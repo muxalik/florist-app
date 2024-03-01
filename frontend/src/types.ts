@@ -85,3 +85,5 @@ export type Color = {
   hex: string
   name: string | null
 }
+
+export type IdFilter = 'even' | 'odd' | 'any'

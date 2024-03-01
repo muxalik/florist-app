@@ -21,12 +21,14 @@ interface DataTablePaginationProps<TData> {
   lastPage: number
   setPage: (page: number) => void
   perPage: number
+  defaultPerPage: number
   setPerPage: (page: number) => void
 }
 
 export function DataTablePagination<TData>({
   table,
   currentPage,
+  defaultPerPage,
   lastPage,
   setPage,
   perPage,
@@ -34,7 +36,7 @@ export function DataTablePagination<TData>({
 }: DataTablePaginationProps<TData>) {
   const perPageOptions = Array.from({ length: 4 })
     .fill(0)
-    .map((_, index) => perPage * (index + 1))
+    .map((_, index) => defaultPerPage * (index + 1))
 
   return (
     <div className='flex items-center justify-between px-2'>

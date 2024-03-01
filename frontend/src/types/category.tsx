@@ -1,3 +1,5 @@
+import { IdFilter } from "@/types"
+
 export type Category = {
   id: number
   name: string
@@ -35,14 +37,12 @@ export type CategoryFilter =
   | 'created_from'
   | 'created_to'
 
-export type CategoryIdFilter = 'even' | 'odd' | 'any'
-
 export type CategoryFilterImage = 'yes' | 'no' | 'any'
 
 export type CategoryFilterFormats = 'jpg' | 'png' | 'webp'
 
 export type CategoryFilters = {
-  id: CategoryIdFilter
+  id: IdFilter
   has_image: CategoryFilterImage
   formats: CategoryFilterFormats[]
   min_name: number

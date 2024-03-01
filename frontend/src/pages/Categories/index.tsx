@@ -124,6 +124,7 @@ const Categories = () => {
             lastPage={lastPage}
             setPage={setPage}
             perPage={perPage}
+            defaultPerPage={categoriesPagination.perPage}
             setPerPage={setPerPage}
           />
         </div>

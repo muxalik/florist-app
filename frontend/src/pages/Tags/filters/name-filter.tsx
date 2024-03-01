@@ -1,13 +1,13 @@
 import Filter from '@/components/filters/filter'
 import { categoryColumns } from '@/constants/categories/columns'
 import { nameFilter } from '@/constants/filters'
-import { useCategoryFilters } from './store'
+import { useTagFilters } from './store'
 import { defaultCategoryFilters } from '@/constants/categories/filters'
 
 const CategoryNameFilter = () => {
-  const filters = useCategoryFilters((state) => state.filters)
-  const onNameChange = useCategoryFilters((state) => state.onNameChange)
-  const clearNameFilters = useCategoryFilters((state) => state.clearNameFilters)
+  const filters = useTagFilters((state) => state.filters)
+  const onNameChange = useTagFilters((state) => state.onNameChange)
+  const clearNameFilters = useTagFilters((state) => state.clearNameFilters)
 
   return (
     <Filter

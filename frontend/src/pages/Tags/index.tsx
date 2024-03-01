@@ -1,7 +1,7 @@
 import { useTags } from './store'
 import { useSearchParams } from 'react-router-dom'
 import { tagsPagination } from '@/constants/tags/pagination'
-import { useCategoryFilters } from './filters/store'
+import { useTagFilters } from './filters/store'
 import { useEffect } from 'react'
 import { columns } from './columns'
 import { DataTable } from '@/components/ui/data-table'
@@ -21,7 +21,7 @@ import { TagToolbar } from './toolbar'
 const Tags = () => {
   const [, setSearchParams] = useSearchParams()
 
-  const filters = useCategoryFilters((state) => state.filters)
+  const filters = useTagFilters((state) => state.filters)
   const sort = useTags((state) => state.sort)
   const sortOrder = useTags((state) => state.sortOrder)
   const search = useTags((state) => state.search)
@@ -75,12 +75,8 @@ const Tags = () => {
     })
   }, [
     filters.id,
-    filters.has_image,
-    filters.formats,
     filters.min_name,
     filters.max_name,
-    filters.parent_min,
-    filters.parent_max,
     filters.updated_from,
     filters.updated_to,
     filters.created_from,
@@ -122,6 +118,7 @@ const Tags = () => {
             lastPage={lastPage}
             setPage={setPage}
             perPage={perPage}
+            defaultPerPage={tagsPagination.perPage}
             setPerPage={setPerPage}
           />
         </div>

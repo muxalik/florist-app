@@ -1,12 +1,12 @@
 import DatePickerFilter from '@/components/filters/date-picker'
 import { categoryColumns } from '@/constants/categories/columns'
-import { defaultCategoryFilters } from '@/constants/categories/filters'
-import { useCategoryFilters } from './store'
+import { useTagFilters } from './store'
+import { defaultTagFilters } from '@/constants/tags/filters'
 
 const CategoryCreatedAtFilter = () => {
-  const filters = useCategoryFilters((state) => state.filters)
-  const onCreatedChange = useCategoryFilters((state) => state.onCreatedChange)
-  const clearCreatedFilters = useCategoryFilters(
+  const filters = useTagFilters((state) => state.filters)
+  const onCreatedChange = useTagFilters((state) => state.onCreatedChange)
+  const clearCreatedFilters = useTagFilters(
     (state) => state.clearCreatedFilters
   )
 
@@ -24,8 +24,8 @@ const CategoryCreatedAtFilter = () => {
       onSelect={onCreatedChange}
       onClear={clearCreatedFilters}
       hasChanged={
-        filters.created_from !== defaultCategoryFilters.created_from ||
-        filters.created_to !== defaultCategoryFilters.created_to
+        filters.created_from !== defaultTagFilters.created_from ||
+        filters.created_to !== defaultTagFilters.created_to
       }
     />
   )

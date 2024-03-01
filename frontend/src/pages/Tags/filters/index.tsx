@@ -1,33 +1,25 @@
-import CategoryCreatedAtFilter from './created-at-filter'
-import CategoryIdFilter from './id-filter'
-import CategoryImageFilter from './image-filter'
-import CategoryNameFilter from './name-filter'
-import ParentNameFilter from './parent-name-filter'
-import CategoryUpdatedAtFilter from './updated-at-filter'
+import TagCreatedAtFilter from './created-at-filter'
+import TagIdFilter from './id-filter'
+import TagNameFilter from './name-filter'
+import TagUpdatedAtFilter from './updated-at-filter'
 
-const CategoryFilters = () => {
+const TagFilters = () => {
   return (
     <ul className='flex gap-2 flex-wrap'>
       <li key='id'>
-        <CategoryIdFilter />
-      </li>
-      <li key='image'>
-        <CategoryImageFilter />
+        <TagIdFilter />
       </li>
       <li key='name'>
-        <CategoryNameFilter />
-      </li>
-      <li key='parentName'>
-        <ParentNameFilter />
+        <TagNameFilter />
       </li>
       <li key='createdAt'>
-        <CategoryCreatedAtFilter />
+        <TagCreatedAtFilter />
       </li>
       <li key='updatedAt'>
-        <CategoryUpdatedAtFilter />
+        <TagUpdatedAtFilter />
       </li>
     </ul>
   )
 }
 
-export default CategoryFilters
+export default TagFilters

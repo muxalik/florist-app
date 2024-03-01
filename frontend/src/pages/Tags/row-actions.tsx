@@ -47,7 +47,7 @@ export function TagRowActions({ row }: DataTableRowActionsProps) {
             onSelect={() => setOpen('view')}
           >
             <Icons.eye className='w-5 h-5' />
-            Посмотреть
+            Просмотреть
             <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuItem

@@ -62,8 +62,6 @@ const fetchColors = () => {
   api
     .get('colors')
     .then((res) => {
-      console.log(res)
-
       useTags.setState({
         colors: res.data,
       })

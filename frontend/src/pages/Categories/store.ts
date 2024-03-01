@@ -124,19 +124,28 @@ export const useCategories = create<CategoriesStore>((set) => ({
       .finally(() => set({ isLoading: false }))
   },
   onEdit: (categoryId: number, data: CategoryEditData) => {
-    const formData = new FormData()
+    if (data.image) {
+      const formData = new FormData()
 
-    formData.append('image', data.image!)
+      formData.append('image', data.image!)
 
-    const updateImage = api.post(`categories/${categoryId}/image`, formData, {
-      headers: { Accept: 'multipart/form-data' },
-    })
+      const updateImage = api.post(`categories/${categoryId}/image`, formData, {
+        headers: { Accept: 'multipart/form-data' },
+      })
 
-    const updateBody = api.patch(`categories/${categoryId}`, data)
+      const updateBody = api.patch(`categories/${categoryId}`, data)
 
-    set({ isLoading: true })
+      set({ isLoading: true })
 
-    Promise.all([updateImage, updateBody])
+      Promise.all([updateImage, updateBody])
+        .then(fetchCategoriesWithDebounce)
+        .catch(console.log)
+
+      return
+    }
+
+    api
+      .patch(`categories/${categoryId}`, data)
       .then(fetchCategoriesWithDebounce)
       .catch(console.log)
   },

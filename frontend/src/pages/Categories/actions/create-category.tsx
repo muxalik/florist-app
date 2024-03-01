@@ -208,13 +208,16 @@ function CreateCategory() {
                                 variant='outline'
                                 role='combobox'
                                 className={cn(
-                                  'justify-between text-left gap-2 text-wrap h-auto min-h-9',
+                                  'justify-between gap-2 text-wrap h-auto min-h-9',
                                   !field.value && 'text-muted-foreground'
                                 )}
                               >
                                 <div className='flex gap-2 items-center'>
                                   {!!field.value && (
-                                    <Badge variant={'outline'}>
+                                    <Badge
+                                      variant={'outline'}
+                                      className='h-8 mr-2'
+                                    >
                                       {
                                         simpleCategories.find(
                                           (category) =>

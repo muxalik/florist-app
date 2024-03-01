@@ -29,6 +29,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 
 const formSchema = z.object({
+  id: z.number(),
   name: z
     .string()
     .min(2, {
@@ -39,6 +40,8 @@ const formSchema = z.object({
     })
     .max(50),
   parentId: z.number().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 })
 
 interface ViewCategoryProps {
@@ -57,8 +60,11 @@ function ViewCategory({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: row.getValue('id'),
       name: row.getValue('name'),
       parentId: row.original.parentId,
+      createdAt: row.getValue('createdAt'),
+      updatedAt: row.getValue('updatedAt'),
     },
   })
 
@@ -81,14 +87,22 @@ function ViewCategory({
                 className='flex flex-col gap-6 pb-2 h-full flex-1 justify-between'
               >
                 <div className='flex flex-col gap-6 '>
-                  <div className='grid gap-2'>
-                    <Label htmlFor='id'>{categoryColumns.id}</Label>
-                    <Input
-                      id='id'
-                      value={row.getValue('id')}
-                      onChange={() => {}}
-                    />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name='id'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{categoryColumns.id}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Введите ${categoryColumns.id}`}
+                            {...field}
+                            onChange={() => {}}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name='name'
@@ -137,9 +151,9 @@ function ViewCategory({
                               !field.value && 'text-muted-foreground'
                             )}
                           >
-                            <div className='flex'>
+                            <div className='flex items-center'>
                               {!!field.value && (
-                                <Badge variant={'outline'} className='mr-2'>
+                                <Badge variant={'outline'} className='mr-2 h-8'>
                                   {
                                     categoryList.find(
                                       (category) => category.id === field.value
@@ -156,6 +170,38 @@ function ViewCategory({
                           </Button>
                         </FormControl>
                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='createdAt'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{categoryColumns.createdAt}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Введите ${categoryColumns.createdAt}`}
+                            {...field}
+                            onChange={() => {}}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='updatedAt'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{categoryColumns.updatedAt}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Введите ${categoryColumns.updatedAt}`}
+                            {...field}
+                            onChange={() => {}}
+                          />
+                        </FormControl>
                       </FormItem>
                     )}
                   />

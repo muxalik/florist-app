@@ -46,6 +46,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 
 const formSchema = z.object({
+  id: z.string(),
   name: z
     .string()
     .min(2, {
@@ -109,6 +110,7 @@ function EditCategory({
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: row.getValue('id'),
       name: row.getValue('name'),
       parentId: row.original.parentId,
     },
@@ -148,10 +150,25 @@ function EditCategory({
                 className='flex flex-col gap-6 pb-2 h-full flex-1 justify-between'
               >
                 <div className='flex flex-col gap-6 '>
-                  <div className='grid gap-2'>
-                    <Label htmlFor='id'>{categoryColumns.id}</Label>
-                    <Input id='id' value={row.getValue('id')} disabled />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name='id'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{categoryColumns.id}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Введите ${categoryColumns.id}`}
+                            {...field}
+                            disabled
+                            onChange={() => {}}
+                          />
+                        </FormControl>
+                        <FormDescription>Не заполняется</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name='name'
@@ -245,9 +262,12 @@ function EditCategory({
                                   !field.value && 'text-muted-foreground'
                                 )}
                               >
-                                <div className='flex'>
+                                <div className='flex items-center'>
                                   {!!field.value && (
-                                    <Badge variant={'outline'} className='mr-2'>
+                                    <Badge
+                                      variant={'outline'}
+                                      className='mr-2 h-8'
+                                    >
                                       {
                                         categoryList.find(
                                           (category) =>

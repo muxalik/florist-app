@@ -1,5 +1,5 @@
 import { tagsPagination } from '@/constants/tags/pagination'
-import { Pagination, SortOrder } from '@/types'
+import { Color, Pagination, SortOrder } from '@/types'
 import { Tag, TagAddData, TagEditData } from '@/types/tag'
 import { api } from '@/utils/api'
 import debounce from '@/utils/debounce'
@@ -20,6 +20,7 @@ type TagsStore = {
   setSortOrder: (order: SortOrder) => void
 
   tags: Tag[]
+  colors: Color[]
 
   search: string
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void
@@ -31,6 +32,7 @@ type TagsStore = {
   onAdd: (data: TagAddData) => void
 
   fetchTags: () => void
+  fetchColors: () => void
 }
 
 const fetchTags = () => {
@@ -54,6 +56,19 @@ const fetchTags = () => {
         isLoading: false,
       })
     })
+}
+
+const fetchColors = () => {
+  api
+    .get('colors')
+    .then((res) => {
+      console.log(res)
+
+      useTags.setState({
+        colors: res.data,
+      })
+    })
+    .catch(console.log)
 }
 
 const fetchTagsWithDebounce = debounce(fetchTags, 200)
@@ -90,6 +105,7 @@ export const useTags = create<TagsStore>((set) => ({
   },
 
   tags: [],
+  colors: [],
 
   search: '',
   onSearch: (e: ChangeEvent<HTMLInputElement>) => {
@@ -132,4 +148,5 @@ export const useTags = create<TagsStore>((set) => ({
     //   .catch(console.log)
   },
   fetchTags: fetchTagsWithDebounce,
+  fetchColors,
 }))

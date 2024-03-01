@@ -34,9 +34,11 @@ const Tags = () => {
   const setPage = useTags((state) => state.setPage)
   const setPerPage = useTags((state) => state.setPerPage)
   const fetchTags = useTags((state) => state.fetchTags)
+  const fetchColors = useTags((state) => state.fetchColors)
 
   useEffect(() => {
     fetchTags()
+    fetchColors()
 
     setSearchParams((prev) => {
       currentPage === tagsPagination.currentPage

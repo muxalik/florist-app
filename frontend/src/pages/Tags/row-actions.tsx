@@ -18,6 +18,7 @@ import { useTags } from './store'
 import ViewCategory from './actions/view-tag'
 import { CategoryRawActions } from '@/types'
 import DeleteTag from './actions/delete-tag'
+import ViewTag from './actions/view-tag'
 
 interface DataTableRowActionsProps {
   row: Row<Tag>
@@ -74,15 +75,14 @@ export function TagRowActions({ row }: DataTableRowActionsProps) {
         open={open === 'delete'}
         onOpenChange={() => setOpen(open === 'delete' ? null : 'delete')}
       />
-{/* 
-      <ViewCategory
+
+      <ViewTag
         open={open === 'view'}
         onOpenChange={() => setOpen(open === 'view' ? null : 'view')}
         row={row}
-        categoryList={simpleCategories}
       />
 
-      <EditCategory
+      {/* <EditCategory
         open={open === 'edit'}
         onOpenChange={() => setOpen(open === 'edit' ? null : 'edit')}
         row={row}

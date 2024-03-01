@@ -5,9 +5,8 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { categoryColumns } from '@/constants/categories/columns'
+import { tagColumns } from '@/constants/tags/columns'
 import { Row } from '@tanstack/react-table'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,15 +19,14 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { preview } from '@/assets'
-import { Category, SimpleCategory } from '@/types/category'
-
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
+import { Tag } from '@/types/tag'
+import { useTags } from '../store'
 
 const formSchema = z.object({
+  id: z.number(),
   name: z
     .string()
     .min(2, {
@@ -38,31 +36,32 @@ const formSchema = z.object({
       message: 'Название должно быть не более 50 символов',
     })
     .max(50),
-  parentId: z.number().nullable(),
+  color: z.number().nullable(),
+  productsCount: z.number(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
 })
 
 interface ViewTagProps {
-  row: Row<Category>
+  row: Row<Tag>
   open: boolean
   onOpenChange: (open: boolean) => void
-  categoryList: SimpleCategory[]
 }
 
-function ViewTag({
-  row,
-  open,
-  onOpenChange,
-  categoryList,
-}: ViewTagProps) {
+function ViewTag({ row, open, onOpenChange }: ViewTagProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: row.getValue('id'),
       name: row.getValue('name'),
-      parentId: row.original.parentId,
+      color: row.original.color.id,
+      productsCount: row.getValue('productsCount'),
+      createdAt: row.getValue('createdAt') || 'Не задано',
+      updatedAt: row.getValue('updatedAt') || 'Не задано',
     },
   })
 
-  const isImageRemoved = !row.getValue('image')
+  const colors = useTags((state) => state.colors)
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -70,9 +69,9 @@ function ViewTag({
         <ScrollArea className='w-full h-full'>
           <div className='px-6 py-6 min-h-screen flex flex-col'>
             <SheetHeader className='mb-10'>
-              <SheetTitle className='mb-2'>Просмотреть категорию</SheetTitle>
+              <SheetTitle className='mb-2'>Просмотреть тег</SheetTitle>
               <SheetDescription>
-                Здесь вы можете просмотреть категорию.
+                Здесь вы можете просмотреть тег.
               </SheetDescription>
             </SheetHeader>
             <Form {...form}>
@@ -81,23 +80,15 @@ function ViewTag({
                 className='flex flex-col gap-6 pb-2 h-full flex-1 justify-between'
               >
                 <div className='flex flex-col gap-6 '>
-                  <div className='grid gap-2'>
-                    <Label htmlFor='id'>{categoryColumns.id}</Label>
-                    <Input
-                      id='id'
-                      value={row.getValue('id')}
-                      onChange={() => {}}
-                    />
-                  </div>
                   <FormField
                     control={form.control}
-                    name='name'
+                    name='id'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{categoryColumns.name}</FormLabel>
+                        <FormLabel>{tagColumns.id}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={`Введите ${categoryColumns.name}`}
+                            placeholder={`Введите ${tagColumns.id}`}
                             {...field}
                             onChange={() => {}}
                           />
@@ -105,30 +96,28 @@ function ViewTag({
                       </FormItem>
                     )}
                   />
-                  <div className='grid gap-2'>
-                    <Label htmlFor='image'>{categoryColumns.image}</Label>
-                    <div className='p-2 rounded-sm border border-dashed relative flex justify-center'>
-                      {!isImageRemoved ? (
-                        <img
-                          src={row.getValue('image')}
-                          alt='Превью'
-                          className='rounded-sm'
-                        />
-                      ) : (
-                        <img
-                          src={preview}
-                          alt='Нет изображения'
-                          className='h-12 w-12'
-                        />
-                      )}
-                    </div>
-                  </div>
                   <FormField
                     control={form.control}
-                    name='parentId'
+                    name='name'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{tagColumns.name}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Введите ${tagColumns.name}`}
+                            {...field}
+                            onChange={() => {}}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='color'
                     render={({ field }) => (
                       <FormItem className='flex flex-col'>
-                        <FormLabel>{categoryColumns.parentName}</FormLabel>
+                        <FormLabel>{tagColumns.color}</FormLabel>
                         <FormControl>
                           <Button
                             variant='outline'
@@ -137,25 +126,74 @@ function ViewTag({
                               !field.value && 'text-muted-foreground'
                             )}
                           >
-                            <div className='flex'>
+                            <div className='flex items-center gap-2'>
                               {!!field.value && (
-                                <Badge variant={'outline'} className='mr-2'>
-                                  {
-                                    categoryList.find(
-                                      (category) => category.id === field.value
-                                    )?.id
-                                  }
-                                </Badge>
+                                <div
+                                  className='w-6 h-6 rounded-full'
+                                  style={{
+                                    backgroundColor: colors.find(
+                                      (color) => color.id === field.value
+                                    )?.hex,
+                                  }}
+                                />
                               )}
                               {field.value
-                                ? categoryList.find(
-                                    (category) => category.id === field.value
+                                ? colors.find(
+                                    (color) => color.id === field.value
                                   )?.name
                                 : 'Нет'}
                             </div>
                           </Button>
                         </FormControl>
                         <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='productsCount'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{tagColumns.productsCount}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Введите ${tagColumns.productsCount}`}
+                            {...field}
+                            onChange={() => {}}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='createdAt'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{tagColumns.createdAt}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Введите ${tagColumns.createdAt}`}
+                            {...field}
+                            onChange={() => {}}
+                          />
+                        </FormControl>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='updatedAt'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{tagColumns.updatedAt}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Введите ${tagColumns.updatedAt}`}
+                            {...field}
+                            onChange={() => {}}
+                          />
+                        </FormControl>
                       </FormItem>
                     )}
                   />

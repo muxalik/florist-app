@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\UpdateTokenController;
 use App\Http\Controllers\Auth\VerifyPasswordController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Category\CategoryExcelController;
+use App\Http\Controllers\Color\ColorController;
 use App\Http\Controllers\Tag\TagController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,6 +50,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::apiResource('tags', TagController::class);
+
+    // Colors 
+    Route::apiResource('colors', ColorController::class);
 
     Route::get('logout', LogoutController::class)->name('logout');
 });

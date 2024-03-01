@@ -63,13 +63,13 @@ class CategoryFilter extends AbstractFilter
          case 'updatedAt':
             $this->query->orderBy(
                str($this->sort)->snake(),
-               $this->order
+               $this->order->value
             );
 
             break;
 
          case 'parentName':
-            $this->query->orderBy('parent_id', $this->order);
+            $this->query->orderBy('parent_id', $this->order->value);
 
             break;
 

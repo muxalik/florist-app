@@ -58,13 +58,24 @@ class TagFilter extends AbstractFilter
          case 'updatedAt':
             $this->query->orderBy(
                str($this->sort)->snake(),
-               $this->order
+               $this->order->value,
             );
 
             break;
 
-         case 'parentName':
-            $this->query->orderBy('parent_id', $this->order);
+         case 'color':
+            $this->query->orderBy(
+               'color_id',
+               $this->order->value
+            );
+
+            break;
+
+         case 'productsCount':
+            $this->query->orderBy(
+               'products_count',
+               $this->order->value
+            );
 
             break;
 

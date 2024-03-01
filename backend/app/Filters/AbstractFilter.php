@@ -6,7 +6,6 @@ use App\Enums\SortOrder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 
 abstract class AbstractFilter
 {
@@ -43,7 +42,7 @@ abstract class AbstractFilter
 
       // Sorting 
       $this->sort = $request->sort ?? $sort;
-      $this->order = $request->order ?? $order;
+      $this->order = SortOrder::tryFrom($request->order) ?? $order;
 
       $this->request = $request;
    }

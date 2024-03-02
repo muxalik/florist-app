@@ -9,8 +9,6 @@ const downloadFromUrl = (url: string, filename: string) => {
     const href = URL.createObjectURL(response.data)
     const link = document.createElement('a')
 
-    console.log(response)
-
     link.href = href
     link.setAttribute('download', filename)
     document.body.appendChild(link)

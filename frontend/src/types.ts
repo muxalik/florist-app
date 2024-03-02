@@ -1,4 +1,5 @@
 import { Table } from '@tanstack/react-table'
+import { FC } from 'react'
 
 export type IconProps = React.HTMLAttributes<SVGElement>
 
@@ -76,10 +77,6 @@ export type SliderFilter = {
   onChange: (key: string, value: number) => void
 }
 
-export type CategoryRawActions = 'delete' | 'view' | 'edit'
-
-export type TagRawActions = CategoryRawActions
-
 export type Color = {
   id: number
   hex: string
@@ -87,3 +84,12 @@ export type Color = {
 }
 
 export type IdFilter = 'even' | 'odd' | 'any'
+
+export type RowActionsCommands = 'view' | 'edit' | 'delete'
+
+export type RowActionsItems = {
+  [key in RowActionsCommands]: {
+    icon: FC<IconProps>
+    title: string
+  }
+}

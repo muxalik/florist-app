@@ -54,7 +54,7 @@ function ViewTag({ row, open, onOpenChange }: ViewTagProps) {
     defaultValues: {
       id: row.getValue('id'),
       name: row.getValue('name'),
-      color: row.original.color.id,
+      color: row.original.color?.id,
       productsCount: row.getValue('productsCount'),
       createdAt: row.getValue('createdAt') || 'Не задано',
       updatedAt: row.getValue('updatedAt') || 'Не задано',
@@ -62,6 +62,10 @@ function ViewTag({ row, open, onOpenChange }: ViewTagProps) {
   })
 
   const colors = useTags((state) => state.colors)
+
+  const currentColor = colors.find(
+    (color) => color.id === form.getValues().color
+  )
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -131,17 +135,11 @@ function ViewTag({ row, open, onOpenChange }: ViewTagProps) {
                                 <div
                                   className='w-6 h-6 rounded-full'
                                   style={{
-                                    backgroundColor: colors.find(
-                                      (color) => color.id === field.value
-                                    )?.hex,
+                                    backgroundColor: currentColor?.hex,
                                   }}
                                 />
                               )}
-                              {field.value
-                                ? colors.find(
-                                    (color) => color.id === field.value
-                                  )?.name
-                                : 'Нет'}
+                              {field.value ? currentColor?.name : 'Нет'}
                             </div>
                           </Button>
                         </FormControl>

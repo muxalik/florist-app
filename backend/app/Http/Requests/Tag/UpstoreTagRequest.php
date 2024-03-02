@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Category;
+namespace App\Http\Requests\Tag;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Arr;
 
-class UpstoreRequest extends FormRequest
+class UpstoreTagRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +24,7 @@ class UpstoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'between:2,50'],
-            'parentId' => ['nullable', 'numeric', 'exists:categories,id'],
+            'colorId' => ['nullable', 'numeric', 'exists:colors,id'],
         ];
     }
 
@@ -32,7 +33,7 @@ class UpstoreRequest extends FormRequest
         $data = parent::validated();
 
         return array_merge($data, [
-            'parent_id' => $data['parentId'],
+            'color_id' => Arr::get($data, 'colorId', null),
         ]);
     }
 }

@@ -122,14 +122,13 @@ export const useTags = create<TagsStore>((set) => ({
       .finally(() => set({ isLoading: false }))
   },
   onEdit: (tagId: number, data: TagEditData) => {
-    // const updateImage = api.post(`tags/${categoryId}/image`, formData, {
-    //   headers: { Accept: 'multipart/form-data' },
-    // })
-    // const updateBody = api.patch(`tags/${categoryId}`, data)
-    // set({ isLoading: true })
-    // Promise.all([updateImage, updateBody])
-    //   .then(fetchtagsWithDebounce)
-    //   .catch(console.log)
+    set({ isLoading: true })
+
+    api
+      .patch(`tags/${tagId}`, data)
+      .then(fetchTagsWithDebounce)
+      .catch(console.log)
+      .finally(() => set({ isLoading: false }))
   },
   onAdd: (data: TagAddData) => {
     // const formData = new FormData()

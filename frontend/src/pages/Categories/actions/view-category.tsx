@@ -21,12 +21,12 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { preview } from '@/assets'
-import { Category, SimpleCategory } from '@/types/category'
-
+import { Category } from '@/types/category'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
+import { useCategories } from '../store'
 
 const formSchema = z.object({
   id: z.number(),
@@ -48,15 +48,9 @@ interface ViewCategoryProps {
   row: Row<Category>
   open: boolean
   onOpenChange: (open: boolean) => void
-  categoryList: SimpleCategory[]
 }
 
-function ViewCategory({
-  row,
-  open,
-  onOpenChange,
-  categoryList,
-}: ViewCategoryProps) {
+function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -67,6 +61,8 @@ function ViewCategory({
       updatedAt: row.getValue('updatedAt'),
     },
   })
+
+  const categoryList = useCategories((state) => state.simpleCategories)
 
   const isImageRemoved = !row.getValue('image')
 

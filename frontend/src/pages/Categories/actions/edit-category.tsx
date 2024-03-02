@@ -25,8 +25,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { preview } from '@/assets'
-import { Category, CategoryEditData, SimpleCategory } from '@/types/category'
-
+import { Category, CategoryEditData } from '@/types/category'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -44,9 +43,10 @@ import {
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
+import { useCategories } from '../store'
 
 const formSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   name: z
     .string()
     .min(2, {
@@ -63,22 +63,21 @@ interface EditCategoryProps {
   row: Row<Category>
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSave: (rowId: number, data: CategoryEditData) => void
   onCancel: () => void
-  categoryList: SimpleCategory[]
 }
 
 function EditCategory({
   row,
   open,
   onOpenChange,
-  onSave,
   onCancel,
-  categoryList,
 }: EditCategoryProps) {
   const [image, setImage] = useState<File | null>(null)
   const [isImageRemoved, setIsImageRemoved] = useState(!row.getValue('image'))
   const [openCategories, setOpenCategories] = useState(false)
+
+  const onSave = useCategories((state) => state.onEdit)
+  const categoryList = useCategories((state) => state.simpleCategories)
 
   const fileInputRef = useRef<HTMLInputElement | null>(null)
 

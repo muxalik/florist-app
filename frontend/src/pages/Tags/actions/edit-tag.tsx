@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEventHandler, useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   Sheet,
   SheetContent,
@@ -9,9 +9,7 @@ import {
 } from '@/components/ui/sheet'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { categoryColumns } from '@/constants/categories/columns'
 import { Row } from '@tanstack/react-table'
-import Icons from '@/components/ui/icons'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -24,9 +22,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { preview } from '@/assets'
-import { Category, CategoryEditData, SimpleCategory } from '@/types/category'
-
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -43,9 +38,12 @@ import {
 } from '@/components/ui/popover'
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
+import { Tag, TagEditData } from '@/types/tag'
+import { useTags } from '../store'
+import { tagColumns } from '@/constants/tags/columns'
 
 const formSchema = z.object({
+  id: z.number(),
   name: z
     .string()
     .min(2, {
@@ -55,79 +53,42 @@ const formSchema = z.object({
       message: 'Название должно быть не более 50 символов',
     })
     .max(50),
-  parentId: z.number().nullable(),
+  colorId: z.number().nullable(),
 })
 
 interface EditTagProps {
-  row: Row<Category>
+  row: Row<Tag>
   open: boolean
   onOpenChange: (open: boolean) => void
-  onSave: (rowId: number, data: CategoryEditData) => void
   onCancel: () => void
-  categoryList: SimpleCategory[]
 }
 
-function EditTag({
-  row,
-  open,
-  onOpenChange,
-  onSave,
-  onCancel,
-  categoryList,
-}: EditTagProps) {
-  const [image, setImage] = useState<File | null>(null)
-  const [isImageRemoved, setIsImageRemoved] = useState(!row.getValue('image'))
-  const [openCategories, setOpenCategories] = useState(false)
+function EditTag({ row, open, onOpenChange, onCancel }: EditTagProps) {
+  const colors = useTags((state) => state.colors)
+  const onSave = useTags((state) => state.onEdit)
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-
-  const onImageClick = () => {
-    fileInputRef.current!.click()
-  }
-
-  const onImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files![0]
-
-    setImage(selectedFile)
-    setIsImageRemoved(false)
-  }
-
-  const onCloseImage: MouseEventHandler = (e) => {
-    e.stopPropagation()
-
-    setImage(null)
-    setIsImageRemoved(true)
-    fileInputRef.current!.value = ''
-  }
-
-  const onRefreshImage: MouseEventHandler = (e) => {
-    e.stopPropagation()
-
-    setImage(null)
-  }
+  const [openColors, setOpenColors] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      id: row.getValue('id'),
       name: row.getValue('name'),
-      parentId: row.original.parentId,
+      colorId: row.original.color?.id,
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const data: CategoryEditData = {
-      ...values,
-      image,
-    }
-
-    onSave(row.getValue('id'), data)
+    onSave(row.getValue('id'), values as TagEditData)
     onOpenChange(false)
   }
 
-  const imageUrl = image ? URL.createObjectURL(image) : ''
+  const filteredColors = colors.filter(
+    (color) => color.id !== row.original.color?.id
+  )
 
-  const filteredCategories = categoryList.filter(
-    (category) => category.id !== row.getValue('id')
+  const currentColor = colors.find(
+    (color) => color.id === form.getValues().colorId
   )
 
   return (
@@ -136,10 +97,10 @@ function EditTag({
         <ScrollArea className='w-full h-full'>
           <div className='px-6 py-6 min-h-screen flex flex-col'>
             <SheetHeader className='mb-10'>
-              <SheetTitle className='mb-2'>Редактировать категорию</SheetTitle>
+              <SheetTitle className='mb-2'>Редактировать тег</SheetTitle>
               <SheetDescription>
-                Здесь вы можете изменить категорию. Когда сделаете все
-                изменения, нажмите Сохранить.
+                Здесь вы можете изменить тег. Когда сделаете все изменения,
+                нажмите Сохранить.
               </SheetDescription>
             </SheetHeader>
             <Form {...form}>
@@ -148,19 +109,34 @@ function EditTag({
                 className='flex flex-col gap-6 pb-2 h-full flex-1 justify-between'
               >
                 <div className='flex flex-col gap-6 '>
-                  <div className='grid gap-2'>
-                    <Label htmlFor='id'>{categoryColumns.id}</Label>
-                    <Input id='id' value={row.getValue('id')} disabled />
-                  </div>
+                  <FormField
+                    control={form.control}
+                    name='id'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{tagColumns.id}</FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder={`Введите ${tagColumns.id}`}
+                            {...field}
+                            disabled
+                            onChange={() => {}}
+                          />
+                        </FormControl>
+                        <FormDescription>Не заполняется</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
                   <FormField
                     control={form.control}
                     name='name'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{categoryColumns.name}</FormLabel>
+                        <FormLabel>{tagColumns.name}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={`Введите ${categoryColumns.name}`}
+                            placeholder={`Введите ${tagColumns.name}`}
                             {...field}
                           />
                         </FormControl>
@@ -171,69 +147,16 @@ function EditTag({
                       </FormItem>
                     )}
                   />
-                  <div className='grid gap-2'>
-                    <Label htmlFor='image'>{categoryColumns.image}</Label>
-                    <Input
-                      type='file'
-                      accept='image/*'
-                      ref={fileInputRef}
-                      style={{ display: 'none' }}
-                      onChange={onImageChange}
-                      placeholder={`Введите ${categoryColumns.image}`}
-                    />
-                    <div
-                      className='p-2 rounded-sm border border-dashed relative flex justify-center cursor-pointer'
-                      onClick={onImageClick}
-                    >
-                      <div className='absolute -right-2 -top-2 z-30 text-gray-600 flex gap-2'>
-                        {!!image ||
-                          (!!row.getValue('image') && !isImageRemoved && (
-                            <Button
-                              variant={'outline'}
-                              size={'icon'}
-                              onClick={onCloseImage}
-                            >
-                              <Icons.close />
-                            </Button>
-                          ))}
-
-                        {!!image && (
-                          <Button
-                            variant={'outline'}
-                            size={'icon'}
-                            className='text-gray-600'
-                            onClick={onRefreshImage}
-                          >
-                            <Icons.refresh />
-                          </Button>
-                        )}
-                      </div>
-                      {!isImageRemoved ? (
-                        <img
-                          src={imageUrl || row.getValue('image')}
-                          alt='Превью'
-                          className='rounded-sm'
-                        />
-                      ) : (
-                        <img
-                          src={preview}
-                          alt='Нет изображения'
-                          className='h-12 w-12'
-                        />
-                      )}
-                    </div>
-                    <FormDescription>Необязательно</FormDescription>
-                  </div>
                   <FormField
                     control={form.control}
-                    name='parentId'
+                    name='colorId'
                     render={({ field }) => (
                       <FormItem className='flex flex-col'>
-                        <FormLabel>{categoryColumns.parentName}</FormLabel>
+                        <FormLabel>{tagColumns.color}</FormLabel>
                         <Popover
                           modal={true}
-                          open={openCategories}
-                          onOpenChange={setOpenCategories}
+                          open={openColors}
+                          onOpenChange={setOpenColors}
                         >
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -245,23 +168,18 @@ function EditTag({
                                   !field.value && 'text-muted-foreground'
                                 )}
                               >
-                                <div className='flex'>
+                                <div className='flex items-center gap-2'>
                                   {!!field.value && (
-                                    <Badge variant={'outline'} className='mr-2'>
-                                      {
-                                        categoryList.find(
-                                          (category) =>
-                                            category.id === field.value
-                                        )?.id
-                                      }
-                                    </Badge>
+                                    <div
+                                      className='w-6 h-6 rounded-full'
+                                      style={{
+                                        backgroundColor: currentColor?.hex,
+                                      }}
+                                    />
                                   )}
                                   {field.value
-                                    ? categoryList.find(
-                                        (category) =>
-                                          category.id === field.value
-                                      )?.name
-                                    : 'Выберите категорию'}
+                                    ? currentColor?.name
+                                    : 'Выберите цвет'}
                                 </div>
                                 <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                               </Button>
@@ -273,27 +191,50 @@ function EditTag({
                                 placeholder='Поиск...'
                                 className='h-9'
                               />
-                              <CommandEmpty>Категория не найдена.</CommandEmpty>
+                              <CommandEmpty>Цвет не найден.</CommandEmpty>
                               <ScrollArea className='h-[190px] z-20'>
                                 <CommandGroup>
-                                  {filteredCategories.map((category) => (
+                                  <CommandItem
+                                    value={'none'}
+                                    key={'default'}
+                                    onSelect={() => {
+                                      setOpenColors(false)
+                                      form.setValue('colorId', null)
+                                    }}
+                                    className='flex gap-2'
+                                  >
+                                    <div className='w-6 h-6 rounded-full border' />
+                                    <span>Без цвета</span>
+                                    <CheckIcon
+                                      className={cn(
+                                        'ml-auto h-4 w-4',
+                                        field.value === null
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )}
+                                    />
+                                  </CommandItem>
+                                  {filteredColors.map((color, index) => (
                                     <CommandItem
-                                      value={category.name + category.id}
-                                      key={category.name}
+                                      value={'' + color.id}
+                                      key={index}
                                       onSelect={() => {
-                                        setOpenCategories(false)
-                                        form.setValue('parentId', category.id)
+                                        setOpenColors(false)
+                                        form.setValue('colorId', color.id)
                                       }}
                                       className='flex gap-2'
                                     >
-                                      <Badge variant={'outline'}>
-                                        {category.id}
-                                      </Badge>
-                                      {category.name}
+                                      <div
+                                        className='w-6 h-6 rounded-full'
+                                        style={{
+                                          backgroundColor: color?.hex,
+                                        }}
+                                      />
+                                      {color.name}
                                       <CheckIcon
                                         className={cn(
                                           'ml-auto h-4 w-4',
-                                          category.id === field.value
+                                          color.id === field.value
                                             ? 'opacity-100'
                                             : 'opacity-0'
                                         )}
@@ -321,7 +262,6 @@ function EditTag({
 
                       setTimeout(() => {
                         form.reset()
-                        setImage(null)
                       }, 300)
                     }}
                   >

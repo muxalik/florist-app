@@ -6,6 +6,7 @@ use App\Filters\CategoryFilter;
 use App\Filters\TagFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Category\UpstoreRequest;
+use App\Http\Requests\Tag\UpstoreTagRequest;
 use App\Http\Resources\TagResource;
 use App\Models\Category;
 use App\Models\Tag;
@@ -74,13 +75,13 @@ class TagController extends Controller
      * Update the specified resource in storage.
      */
     public function update(
-        UpstoreRequest $request,
-        Category $category
+        UpstoreTagRequest $request,
+        Tag $tag
     ): JsonResponse {
-        $category->update($request->validated());
+        $tag->update($request->validated());
 
         return response()->json([
-            'message' => __('category.updated'),
+            'message' => __('tag.updated'),
         ]);
     }
 

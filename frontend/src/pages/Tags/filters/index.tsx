@@ -1,6 +1,7 @@
 import TagCreatedAtFilter from './created-at-filter'
 import TagIdFilter from './id-filter'
 import TagNameFilter from './name-filter'
+import TagProductsFilter from './products-filter'
 import TagUpdatedAtFilter from './updated-at-filter'
 
 const TagFilters = () => {
@@ -11,6 +12,9 @@ const TagFilters = () => {
       </li>
       <li key='name'>
         <TagNameFilter />
+      </li>
+      <li key='productsCount'>
+        <TagProductsFilter />
       </li>
       <li key='createdAt'>
         <TagCreatedAtFilter />

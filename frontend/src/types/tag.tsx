@@ -30,6 +30,8 @@ export type TagFilters = {
   id: IdFilter
   min_name: number
   max_name: number
+  min_products: number
+  max_products: number
   updated_from: string
   updated_to: string
   created_from: string

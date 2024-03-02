@@ -68,6 +68,7 @@ export type SliderFilterOption = {
   min: number
   max: number
   value: number
+  step?: number
 }
 
 export type SliderFilter = {

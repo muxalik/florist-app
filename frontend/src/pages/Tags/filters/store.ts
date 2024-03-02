@@ -12,11 +12,13 @@ type TagFiltersStore = {
 
   clearIdFilters: () => void
   clearNameFilters: () => void
+  clearProductsFilters: () => void
   clearUpdatedFilters: () => void
   clearCreatedFilters: () => void
 
   onIdSelect: (value: string) => void
   onNameChange: (key: string, value: number) => void
+  onProductsChange: (key: string, value: number) => void
   onUpdatedChange: (range: DateRange | undefined) => void
   onCreatedChange: (range: DateRange | undefined) => void
 }
@@ -29,6 +31,14 @@ const filtersFromUrl = (): TagFilters => {
   const min_name = +(searchParams.get('min_name') || defaultTagFilters.min_name)
 
   const max_name = +(searchParams.get('max_name') || defaultTagFilters.max_name)
+
+  const min_products = +(
+    searchParams.get('min_products') || defaultTagFilters.min_products
+  )
+
+  const max_products = +(
+    searchParams.get('max_products') || defaultTagFilters.max_products
+  )
 
   const updated_from =
     searchParams.get('updated_from') || defaultTagFilters.updated_from
@@ -46,6 +56,8 @@ const filtersFromUrl = (): TagFilters => {
     id,
     min_name,
     max_name,
+    min_products,
+    max_products,
     updated_from,
     updated_to,
     created_from,
@@ -88,6 +100,16 @@ export const useTagFilters = create<TagFiltersStore>((set) => ({
     }))
   },
 
+  clearProductsFilters: () => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        min_products: defaultTagFilters.min_products,
+        max_products: defaultTagFilters.max_products,
+      },
+    }))
+  },
+
   clearUpdatedFilters: () => {
     set((state) => ({
       filters: {
@@ -118,6 +140,15 @@ export const useTagFilters = create<TagFiltersStore>((set) => ({
   },
 
   onNameChange: (key: string, value: number) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        [key]: value,
+      },
+    }))
+  },
+
+  onProductsChange: (key: string, value: number) => {
     set((state) => ({
       filters: {
         ...state.filters,

@@ -34,7 +34,7 @@ export const nameFilter = (
   onChange: (key: string, value: number) => void
 ): SliderFilter => {
   return {
-    title: 'Длина названия',
+    title: 'Длина',
     type: 'slider',
     options: [
       {

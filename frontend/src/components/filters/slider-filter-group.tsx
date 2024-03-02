@@ -55,7 +55,7 @@ const SliderFilter = ({ id, option, onChange }: SliderFilterProps) => {
             <Slider
               min={option.min}
               max={option.max}
-              step={1}
+              step={option.step || 1}
               value={[value]}
               onValueChange={(value) => setValue(value[0])}
               onValueCommit={(value) => onChange(option.key, value[0])}

@@ -1,9 +1,9 @@
 import { defaultCategoryFilters } from '@/constants/categories/filters'
+import { IdFilter } from '@/types'
 import {
   CategoryFilterFormats,
   CategoryFilterImage,
   CategoryFilters,
-  CategoryIdFilter,
 } from '@/types/category'
 import { format } from 'date-fns'
 import { DateRange } from 'react-day-picker'
@@ -151,8 +151,8 @@ export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
     set((state) => ({
       filters: {
         ...state.filters,
-        updated_from: defaultCategoryFilters.updated_from,
-        updated_to: defaultCategoryFilters.updated_to,
+        created_from: defaultCategoryFilters.created_from,
+        created_to: defaultCategoryFilters.created_to,
       },
     }))
   },
@@ -161,7 +161,7 @@ export const useCategoryFilters = create<CategoryFiltersStore>((set) => ({
     set((state) => ({
       filters: {
         ...state.filters,
-        id: value as CategoryIdFilter,
+        id: value as IdFilter,
       },
     }))
   },

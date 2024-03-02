@@ -1,7 +1,7 @@
 import DatePickerFilter from '@/components/filters/date-picker'
-import { categoryColumns } from '@/constants/categories/columns'
 import { defaultCategoryFilters } from '@/constants/categories/filters'
 import { useTagFilters } from './store'
+import { columns } from '@/constants/columns'
 
 const CategoryUpdatedAtFilter = () => {
   const filters = useTagFilters((state) => state.filters)
@@ -12,7 +12,7 @@ const CategoryUpdatedAtFilter = () => {
 
   return (
     <DatePickerFilter
-      label={categoryColumns.updatedAt}
+      label={columns.updatedAt}
       date={{
         from: filters.updated_from?.length
           ? new Date(Date.parse(filters.updated_from))

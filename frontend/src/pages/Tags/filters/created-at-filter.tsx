@@ -1,7 +1,7 @@
 import DatePickerFilter from '@/components/filters/date-picker'
-import { categoryColumns } from '@/constants/categories/columns'
 import { useTagFilters } from './store'
 import { defaultTagFilters } from '@/constants/tags/filters'
+import { columns } from '@/constants/columns'
 
 const CategoryCreatedAtFilter = () => {
   const filters = useTagFilters((state) => state.filters)
@@ -12,7 +12,7 @@ const CategoryCreatedAtFilter = () => {
 
   return (
     <DatePickerFilter
-      label={categoryColumns.createdAt}
+      label={columns.createdAt}
       date={{
         from: filters.created_from?.length
           ? new Date(Date.parse(filters.created_from))

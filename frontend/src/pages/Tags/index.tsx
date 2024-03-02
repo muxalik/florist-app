@@ -17,6 +17,8 @@ import {
 import { DataTablePagination } from '@/components/ui/data-table/pagination'
 import _ from 'lodash'
 import { TagToolbar } from './toolbar'
+import { defaultTagFilters } from '@/constants/tags/filters'
+import { TagFilter } from '@/types/tag'
 
 const Tags = () => {
   const [, setSearchParams] = useSearchParams()
@@ -57,21 +59,21 @@ const Tags = () => {
 
       !search ? prev.delete('q') : prev.set('q', search.toString())
 
-      // Object.entries(filters).forEach(([key, value]) => {
-      //   const defaultFilter = defaultCategoryFilters[key as CategoryFilter]
+      Object.entries(filters).forEach(([key, value]) => {
+        const defaultFilter = defaultTagFilters[key as TagFilter]
 
-      //   if (Array.isArray(defaultFilter)) {
-      //     _.isEqual(value, defaultFilter)
-      //       ? prev.delete(key)
-      //       : prev.set(key, value.toString())
+        if (Array.isArray(defaultFilter)) {
+          _.isEqual(value, defaultFilter)
+            ? prev.delete(key)
+            : prev.set(key, value.toString())
 
-      //     return
-      //   }
+          return
+        }
 
-      //   value === defaultFilter
-      //     ? prev.delete(key)
-      //     : prev.set(key, value.toString())
-      // })
+        value === defaultFilter
+          ? prev.delete(key)
+          : prev.set(key, value.toString())
+      })
 
       return prev
     })

@@ -1,5 +1,6 @@
 import { defaultTagFilters } from '@/constants/tags/filters'
-import { TagFilters, TagIdFilter } from '@/types/tag'
+import { IdFilter } from '@/types'
+import { TagFilters } from '@/types/tag'
 import { format } from 'date-fns'
 import { DateRange } from 'react-day-picker'
 import { create } from 'zustand'
@@ -8,6 +9,7 @@ type TagFiltersStore = {
   filters: TagFilters
   setFilters: (filters: Partial<TagFilters>) => void
   clearFilters: () => void
+
   clearIdFilters: () => void
   clearNameFilters: () => void
   clearUpdatedFilters: () => void
@@ -100,8 +102,8 @@ export const useTagFilters = create<TagFiltersStore>((set) => ({
     set((state) => ({
       filters: {
         ...state.filters,
-        updated_from: defaultTagFilters.updated_from,
-        updated_to: defaultTagFilters.updated_to,
+        created_from: defaultTagFilters.created_from,
+        created_to: defaultTagFilters.created_to,
       },
     }))
   },
@@ -110,7 +112,7 @@ export const useTagFilters = create<TagFiltersStore>((set) => ({
     set((state) => ({
       filters: {
         ...state.filters,
-        id: value as TagIdFilter,
+        id: value as IdFilter,
       },
     }))
   },

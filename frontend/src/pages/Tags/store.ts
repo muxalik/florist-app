@@ -131,19 +131,15 @@ export const useTags = create<TagsStore>((set) => ({
       .finally(() => set({ isLoading: false }))
   },
   onAdd: (data: TagAddData) => {
-    // const formData = new FormData()
-    // formData.append('name', data.name)
-    // formData.append('parentId', data.parentId + '')
-    // formData.append('image', data.image!)
-    // api
-    //   .post('tags', formData, {
-    //     headers: {
-    //       Accept: 'multipart/form-data',
-    //     },
-    //   })
-    //   .then(fetchtagsWithDebounce)
-    //   .catch(console.log)
+    set({ isLoading: true })
+
+    api
+      .post('tags', data)
+      .then(fetchTagsWithDebounce)
+      .catch(console.log)
+      .finally(() => set({ isLoading: false }))
   },
+
   fetchTags: fetchTagsWithDebounce,
   fetchColors,
 }))

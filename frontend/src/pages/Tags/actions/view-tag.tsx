@@ -36,7 +36,7 @@ const formSchema = z.object({
       message: 'Название должно быть не более 50 символов',
     })
     .max(50),
-  color: z.number().nullable(),
+  colorId: z.number().nullable(),
   productsCount: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
@@ -54,7 +54,7 @@ function ViewTag({ row, open, onOpenChange }: ViewTagProps) {
     defaultValues: {
       id: row.getValue('id'),
       name: row.getValue('name'),
-      color: row.original.color?.id,
+      colorId: row.original.color?.id,
       productsCount: row.getValue('productsCount'),
       createdAt: row.getValue('createdAt') || 'Не задано',
       updatedAt: row.getValue('updatedAt') || 'Не задано',
@@ -64,7 +64,7 @@ function ViewTag({ row, open, onOpenChange }: ViewTagProps) {
   const colors = useTags((state) => state.colors)
 
   const currentColor = colors.find(
-    (color) => color.id === form.getValues().color
+    (color) => color.id === form.getValues().colorId
   )
 
   return (
@@ -118,7 +118,7 @@ function ViewTag({ row, open, onOpenChange }: ViewTagProps) {
                   />
                   <FormField
                     control={form.control}
-                    name='color'
+                    name='colorId'
                     render={({ field }) => (
                       <FormItem className='flex flex-col'>
                         <FormLabel>{tagColumns.color}</FormLabel>

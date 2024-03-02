@@ -1,4 +1,4 @@
-import { ChangeEvent, MouseEventHandler, useRef, useState } from 'react'
+import { useState } from 'react'
 import {
   Sheet,
   SheetContent,
@@ -9,7 +9,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
-import { categoryColumns } from '@/constants/categories/columns'
+import { tagColumns } from '@/constants/tags/columns'
 import Icons from '@/components/ui/icons'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,7 +23,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { preview } from '@/assets'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -40,9 +39,8 @@ import {
 } from '@/components/ui/popover'
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
-import { Label } from '@/components/ui/label'
 import { useTags } from '../store'
+import { TagAddData } from '@/types/tag'
 
 const formSchema = z.object({
   name: z
@@ -54,57 +52,36 @@ const formSchema = z.object({
       message: 'Название должно быть не более 50 символов',
     })
     .max(50),
-  parentId: z.number().nullable(),
+  colorId: z.number().nullable(),
 })
 
-function CreateCategory() {
+function CreateTag() {
   const onAdd = useTags((state) => state.onAdd)
+  const colors = useTags((state) => state.colors)
 
   const [open, setOpen] = useState(false)
-  const [image, setImage] = useState<File | null>(null)
-  const [openCategories, setOpenCategories] = useState(false)
-
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
-
-  const onImageClick = () => {
-    fileInputRef.current!.click()
-  }
-
-  const onImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files![0]
-
-    setImage(selectedFile)
-  }
-
-  const onCloseImage: MouseEventHandler = (e) => {
-    e.stopPropagation()
-
-    setImage(null)
-    fileInputRef.current!.value = ''
-  }
+  const [openColors, setOpenColors] = useState(false)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      parentId: null,
+      colorId: null,
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAdd({
-      ...values,
-      image,
-    })
+    onAdd(values as TagAddData)
 
     setOpen(false)
     setTimeout(() => {
       form.reset()
-      setImage(null)
     }, 300)
   }
 
-  const imageUrl = image ? URL.createObjectURL(image) : ''
+  const currentColor = colors.find(
+    (color) => color.id === form.getValues().colorId
+  )
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -118,10 +95,10 @@ function CreateCategory() {
         <ScrollArea className='w-full h-full'>
           <div className='px-6 py-6 min-h-screen flex flex-col'>
             <SheetHeader className='mb-10'>
-              <SheetTitle className='mb-2'>Добавить новую категорию</SheetTitle>
+              <SheetTitle className='mb-2'>Добавить новый тег</SheetTitle>
               <SheetDescription>
-                Здесь вы можете создать категорию. Когда заполните все
-                необходимые поля, нажмите Добавить.
+                Здесь вы можете создать тег. Когда заполните все необходимые
+                поля, нажмите Добавить.
               </SheetDescription>
             </SheetHeader>
             <Form {...form}>
@@ -135,10 +112,10 @@ function CreateCategory() {
                     name='name'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{categoryColumns.name}</FormLabel>
+                        <FormLabel>{tagColumns.name}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={`Введите ${categoryColumns.name}`}
+                            placeholder={`Введите ${tagColumns.name}`}
                             {...field}
                           />
                         </FormControl>
@@ -149,57 +126,16 @@ function CreateCategory() {
                       </FormItem>
                     )}
                   />
-                  <div className='grid gap-2'>
-                    <Label htmlFor='image'>{categoryColumns.image}</Label>
-                    <Input
-                      type='file'
-                      accept='image/*'
-                      ref={fileInputRef}
-                      style={{ display: 'none' }}
-                      onChange={onImageChange}
-                      placeholder={`Введите ${categoryColumns.image}`}
-                    />
-                    <div
-                      className='p-2 rounded-sm border border-dashed relative flex justify-center cursor-pointer'
-                      onClick={onImageClick}
-                    >
-                      <div className='absolute -right-2 -top-2 z-30 text-gray-600 flex gap-2'>
-                        {!!image && (
-                          <Button
-                            variant={'outline'}
-                            size={'icon'}
-                            onClick={onCloseImage}
-                          >
-                            <Icons.close />
-                          </Button>
-                        )}
-                      </div>
-                      {!!image ? (
-                        <img
-                          src={imageUrl}
-                          alt='Превью'
-                          className='rounded-sm'
-                        />
-                      ) : (
-                        <img
-                          src={preview}
-                          alt='Нет изображения'
-                          className='h-12 w-12'
-                        />
-                      )}
-                    </div>
-                    <FormDescription>Необязательно</FormDescription>
-                  </div>
                   <FormField
                     control={form.control}
-                    name='parentId'
+                    name='colorId'
                     render={({ field }) => (
                       <FormItem className='flex flex-col'>
-                        <FormLabel>{categoryColumns.parentName}</FormLabel>
+                        <FormLabel>{tagColumns.color}</FormLabel>
                         <Popover
                           modal={true}
-                          open={openCategories}
-                          onOpenChange={setOpenCategories}
+                          open={openColors}
+                          onOpenChange={setOpenColors}
                         >
                           <PopoverTrigger asChild>
                             <FormControl>
@@ -207,27 +143,22 @@ function CreateCategory() {
                                 variant='outline'
                                 role='combobox'
                                 className={cn(
-                                  'justify-between text-left gap-2 text-wrap h-auto min-h-9',
+                                  'justify-between text-wrap h-auto min-h-9',
                                   !field.value && 'text-muted-foreground'
                                 )}
                               >
-                                <div className='flex gap-2 items-center'>
+                                <div className='flex items-center gap-2'>
                                   {!!field.value && (
-                                    <Badge variant={'outline'}>
-                                      {
-                                        simpleCategories.find(
-                                          (category) =>
-                                            category.id === field.value
-                                        )?.id
-                                      }
-                                    </Badge>
+                                    <div
+                                      className='w-6 h-6 rounded-full'
+                                      style={{
+                                        backgroundColor: currentColor?.hex,
+                                      }}
+                                    />
                                   )}
                                   {field.value
-                                    ? simpleCategories.find(
-                                        (category) =>
-                                          category.id === field.value
-                                      )?.name
-                                    : 'Выберите категорию'}
+                                    ? currentColor?.name
+                                    : 'Выберите цвет'}
                                 </div>
                                 <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                               </Button>
@@ -239,27 +170,50 @@ function CreateCategory() {
                                 placeholder='Поиск...'
                                 className='h-9'
                               />
-                              <CommandEmpty>Категория не найдена.</CommandEmpty>
+                              <CommandEmpty>Цвет не найден.</CommandEmpty>
                               <ScrollArea className='h-[190px] z-20'>
                                 <CommandGroup>
-                                  {simpleCategories.map((category) => (
+                                  <CommandItem
+                                    value={'none'}
+                                    key={'default'}
+                                    onSelect={() => {
+                                      setOpenColors(false)
+                                      form.setValue('colorId', null)
+                                    }}
+                                    className='flex gap-2'
+                                  >
+                                    <div className='w-6 h-6 rounded-full border' />
+                                    <span>Без цвета</span>
+                                    <CheckIcon
+                                      className={cn(
+                                        'ml-auto h-4 w-4',
+                                        field.value === null
+                                          ? 'opacity-100'
+                                          : 'opacity-0'
+                                      )}
+                                    />
+                                  </CommandItem>
+                                  {colors.map((color, index) => (
                                     <CommandItem
-                                      value={category.name + category.id}
-                                      key={category.name}
+                                      value={'' + color.id}
+                                      key={index}
                                       onSelect={() => {
-                                        setOpenCategories(false)
-                                        form.setValue('parentId', category.id)
+                                        setOpenColors(false)
+                                        form.setValue('colorId', color.id)
                                       }}
                                       className='flex gap-2'
                                     >
-                                      <Badge variant={'outline'}>
-                                        {category.id}
-                                      </Badge>
-                                      {category.name}
+                                      <div
+                                        className='w-6 h-6 rounded-full'
+                                        style={{
+                                          backgroundColor: color?.hex,
+                                        }}
+                                      />
+                                      {color.name}
                                       <CheckIcon
                                         className={cn(
                                           'ml-auto h-4 w-4',
-                                          category.id === field.value
+                                          color.id === field.value
                                             ? 'opacity-100'
                                             : 'opacity-0'
                                         )}
@@ -287,7 +241,6 @@ function CreateCategory() {
 
                       setTimeout(() => {
                         form.reset()
-                        setImage(null)
                       }, 300)
                     }}
                   >
@@ -306,4 +259,4 @@ function CreateCategory() {
   )
 }
 
-export default CreateCategory
+export default CreateTag

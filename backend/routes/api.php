@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\UpdateTokenController;
 use App\Http\Controllers\Auth\VerifyPasswordController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Category\CategoryExcelController;
+use App\Http\Controllers\Tag\TagExcelController;
 use App\Http\Controllers\Color\ColorController;
 use App\Http\Controllers\Tag\TagController;
 use Illuminate\Support\Facades\Route;
@@ -46,7 +47,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Tags
     Route::prefix('tags')->as('tags.')->group(function () {
-        Route::get('export/excel', CategoryExcelController::class)->name('export-excel');
+        Route::get('export/excel', TagExcelController::class)->name('export-excel');
     });
 
     Route::apiResource('tags', TagController::class);

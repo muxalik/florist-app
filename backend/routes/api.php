@@ -10,6 +10,7 @@ use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Category\CategoryExcelController;
 use App\Http\Controllers\Tag\TagExcelController;
 use App\Http\Controllers\Color\ColorController;
+use App\Http\Controllers\Manufacturer\ManufacturerController;
 use App\Http\Controllers\Tag\TagController;
 use Illuminate\Support\Facades\Route;
 
@@ -54,6 +55,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     // Colors 
     Route::apiResource('colors', ColorController::class);
+
+    // Manufacturers
+    Route::prefix('manufacturers')->as('manufacturers.')->group(function () {
+        Route::post('{manufacturer}/image', [ManufacturerController::class, 'updateImage'])->name('update-image');
+        Route::get('export/excel', CategoryExcelController::class)->name('export-excel');
+    });
+
+    Route::apiResource('manufacturers', ManufacturerController::class);
 
     Route::get('logout', LogoutController::class)->name('logout');
 });

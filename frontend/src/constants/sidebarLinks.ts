@@ -34,6 +34,11 @@ const sidebarLinks: SidebarLink[] = [
     to: '/tags',
     icon: Icons.hash,
   },
+  {
+    title: 'Производители',
+    to: '/manufacturers',
+    icon: Icons.verified,
+  },
 ]
 
 export default sidebarLinks

@@ -5,9 +5,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
-import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
-import { categoryColumns } from '@/constants/categories/columns'
 import { Row } from '@tanstack/react-table'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -18,15 +16,12 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form'
-import { preview } from '@/assets'
-import { Category } from '@/types/category'
-import { cn } from '@/lib/utils'
-import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
-import { useCategories } from '../store'
+import { Manufacturer } from '@/types/manufacturer'
+import { manufacturerColumns } from '@/constants/manufacturers/columns'
+import { Label } from '@/components/ui/label'
+import { preview } from '@/assets'
 
 const formSchema = z.object({
   id: z.number(),
@@ -39,36 +34,31 @@ const formSchema = z.object({
       message: 'Название должно быть не более 50 символов',
     })
     .max(50),
-  parentId: z.number().nullable(),
+  colorId: z.number().nullable(),
+  productsCount: z.number(),
   createdAt: z.string(),
   updatedAt: z.string(),
 })
 
-interface ViewCategoryProps {
-  row: Row<Category>
+interface ViewTagProps {
+  row: Row<Manufacturer>
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
+function ViewManufacturer({ row, open, onOpenChange }: ViewTagProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       id: row.getValue('id'),
       name: row.getValue('name'),
-      parentId: row.original.parentId,
-      createdAt: row.getValue('createdAt'),
-      updatedAt: row.getValue('updatedAt'),
+      productsCount: row.getValue('productsCount'),
+      createdAt: row.getValue('createdAt') || 'Не задано',
+      updatedAt: row.getValue('updatedAt') || 'Не задано',
     },
   })
 
-  const categoryList = useCategories((state) => state.simpleCategories)
-
   const isImageRemoved = !row.getValue('image')
-
-  const currentCategory = categoryList.find(
-    (category) => category.id === row.getValue('id')
-  )
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -76,9 +66,11 @@ function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
         <ScrollArea className='w-full h-full'>
           <div className='px-6 py-6 min-h-screen flex flex-col'>
             <SheetHeader className='mb-10'>
-              <SheetTitle className='mb-2'>Просмотреть категорию</SheetTitle>
+              <SheetTitle className='mb-2'>
+                Просмотреть производителя
+              </SheetTitle>
               <SheetDescription>
-                Здесь вы можете просмотреть категорию.
+                Здесь вы можете просмотреть производителя.
               </SheetDescription>
             </SheetHeader>
             <Form {...form}>
@@ -92,10 +84,10 @@ function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
                     name='id'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{categoryColumns.id}</FormLabel>
+                        <FormLabel>{manufacturerColumns.id}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={`Введите ${categoryColumns.id}`}
+                            placeholder={`Введите ${manufacturerColumns.id}`}
                             {...field}
                             onChange={() => {}}
                           />
@@ -108,10 +100,10 @@ function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
                     name='name'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{categoryColumns.name}</FormLabel>
+                        <FormLabel>{manufacturerColumns.name}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={`Введите ${categoryColumns.name}`}
+                            placeholder={`Введите ${manufacturerColumns.name}`}
                             {...field}
                             onChange={() => {}}
                           />
@@ -120,7 +112,7 @@ function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
                     )}
                   />
                   <div className='grid gap-2'>
-                    <Label htmlFor='image'>{categoryColumns.image}</Label>
+                    <Label htmlFor='image'>{manufacturerColumns.image}</Label>
                     <div className='p-2 rounded-sm border border-dashed relative flex justify-center'>
                       {!isImageRemoved ? (
                         <img
@@ -139,29 +131,19 @@ function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
                   </div>
                   <FormField
                     control={form.control}
-                    name='parentId'
+                    name='productsCount'
                     render={({ field }) => (
-                      <FormItem className='flex flex-col'>
-                        <FormLabel>{categoryColumns.parentName}</FormLabel>
+                      <FormItem>
+                        <FormLabel>
+                          {manufacturerColumns.productsCount}
+                        </FormLabel>
                         <FormControl>
-                          <Button
-                            variant='outline'
-                            className={cn(
-                              'justify-between text-wrap h-auto min-h-9 hover:bg-transparent cursor-default',
-                              !field.value && 'text-muted-foreground'
-                            )}
-                          >
-                            <div className='flex items-center'>
-                              {!!field.value && (
-                                <Badge variant={'outline'} className='mr-2 h-8'>
-                                  {currentCategory?.id}
-                                </Badge>
-                              )}
-                              {field.value ? currentCategory?.name : 'Нет'}
-                            </div>
-                          </Button>
+                          <Input
+                            placeholder={`Введите ${manufacturerColumns.productsCount}`}
+                            {...field}
+                            onChange={() => {}}
+                          />
                         </FormControl>
-                        <FormMessage />
                       </FormItem>
                     )}
                   />
@@ -170,10 +152,10 @@ function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
                     name='createdAt'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{categoryColumns.createdAt}</FormLabel>
+                        <FormLabel>{manufacturerColumns.createdAt}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={`Введите ${categoryColumns.createdAt}`}
+                            placeholder={`Введите ${manufacturerColumns.createdAt}`}
                             {...field}
                             onChange={() => {}}
                           />
@@ -186,10 +168,10 @@ function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
                     name='updatedAt'
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{categoryColumns.updatedAt}</FormLabel>
+                        <FormLabel>{manufacturerColumns.updatedAt}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={`Введите ${categoryColumns.updatedAt}`}
+                            placeholder={`Введите ${manufacturerColumns.updatedAt}`}
                             {...field}
                             onChange={() => {}}
                           />
@@ -207,4 +189,4 @@ function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
   )
 }
 
-export default ViewCategory
+export default ViewManufacturer

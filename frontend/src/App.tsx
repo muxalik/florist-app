@@ -12,6 +12,7 @@ import Categories from './pages/Categories'
 import { useAuth } from './context/AuthContext'
 import Preloader from './components/Preloader'
 import Tags from './pages/Tags'
+import Manufacturers from './pages/Manufacturers'
 
 const App = () => {
   const { isLoading } = useAuth()
@@ -33,6 +34,7 @@ const App = () => {
             <Route path='/dashboard' element={<Dashboard />} />
             <Route path='/categories' element={<Categories />} />
             <Route path='/tags' element={<Tags />} />
+            <Route path='/manufacturers' element={<Manufacturers />} />
           </Route>
         </Route>
 

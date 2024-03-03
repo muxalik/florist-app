@@ -2,27 +2,25 @@
 
 namespace App\Filters;
 
-use App\Actions\Filters\HasImageFilter;
 use App\Actions\Filters\IdFilter;
-use App\Actions\Filters\ImageFormatsFilter;
 use App\Actions\Filters\NameFilter;
-use App\Actions\Filters\Category\CategoryParentNameFilter;
+use App\Actions\Filters\ImageFormatsFilter;
 use App\Actions\Filters\CreatedAtFilter;
+use App\Actions\Filters\HasImageFilter;
 use App\Actions\Filters\UpdatedAtFilter;
-use App\Models\Category;
+use App\Models\Manufacturer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class CategoryFilter extends AbstractFilter
+class ManufacturerFilter extends AbstractFilter
 {
    protected array $filters = [
-      IdFilter::class,
-      HasImageFilter::class,
-      ImageFormatsFilter::class,
-      NameFilter::class,
-      CategoryParentNameFilter::class,
-      UpdatedAtFilter::class,
-      CreatedAtFilter::class,
+      // IdFilter::class,
+      // HasImageFilter::class,
+      // ImageFormatsFilter::class,
+      // NameFilter::class,
+      // UpdatedAtFilter::class,
+      // CreatedAtFilter::class,
    ];
 
 
@@ -30,7 +28,7 @@ class CategoryFilter extends AbstractFilter
    {
       parent::__construct($request);
 
-      $this->query = Category::with('image', 'parent');
+      $this->query = Manufacturer::with('image')->withCount('products');
    }
 
    protected function search(): self
@@ -44,11 +42,7 @@ class CategoryFilter extends AbstractFilter
             return $q
                ->where('id', 'LIKE', "%$this->q%")
                ->orWhere('name', 'LIKE', "%$this->q%")
-               ->orWhereHas('parent', function (Builder $q): Builder {
-                  return $q
-                     ->where('id', 'LIKE', "%$this->q%")
-                     ->orWhere('name', 'LIKE', "%$this->q%");
-               });
+               ->orHas('products', 'LIKE', "%$this->q%");
          });
 
       return $this;
@@ -65,11 +59,6 @@ class CategoryFilter extends AbstractFilter
                str($this->sort)->snake(),
                $this->order->value
             );
-
-            break;
-
-         case 'parentName':
-            $this->query->orderBy('parent_id', $this->order->value);
 
             break;
 

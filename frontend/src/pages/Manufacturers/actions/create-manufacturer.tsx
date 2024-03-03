@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ChangeEvent, MouseEventHandler, useRef, useState } from 'react'
 import {
   Sheet,
   SheetContent,
@@ -26,7 +26,9 @@ import {
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useManufacturers } from '../store'
-import { ManufacturerAddData } from '@/types/manufacturer'
+import { manufacturerColumns } from '@/constants/manufacturers/columns'
+import { Label } from '@/components/ui/label'
+import { preview } from '@/assets'
 
 const formSchema = z.object({
   name: z
@@ -44,6 +46,26 @@ const CreateManufacturer = () => {
   const onAdd = useManufacturers((state) => state.onAdd)
 
   const [open, setOpen] = useState(false)
+  const [image, setImage] = useState<File | null>(null)
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
+
+  const onImageClick = () => {
+    fileInputRef.current!.click()
+  }
+
+  const onImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files![0]
+
+    setImage(selectedFile)
+  }
+
+  const onCloseImage: MouseEventHandler = (e) => {
+    e.stopPropagation()
+
+    setImage(null)
+    fileInputRef.current!.value = ''
+  }
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,13 +75,19 @@ const CreateManufacturer = () => {
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    onAdd(values as ManufacturerAddData)
+    onAdd({
+      ...values,
+      image,
+    })
 
     setOpen(false)
     setTimeout(() => {
       form.reset()
+      setImage(null)
     }, 300)
   }
+
+  const imageUrl = image ? URL.createObjectURL(image) : ''
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -73,10 +101,12 @@ const CreateManufacturer = () => {
         <ScrollArea className='w-full h-full'>
           <div className='px-6 py-6 min-h-screen flex flex-col'>
             <SheetHeader className='mb-10'>
-              <SheetTitle className='mb-2'>Добавить новый тег</SheetTitle>
+              <SheetTitle className='mb-2'>
+                Добавить новый производителя
+              </SheetTitle>
               <SheetDescription>
-                Здесь вы можете создать тег. Когда заполните все необходимые
-                поля, нажмите Добавить.
+                Здесь вы можете создать производителя. Когда заполните все
+                необходимые поля, нажмите Добавить.
               </SheetDescription>
             </SheetHeader>
             <Form {...form}>
@@ -104,6 +134,47 @@ const CreateManufacturer = () => {
                       </FormItem>
                     )}
                   />
+                  <div className='grid gap-2'>
+                    <Label htmlFor='image'>{manufacturerColumns.image}</Label>
+                    <Input
+                      type='file'
+                      accept='image/*'
+                      ref={fileInputRef}
+                      style={{ display: 'none' }}
+                      onChange={onImageChange}
+                      placeholder={`Введите ${manufacturerColumns.image}`}
+                    />
+                    <div
+                      className='p-2 rounded-sm border border-dashed relative flex justify-center cursor-pointer'
+                      onClick={onImageClick}
+                    >
+                      <div className='absolute -right-2 -top-2 z-30 text-gray-600 flex gap-2'>
+                        {!!image && (
+                          <Button
+                            variant={'outline'}
+                            size={'icon'}
+                            onClick={onCloseImage}
+                          >
+                            <Icons.close />
+                          </Button>
+                        )}
+                      </div>
+                      {!!image ? (
+                        <img
+                          src={imageUrl}
+                          alt='Превью'
+                          className='rounded-sm'
+                        />
+                      ) : (
+                        <img
+                          src={preview}
+                          alt='Нет изображения'
+                          className='h-12 w-12'
+                        />
+                      )}
+                    </div>
+                    <FormDescription>Необязательно</FormDescription>
+                  </div>
                 </div>
                 <SheetFooter className='flex w-full'>
                   <Button

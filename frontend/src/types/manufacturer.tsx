@@ -1,4 +1,4 @@
-import { IdFilter } from "@/types"
+import { IdFilter } from '@/types'
 
 export type Manufacturer = {
   id: number
@@ -19,6 +19,8 @@ export type ManufacturerAddData = ManufacturerEditData
 // Filters
 export type ManufacturerFilter =
   | 'id'
+  | 'has_image'
+  | 'formats'
   | 'min_name'
   | 'max_name'
   | 'min_products'
@@ -28,8 +30,14 @@ export type ManufacturerFilter =
   | 'created_from'
   | 'created_to'
 
+export type ManufacturerFilterImage = 'yes' | 'no' | 'any'
+
+export type ManufacturerFilterFormats = 'jpg' | 'png' | 'webp'
+
 export type ManufacturerFilters = {
   id: IdFilter
+  has_image: ManufacturerFilterImage
+  formats: ManufacturerFilterFormats[]
   min_name: number
   max_name: number
   min_products: number

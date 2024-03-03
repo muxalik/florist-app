@@ -1,5 +1,5 @@
 import Filter from '@/components/filters/filter'
-import { tagProductsFilter } from '@/constants/tags/filters'
+import { productCountFilter } from '@/constants/filters'
 import { useTagFilters } from './store'
 import { defaultTagFilters } from '@/constants/tags/filters'
 import { tagColumns } from '@/constants/tags/columns'
@@ -15,7 +15,7 @@ const TagProductsFilter = () => {
     <Filter
       title={tagColumns.productsCount}
       filters={[
-        tagProductsFilter(
+        productCountFilter(
           filters.min_products,
           filters.max_products,
           defaultTagFilters.min_products,

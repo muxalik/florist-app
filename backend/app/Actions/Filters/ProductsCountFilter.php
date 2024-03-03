@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Actions\Filters\Tag;
+namespace App\Actions\Filters;
 
 use App\ValueObjects\FilterResultObj;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-class TagProductsFilter
+class ProductsCountFilter
 {
    public static function handle(
       Request $request,

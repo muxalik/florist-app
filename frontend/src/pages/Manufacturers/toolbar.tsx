@@ -7,9 +7,9 @@ import Icons from '@/components/ui/icons'
 import _ from 'lodash'
 import { Button } from '@/components/ui/button'
 import downloadFromUrl from '@/utils/downloadFromUrl'
-import TagFilters from './filters'
-import { defaultTagFilters } from '@/constants/manufacturers/filters'
-import { useTagFilters } from './filters/store'
+import { useManufacturerFilters } from './filters/store'
+import { defaultManufacturerFilters } from '@/constants/manufacturers/filters'
+import ManufacturerFilters from './filters'
 
 export function ManufacturerToolbar<TData>({
   table,
@@ -18,10 +18,10 @@ export function ManufacturerToolbar<TData>({
   const search = useManufacturers((state) => state.search)
   const onSearch = useManufacturers((state) => state.onSearch)
 
-  const clearFilters = useTagFilters((state) => state.clearFilters)
-  const filters = useTagFilters((state) => state.filters)
+  const clearFilters = useManufacturerFilters((state) => state.clearFilters)
+  const filters = useManufacturerFilters((state) => state.filters)
 
-  const hasFiltersChanged = !_.isEqual(filters, defaultTagFilters)
+  const hasFiltersChanged = !_.isEqual(filters, defaultManufacturerFilters)
 
   return (
     <div className='flex items-end gap-10 justify-between'>
@@ -41,7 +41,7 @@ export function ManufacturerToolbar<TData>({
         </div>
 
         <div className='flex gap-x-2 gap-y-3'>
-          {/* <TagFilters /> */}
+          <ManufacturerFilters />
 
           {hasFiltersChanged && (
             <Button

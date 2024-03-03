@@ -1,35 +1,37 @@
 import Filter from '@/components/filters/filter'
-import { tagProductsFilter } from '@/constants/tags/filters'
-import { useTagFilters } from './store'
-import { defaultTagFilters } from '@/constants/tags/filters'
-import { tagColumns } from '@/constants/tags/columns'
+import { productCountFilter } from '@/constants/filters'
+import { useManufacturerFilters } from './store'
+import { defaultManufacturerFilters } from '@/constants/manufacturers/filters'
+import { manufacturerColumns } from '@/constants/manufacturers/columns'
 
-const TagProductsFilter = () => {
-  const filters = useTagFilters((state) => state.filters)
-  const onProductsChange = useTagFilters((state) => state.onProductsChange)
-  const clearProductsFilters = useTagFilters(
-    (state) => state.clearProductsFilters
+const ManufacturerProductsFilter = () => {
+  const filters = useManufacturerFilters((state) => state.filters)
+  const onProductCountChange = useManufacturerFilters(
+    (state) => state.onProductCountChange
+  )
+  const clearProductCountFilters = useManufacturerFilters(
+    (state) => state.clearProductCountFilters
   )
 
   return (
     <Filter
-      title={tagColumns.productsCount}
+      title={manufacturerColumns.productsCount}
       filters={[
-        tagProductsFilter(
+        productCountFilter(
           filters.min_products,
           filters.max_products,
-          defaultTagFilters.min_products,
-          defaultTagFilters.max_products,
-          onProductsChange
+          defaultManufacturerFilters.min_products,
+          defaultManufacturerFilters.max_products,
+          onProductCountChange
         ),
       ]}
-      onClear={clearProductsFilters}
+      onClear={clearProductCountFilters}
       hasChanged={
-        filters.max_products !== defaultTagFilters.max_products ||
-        filters.min_products !== defaultTagFilters.min_products
+        filters.max_products !== defaultManufacturerFilters.max_products ||
+        filters.min_products !== defaultManufacturerFilters.min_products
       }
     />
   )
 }
 
-export default TagProductsFilter
+export default ManufacturerProductsFilter

@@ -1,224 +1,233 @@
-import { defaultTagFilters } from '@/constants/tags/filters'
+import { defaultManufacturerFilters } from '@/constants/manufacturers/filters'
 import { IdFilter } from '@/types'
-import { TagFilters } from '@/types/tag'
+import {
+  ManufacturerFilterFormats,
+  ManufacturerFilterImage,
+  ManufacturerFilters,
+} from '@/types/manufacturer'
 import { format } from 'date-fns'
 import { DateRange } from 'react-day-picker'
 import { create } from 'zustand'
 
-type TagFiltersStore = {
-  filters: TagFilters
-  setFilters: (filters: Partial<TagFilters>) => void
+type ManufacturerFiltersStore = {
+  filters: ManufacturerFilters
+  setFilters: (filters: Partial<ManufacturerFilters>) => void
   clearFilters: () => void
 
+  clearImageFilters: () => void
   clearIdFilters: () => void
   clearNameFilters: () => void
-  clearColorsFilters: () => void
-  clearProductsFilters: () => void
+  clearProductCountFilters: () => void
   clearUpdatedFilters: () => void
   clearCreatedFilters: () => void
 
   onIdSelect: (value: string) => void
+  onImageSelect: (value: string) => void
+  onFormatsSelect: (value: string) => void
   onNameChange: (key: string, value: number) => void
-  onColorsChange: (colorId: number) => void
-  onWithoutColorChange: (include: boolean) => void
-  onProductsChange: (key: string, value: number) => void
+  onProductCountChange: (key: string, value: number) => void
   onUpdatedChange: (range: DateRange | undefined) => void
   onCreatedChange: (range: DateRange | undefined) => void
 }
 
-const filtersFromUrl = (): TagFilters => {
+const filtersFromUrl = (): ManufacturerFilters => {
   const searchParams = new URLSearchParams(window.location.search)
 
-  const id = searchParams.get('id') || defaultTagFilters.id
+  const id = searchParams.get('id') || defaultManufacturerFilters.id
 
-  const min_name = +(searchParams.get('min_name') || defaultTagFilters.min_name)
+  const has_image =
+    searchParams.get('has_image') || defaultManufacturerFilters.has_image
 
-  const max_name = +(searchParams.get('max_name') || defaultTagFilters.max_name)
+  let formats =
+    searchParams.getAll('formats') || defaultManufacturerFilters.formats
+  formats = formats.length > 0 ? formats : defaultManufacturerFilters.formats
 
-  let colors =
-    searchParams.getAll('colors')?.map((color) => +color) ||
-    defaultTagFilters.colors
+  const min_name = +(
+    searchParams.get('min_name') || defaultManufacturerFilters.min_name
+  )
 
-  colors = colors.length > 0 ? colors : defaultTagFilters.colors
-
-  const without_color = !!(
-    searchParams.get('without_color') || defaultTagFilters.without_color
+  const max_name = +(
+    searchParams.get('max_name') || defaultManufacturerFilters.max_name
   )
 
   const min_products = +(
-    searchParams.get('min_products') || defaultTagFilters.min_products
+    searchParams.get('min_products') || defaultManufacturerFilters.min_products
   )
 
   const max_products = +(
-    searchParams.get('max_products') || defaultTagFilters.max_products
+    searchParams.get('max_products') || defaultManufacturerFilters.max_products
   )
 
   const updated_from =
-    searchParams.get('updated_from') || defaultTagFilters.updated_from
+    searchParams.get('updated_from') || defaultManufacturerFilters.updated_from
 
   const updated_to =
-    searchParams.get('updated_to') || defaultTagFilters.updated_to
+    searchParams.get('updated_to') || defaultManufacturerFilters.updated_to
 
   const created_from =
-    searchParams.get('created_from') || defaultTagFilters.created_from
+    searchParams.get('created_from') || defaultManufacturerFilters.created_from
 
   const created_to =
-    searchParams.get('created_to') || defaultTagFilters.created_to
+    searchParams.get('created_to') || defaultManufacturerFilters.created_to
 
   return {
     id,
+    has_image,
+    formats,
     min_name,
     max_name,
-    colors,
-    without_color,
     min_products,
     max_products,
     updated_from,
     updated_to,
     created_from,
     created_to,
-  } as TagFilters
+  } as ManufacturerFilters
 }
 
-export const useTagFilters = create<TagFiltersStore>((set) => ({
-  filters: (() => {
-    return filtersFromUrl()
-  })(),
+export const useManufacturerFilters = create<ManufacturerFiltersStore>(
+  (set) => ({
+    filters: (() => {
+      return filtersFromUrl()
+    })(),
 
-  setFilters: (filters: Partial<TagFilters>) => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        ...filters,
-      },
-    }))
-  },
+    setFilters: (filters: Partial<ManufacturerFilters>) => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          ...filters,
+        },
+      }))
+    },
 
-  clearFilters: () => set({ filters: defaultTagFilters }),
+    clearFilters: () => set({ filters: defaultManufacturerFilters }),
 
-  clearIdFilters: () => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        id: defaultTagFilters.id,
-      },
-    }))
-  },
+    clearIdFilters: () => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          id: defaultManufacturerFilters.id,
+        },
+      }))
+    },
 
-  clearNameFilters: () => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        min_name: defaultTagFilters.min_name,
-        max_name: defaultTagFilters.max_name,
-      },
-    }))
-  },
+    clearImageFilters: () => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          has_image: defaultManufacturerFilters.has_image,
+          formats: defaultManufacturerFilters.formats,
+        },
+      }))
+    },
 
-  clearColorsFilters: () => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        colors: defaultTagFilters.colors,
-        without_color: defaultTagFilters.without_color,
-      },
-    }))
-  },
+    clearNameFilters: () => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          min_name: defaultManufacturerFilters.min_name,
+          max_name: defaultManufacturerFilters.max_name,
+        },
+      }))
+    },
 
-  clearProductsFilters: () => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        min_products: defaultTagFilters.min_products,
-        max_products: defaultTagFilters.max_products,
-      },
-    }))
-  },
+    clearProductCountFilters: () => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          min_products: defaultManufacturerFilters.min_products,
+          max_products: defaultManufacturerFilters.max_products,
+        },
+      }))
+    },
 
-  clearUpdatedFilters: () => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        updated_from: defaultTagFilters.updated_from,
-        updated_to: defaultTagFilters.updated_to,
-      },
-    }))
-  },
+    clearUpdatedFilters: () => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          updated_from: defaultManufacturerFilters.updated_from,
+          updated_to: defaultManufacturerFilters.updated_to,
+        },
+      }))
+    },
 
-  clearCreatedFilters: () => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        created_from: defaultTagFilters.created_from,
-        created_to: defaultTagFilters.created_to,
-      },
-    }))
-  },
+    clearCreatedFilters: () => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          created_from: defaultManufacturerFilters.created_from,
+          created_to: defaultManufacturerFilters.created_to,
+        },
+      }))
+    },
 
-  onIdSelect: (value: string) => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        id: value as IdFilter,
-      },
-    }))
-  },
+    onIdSelect: (value: string) => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          id: value as IdFilter,
+        },
+      }))
+    },
 
-  onNameChange: (key: string, value: number) => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        [key]: value,
-      },
-    }))
-  },
+    onImageSelect: (value: string) => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          has_image: value as ManufacturerFilterImage,
+        },
+      }))
+    },
 
-  onColorsChange(colorId: number) {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        colors: state.filters.colors.includes(colorId)
-          ? state.filters.colors.filter((filter) => filter !== colorId)
-          : [...state.filters.colors, colorId],
-      },
-    }))
-  },
+    onFormatsSelect: (value: string) => {
+      const castedValue = value as ManufacturerFilterFormats
 
-  onWithoutColorChange: (include: boolean) => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        without_color: include,
-      },
-    }))
-  },
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          formats: state.filters.formats.includes(castedValue)
+            ? state.filters.formats.filter((filter) => filter !== value)
+            : [...state.filters.formats, castedValue],
+        },
+      }))
+    },
 
-  onProductsChange: (key: string, value: number) => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        [key]: value,
-      },
-    }))
-  },
+    onNameChange: (key: string, value: number) => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          [key]: value,
+        },
+      }))
+    },
 
-  onUpdatedChange: (range: DateRange | undefined) => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        updated_from: range?.from ? format(range?.from, 'MM-dd-yyyy') : '',
-        updated_to: range?.to ? format(range?.to, 'MM-dd-yyyy') : '',
-      },
-    }))
-  },
+    onProductCountChange: (key: string, value: number) => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          [key]: value,
+        },
+      }))
+    },
 
-  onCreatedChange: (range: DateRange | undefined) => {
-    set((state) => ({
-      filters: {
-        ...state.filters,
-        created_from: range?.from ? format(range?.from, 'MM-dd-yyyy') : '',
-        created_to: range?.to ? format(range?.to, 'MM-dd-yyyy') : '',
-      },
-    }))
-  },
-}))
+    onUpdatedChange: (range: DateRange | undefined) => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          updated_from: range?.from ? format(range?.from, 'MM-dd-yyyy') : '',
+          updated_to: range?.to ? format(range?.to, 'MM-dd-yyyy') : '',
+        },
+      }))
+    },
+
+    onCreatedChange: (range: DateRange | undefined) => {
+      set((state) => ({
+        filters: {
+          ...state.filters,
+          created_from: range?.from ? format(range?.from, 'MM-dd-yyyy') : '',
+          created_to: range?.to ? format(range?.to, 'MM-dd-yyyy') : '',
+        },
+      }))
+    },
+  })
+)

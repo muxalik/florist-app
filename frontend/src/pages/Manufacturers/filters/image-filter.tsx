@@ -1,21 +1,23 @@
 import Filter from '@/components/filters/filter'
-import { categoryColumns } from '@/constants/categories/columns'
+import { manufacturerColumns } from '@/constants/manufacturers/columns'
 import { formatsFilter, hasImageFilter } from '@/constants/filters'
-import { useCategoryFilters } from './store'
+import { useManufacturerFilters } from './store'
 import _ from 'lodash'
 import { defaultCategoryFilters } from '@/constants/categories/filters'
 
 const CategoryImageFilter = () => {
-  const filters = useCategoryFilters((state) => state.filters)
-  const onFormatsSelect = useCategoryFilters((state) => state.onFormatsSelect)
-  const onImageSelect = useCategoryFilters((state) => state.onImageSelect)
-  const clearImageFilters = useCategoryFilters(
+  const filters = useManufacturerFilters((state) => state.filters)
+  const onFormatsSelect = useManufacturerFilters(
+    (state) => state.onFormatsSelect
+  )
+  const onImageSelect = useManufacturerFilters((state) => state.onImageSelect)
+  const clearImageFilters = useManufacturerFilters(
     (state) => state.clearImageFilters
   )
 
   return (
     <Filter
-      title={categoryColumns.image}
+      title={manufacturerColumns.image}
       filters={[
         hasImageFilter(filters.has_image, onImageSelect),
         formatsFilter(filters.formats, onFormatsSelect),

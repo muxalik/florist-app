@@ -1,22 +1,22 @@
 import { idFilter } from '@/constants/filters'
-import { useTagFilters } from './store'
+import { useManufacturerFilters } from './store'
 import Filter from '@/components/filters/filter'
-import { defaultTagFilters } from '@/constants/tags/filters'
-import { tagColumns } from '@/constants/tags/columns'
+import { manufacturerColumns } from '@/constants/manufacturers/columns'
+import { defaultManufacturerFilters } from '@/constants/manufacturers/filters'
 
-const TagIdFilter = () => {
-  const filters = useTagFilters((state) => state.filters)
-  const clearIdFilters = useTagFilters((state) => state.clearIdFilters)
-  const onIdSelect = useTagFilters((state) => state.onIdSelect)
+const CategoryIdFilter = () => {
+  const filters = useManufacturerFilters((state) => state.filters)
+  const clearIdFilters = useManufacturerFilters((state) => state.clearIdFilters)
+  const onIdSelect = useManufacturerFilters((state) => state.onIdSelect)
 
   return (
     <Filter
-      title={tagColumns.id}
+      title={manufacturerColumns.id}
       filters={[idFilter(filters.id, onIdSelect)]}
       onClear={clearIdFilters}
-      hasChanged={filters.id !== defaultTagFilters.id}
+      hasChanged={filters.id !== defaultManufacturerFilters.id}
     />
   )
 }
 
-export default TagIdFilter
+export default CategoryIdFilter

@@ -1,6 +1,5 @@
 import { useManufacturers } from './store'
 import { useSearchParams } from 'react-router-dom'
-import { tagsPagination } from '@/constants/tags/pagination'
 import { useEffect } from 'react'
 import { columns } from './columns'
 import { DataTable } from '@/components/ui/data-table'
@@ -14,16 +13,17 @@ import {
 } from '@tanstack/react-table'
 import { DataTablePagination } from '@/components/ui/data-table/pagination'
 import _ from 'lodash'
-import { defaultTagFilters } from '@/constants/tags/filters'
-import { TagFilter } from '@/types/tag'
 import { manufacturerColumns } from '@/constants/manufacturers/columns'
 import { manufacturersPagination } from '@/constants/manufacturers/pagination'
 import { ManufacturerToolbar } from './toolbar'
+import { useManufacturerFilters } from './filters/store'
+import { defaultManufacturerFilters } from '@/constants/manufacturers/filters'
+import { ManufacturerFilter } from '@/types/manufacturer'
 
 const Manufacturers = () => {
   const [, setSearchParams] = useSearchParams()
 
-  // const filters = useTagFilters((state) => state.filters)
+  const filters = useManufacturerFilters((state) => state.filters)
   const sort = useManufacturers((state) => state.sort)
   const sortOrder = useManufacturers((state) => state.sortOrder)
   const search = useManufacturers((state) => state.search)
@@ -43,11 +43,11 @@ const Manufacturers = () => {
     fetchManufacturers()
 
     setSearchParams((prev) => {
-      currentPage === tagsPagination.currentPage
+      currentPage === manufacturersPagination.currentPage
         ? prev.delete('page')
         : prev.set('page', currentPage.toString())
 
-      perPage === tagsPagination.perPage
+      perPage === manufacturersPagination.perPage
         ? prev.delete('per_page')
         : prev.set('per_page', perPage.toString())
 
@@ -59,34 +59,37 @@ const Manufacturers = () => {
 
       !search ? prev.delete('q') : prev.set('q', search.toString())
 
-      // Object.entries(filters).forEach(([key, value]) => {
-      //   const defaultFilter = defaultTagFilters[key as TagFilter]
+      Object.entries(filters).forEach(([key, value]) => {
+        const defaultFilter =
+          defaultManufacturerFilters[key as ManufacturerFilter]
 
-      //   if (Array.isArray(defaultFilter)) {
-      //     _.isEqual(value, defaultFilter)
-      //       ? prev.delete(key)
-      //       : prev.set(key, value.toString())
+        if (Array.isArray(defaultFilter)) {
+          _.isEqual(value, defaultFilter)
+            ? prev.delete(key)
+            : prev.set(key, value.toString())
 
-      //     return
-      //   }
+          return
+        }
 
-      //   value === defaultFilter
-      //     ? prev.delete(key)
-      //     : prev.set(key, value.toString())
-      // })
+        value === defaultFilter
+          ? prev.delete(key)
+          : prev.set(key, value.toString())
+      })
 
       return prev
     })
   }, [
-    // filters.id,
-    // filters.min_name,
-    // filters.max_name,
-    // filters.min_products,
-    // filters.max_products,
-    // filters.updated_from,
-    // filters.updated_to,
-    // filters.created_from,
-    // filters.created_to,
+    filters.id,
+    filters.min_name,
+    filters.max_name,
+    filters.has_image,
+    filters.formats,
+    filters.min_products,
+    filters.max_products,
+    filters.updated_from,
+    filters.updated_to,
+    filters.created_from,
+    filters.created_to,
     sort,
     sortOrder,
     currentPage,

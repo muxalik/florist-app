@@ -1,18 +1,20 @@
 import DatePickerFilter from '@/components/filters/date-picker'
-import { defaultCategoryFilters } from '@/constants/categories/filters'
-import { useTagFilters } from './store'
-import { columns } from '@/constants/columns'
+import { defaultManufacturerFilters } from '@/constants/manufacturers/filters'
+import { useManufacturerFilters } from './store'
+import { manufacturerColumns } from '@/constants/manufacturers/columns'
 
 const CategoryUpdatedAtFilter = () => {
-  const filters = useTagFilters((state) => state.filters)
-  const onUpdatedChange = useTagFilters((state) => state.onUpdatedChange)
-  const clearUpdatedFilters = useTagFilters(
+  const filters = useManufacturerFilters((state) => state.filters)
+  const onUpdatedChange = useManufacturerFilters(
+    (state) => state.onUpdatedChange
+  )
+  const clearUpdatedFilters = useManufacturerFilters(
     (state) => state.clearUpdatedFilters
   )
 
   return (
     <DatePickerFilter
-      label={columns.updatedAt}
+      label={manufacturerColumns.updatedAt}
       date={{
         from: filters.updated_from?.length
           ? new Date(Date.parse(filters.updated_from))
@@ -24,8 +26,8 @@ const CategoryUpdatedAtFilter = () => {
       onSelect={onUpdatedChange}
       onClear={clearUpdatedFilters}
       hasChanged={
-        filters.updated_from !== defaultCategoryFilters.updated_from ||
-        filters.updated_to !== defaultCategoryFilters.updated_to
+        filters.updated_from !== defaultManufacturerFilters.updated_from ||
+        filters.updated_to !== defaultManufacturerFilters.updated_to
       }
     />
   )

@@ -7,6 +7,7 @@ use App\Actions\Filters\NameFilter;
 use App\Actions\Filters\ImageFormatsFilter;
 use App\Actions\Filters\CreatedAtFilter;
 use App\Actions\Filters\HasImageFilter;
+use App\Actions\Filters\ProductsCountFilter;
 use App\Actions\Filters\UpdatedAtFilter;
 use App\Models\Manufacturer;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,12 +16,13 @@ use Illuminate\Http\Request;
 class ManufacturerFilter extends AbstractFilter
 {
    protected array $filters = [
-      // IdFilter::class,
-      // HasImageFilter::class,
-      // ImageFormatsFilter::class,
-      // NameFilter::class,
-      // UpdatedAtFilter::class,
-      // CreatedAtFilter::class,
+      IdFilter::class,
+      HasImageFilter::class,
+      ImageFormatsFilter::class,
+      NameFilter::class,
+      ProductsCountFilter::class,
+      UpdatedAtFilter::class,
+      CreatedAtFilter::class,
    ];
 
 
@@ -61,6 +63,12 @@ class ManufacturerFilter extends AbstractFilter
             );
 
             break;
+
+         case 'productsCount':
+            $this->query->orderBy(
+               'products_count',
+               $this->order->value
+            );
 
          default:
             $this->query->latest('id');

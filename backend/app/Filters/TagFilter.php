@@ -3,10 +3,10 @@
 namespace App\Filters;
 
 use App\Actions\Filters\ColorFilter;
-use App\Actions\Filters\Tag\TagProductsFilter;
 use App\Actions\Filters\IdFilter;
 use App\Actions\Filters\CreatedAtFilter;
 use App\Actions\Filters\NameFilter;
+use App\Actions\Filters\ProductsCountFilter;
 use App\Actions\Filters\UpdatedAtFilter;
 use App\Models\Tag;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +18,7 @@ class TagFilter extends AbstractFilter
       IdFilter::class,
       NameFilter::class,
       ColorFilter::class,
-      TagProductsFilter::class,
+      ProductsCountFilter::class,
       UpdatedAtFilter::class,
       CreatedAtFilter::class,
    ];

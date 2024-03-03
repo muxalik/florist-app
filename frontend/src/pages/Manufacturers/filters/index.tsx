@@ -1,33 +1,33 @@
-import TagColorFilter from './color-filter'
-import TagCreatedAtFilter from './created-at-filter'
-import TagIdFilter from './id-filter'
-import TagNameFilter from './name-filter'
-import TagProductsFilter from './products-filter'
-import TagUpdatedAtFilter from './updated-at-filter'
+import ManufacturerCreatedAtFilter from './created-at-filter'
+import ManufacturerIdFilter from './id-filter'
+import ManufacturerImageFilter from './image-filter'
+import ManufacturerNameFilter from './name-filter'
+import ManufacturerProductsFilter from './products-filter'
+import ManufacturerUpdatedAtFilter from './updated-at-filter'
 
-const TagFilters = () => {
+const ManufacturerFilters = () => {
   return (
     <ul className='flex gap-2 flex-wrap'>
       <li key='id'>
-        <TagIdFilter />
+        <ManufacturerIdFilter />
+      </li>
+      <li key='image'>
+        <ManufacturerImageFilter />
       </li>
       <li key='name'>
-        <TagNameFilter />
-      </li>
-      <li key='color'>
-        <TagColorFilter />
+        <ManufacturerNameFilter />
       </li>
       <li key='productsCount'>
-        <TagProductsFilter />
+        <ManufacturerProductsFilter />
       </li>
       <li key='createdAt'>
-        <TagCreatedAtFilter />
+        <ManufacturerCreatedAtFilter />
       </li>
       <li key='updatedAt'>
-        <TagUpdatedAtFilter />
+        <ManufacturerUpdatedAtFilter />
       </li>
     </ul>
   )
 }
 
-export default TagFilters
+export default ManufacturerFilters

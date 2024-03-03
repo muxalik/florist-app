@@ -74,3 +74,87 @@ export const colorsFilter = (
     onWithoutColorChange,
   }
 }
+
+export const hasImageFilter = (
+  selected: string,
+  onSelect: (value: string) => void
+): BaseFilter => {
+  return {
+    type: 'radio',
+    title: 'Наличие',
+    selected: selected,
+    options: [
+      {
+        value: 'yes',
+        name: 'Есть',
+      },
+      {
+        value: 'no',
+        name: 'Нет',
+      },
+      {
+        value: 'any',
+        name: 'Неважно',
+      },
+    ],
+    onSelect: onSelect,
+  }
+}
+
+export const formatsFilter = (
+  selected: string[],
+  onSelect: (value: string) => void
+): BaseFilter => {
+  return {
+    type: 'checkbox',
+    title: 'Форматы',
+    selected: selected,
+    options: [
+      {
+        value: 'jpg',
+        name: '.jpg',
+      },
+      {
+        value: 'png',
+        name: '.png',
+      },
+      {
+        value: 'webp',
+        name: '.webp',
+      },
+    ],
+    onSelect: onSelect,
+  }
+}
+
+export const productCountFilter = (
+  minValue: number,
+  maxValue: number,
+  min: number,
+  max: number,
+  onChange: (key: string, value: number) => void
+): SliderFilter => {
+  return {
+    title: 'Количество',
+    type: 'slider',
+    options: [
+      {
+        key: 'min_products',
+        name: 'Мин',
+        min: min,
+        max: max,
+        value: minValue,
+        step: 5,
+      },
+      {
+        key: 'max_products',
+        name: 'Макс',
+        min: min,
+        max: max,
+        value: maxValue,
+        step: 5,
+      },
+    ],
+    onChange: onChange,
+  }
+}

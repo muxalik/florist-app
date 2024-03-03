@@ -4,7 +4,7 @@ import Filter from '@/components/filters/filter'
 import { defaultTagFilters } from '@/constants/tags/filters'
 import { tagColumns } from '@/constants/tags/columns'
 
-const CategoryIdFilter = () => {
+const TagIdFilter = () => {
   const filters = useTagFilters((state) => state.filters)
   const clearIdFilters = useTagFilters((state) => state.clearIdFilters)
   const onIdSelect = useTagFilters((state) => state.onIdSelect)
@@ -19,4 +19,4 @@ const CategoryIdFilter = () => {
   )
 }
 
-export default CategoryIdFilter
+export default TagIdFilter

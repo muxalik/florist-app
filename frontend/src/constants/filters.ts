@@ -1,4 +1,4 @@
-import { BaseFilter, SliderFilter } from '@/types'
+import { BaseFilter, Color, ColorFilter, SliderFilter } from '@/types'
 
 export const idFilter = (
   selected: string,
@@ -53,5 +53,24 @@ export const nameFilter = (
       },
     ],
     onChange: onChange,
+  }
+}
+
+export const colorsFilter = (
+  title: string,
+  colors: Color[],
+  selected: number[],
+  onSelect: (colorId: number) => void,
+  without: boolean,
+  onWithoutColorChange: (includes: boolean) => void
+): ColorFilter => {
+  return {
+    title,
+    type: 'color',
+    colors,
+    selected,
+    onSelect,
+    without,
+    onWithoutColorChange,
   }
 }

@@ -5,6 +5,8 @@ export const defaultTagFilters: TagFilters = {
   id: 'any',
   min_name: 0,
   max_name: 100,
+  colors: [],
+  without_color: false,
   min_products: 0,
   max_products: 100,
   updated_from: '',
@@ -13,7 +15,7 @@ export const defaultTagFilters: TagFilters = {
   created_to: '',
 } as const
 
-export const productsFilter = (
+export const tagProductsFilter = (
   minValue: number,
   maxValue: number,
   min: number,

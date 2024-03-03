@@ -4,7 +4,7 @@ import { nameFilter } from '@/constants/filters'
 import { useTagFilters } from './store'
 import { defaultCategoryFilters } from '@/constants/categories/filters'
 
-const CategoryNameFilter = () => {
+const TagNameFilter = () => {
   const filters = useTagFilters((state) => state.filters)
   const onNameChange = useTagFilters((state) => state.onNameChange)
   const clearNameFilters = useTagFilters((state) => state.clearNameFilters)
@@ -30,4 +30,4 @@ const CategoryNameFilter = () => {
   )
 }
 
-export default CategoryNameFilter
+export default TagNameFilter

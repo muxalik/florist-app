@@ -12,12 +12,15 @@ type TagFiltersStore = {
 
   clearIdFilters: () => void
   clearNameFilters: () => void
+  clearColorsFilters: () => void
   clearProductsFilters: () => void
   clearUpdatedFilters: () => void
   clearCreatedFilters: () => void
 
   onIdSelect: (value: string) => void
   onNameChange: (key: string, value: number) => void
+  onColorsChange: (colorId: number) => void
+  onWithoutColorChange: (include: boolean) => void
   onProductsChange: (key: string, value: number) => void
   onUpdatedChange: (range: DateRange | undefined) => void
   onCreatedChange: (range: DateRange | undefined) => void
@@ -31,6 +34,16 @@ const filtersFromUrl = (): TagFilters => {
   const min_name = +(searchParams.get('min_name') || defaultTagFilters.min_name)
 
   const max_name = +(searchParams.get('max_name') || defaultTagFilters.max_name)
+
+  let colors =
+    searchParams.getAll('colors')?.map((color) => +color) ||
+    defaultTagFilters.colors
+
+  colors = colors.length > 0 ? colors : defaultTagFilters.colors
+
+  const without_color = !!(
+    searchParams.get('without_color') || defaultTagFilters.without_color
+  )
 
   const min_products = +(
     searchParams.get('min_products') || defaultTagFilters.min_products
@@ -56,6 +69,8 @@ const filtersFromUrl = (): TagFilters => {
     id,
     min_name,
     max_name,
+    colors,
+    without_color,
     min_products,
     max_products,
     updated_from,
@@ -96,6 +111,16 @@ export const useTagFilters = create<TagFiltersStore>((set) => ({
         ...state.filters,
         min_name: defaultTagFilters.min_name,
         max_name: defaultTagFilters.max_name,
+      },
+    }))
+  },
+
+  clearColorsFilters: () => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        colors: defaultTagFilters.colors,
+        without_color: defaultTagFilters.without_color,
       },
     }))
   },
@@ -144,6 +169,26 @@ export const useTagFilters = create<TagFiltersStore>((set) => ({
       filters: {
         ...state.filters,
         [key]: value,
+      },
+    }))
+  },
+
+  onColorsChange(colorId: number) {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        colors: state.filters.colors.includes(colorId)
+          ? state.filters.colors.filter((filter) => filter !== colorId)
+          : [...state.filters.colors, colorId],
+      },
+    }))
+  },
+
+  onWithoutColorChange: (include: boolean) => {
+    set((state) => ({
+      filters: {
+        ...state.filters,
+        without_color: include,
       },
     }))
   },

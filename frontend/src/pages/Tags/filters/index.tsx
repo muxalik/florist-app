@@ -1,3 +1,4 @@
+import TagColorFilter from './color-filter'
 import TagCreatedAtFilter from './created-at-filter'
 import TagIdFilter from './id-filter'
 import TagNameFilter from './name-filter'
@@ -12,6 +13,9 @@ const TagFilters = () => {
       </li>
       <li key='name'>
         <TagNameFilter />
+      </li>
+      <li key='color'>
+        <TagColorFilter />
       </li>
       <li key='productsCount'>
         <TagProductsFilter />

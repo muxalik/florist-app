@@ -81,6 +81,8 @@ const Tags = () => {
     filters.id,
     filters.min_name,
     filters.max_name,
+    filters.without_color,
+    filters.colors,
     filters.min_products,
     filters.max_products,
     filters.updated_from,

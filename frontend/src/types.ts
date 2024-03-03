@@ -78,6 +78,16 @@ export type SliderFilter = {
   onChange: (key: string, value: number) => void
 }
 
+export type ColorFilter = {
+  type: 'color'
+  title: string
+  colors: Color[]
+  selected: number[]
+  onSelect: (colorId: number) => void
+  without: boolean
+  onWithoutColorChange: (includes: boolean) => void
+}
+
 export type Color = {
   id: number
   hex: string

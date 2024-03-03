@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Actions\Filters\ColorFilter;
 use App\Actions\Filters\Tag\TagProductsFilter;
 use App\Actions\Filters\IdFilter;
 use App\Actions\Filters\CreatedAtFilter;
@@ -16,6 +17,7 @@ class TagFilter extends AbstractFilter
    protected array $filters = [
       IdFilter::class,
       NameFilter::class,
+      ColorFilter::class,
       TagProductsFilter::class,
       UpdatedAtFilter::class,
       CreatedAtFilter::class,

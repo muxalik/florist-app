@@ -3,7 +3,7 @@ import { useTagFilters } from './store'
 import { defaultTagFilters } from '@/constants/tags/filters'
 import { columns } from '@/constants/columns'
 
-const CategoryCreatedAtFilter = () => {
+const TagCreatedAtFilter = () => {
   const filters = useTagFilters((state) => state.filters)
   const onCreatedChange = useTagFilters((state) => state.onCreatedChange)
   const clearCreatedFilters = useTagFilters(
@@ -31,4 +31,4 @@ const CategoryCreatedAtFilter = () => {
   )
 }
 
-export default CategoryCreatedAtFilter
+export default TagCreatedAtFilter

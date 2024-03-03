@@ -8,7 +8,7 @@ import _ from 'lodash'
 import { Button } from '@/components/ui/button'
 import downloadFromUrl from '@/utils/downloadFromUrl'
 import TagFilters from './filters'
-import { defaultTagFilters } from '@/constants/tags/filters'
+import { defaultTagFilters } from '@/constants/manufacturers/filters'
 import { useTagFilters } from './filters/store'
 
 export function ManufacturerToolbar<TData>({
@@ -61,7 +61,9 @@ export function ManufacturerToolbar<TData>({
           className='gap-2'
           variant={'outline'}
           size={'sm'}
-          onClick={() => downloadFromUrl('/tags/export/excel', 'Теги.xlsx')}
+          onClick={() =>
+            downloadFromUrl('/manufacturers/export/excel', 'Производители.xlsx')
+          }
         >
           <Icons.donwload className='w-4 h-4' />
           <span>Скачать</span>

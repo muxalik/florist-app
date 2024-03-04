@@ -11,7 +11,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { categoryColumns } from '@/constants/categories/columns'
 import Icons from '@/components/ui/icons'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -43,21 +42,12 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { useCategories } from '../store'
+import {
+  CreateCategorySchema,
+  createCategorySchema,
+} from '@/constants/categories/schema'
 
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название должно быть не менее 2 символов',
-    })
-    .max(50, {
-      message: 'Название должно быть не более 50 символов',
-    })
-    .max(50),
-  parentId: z.number().nullable(),
-})
-
-function CreateCategory() {
+const CreateCategory = () => {
   const onAdd = useCategories((state) => state.onAdd)
   const simpleCategories = useCategories((state) => state.simpleCategories)
 
@@ -84,15 +74,15 @@ function CreateCategory() {
     fileInputRef.current!.value = ''
   }
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateCategorySchema>({
+    resolver: zodResolver(createCategorySchema),
     defaultValues: {
       name: '',
       parentId: null,
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: CreateCategorySchema) {
     onAdd({
       ...values,
       image,

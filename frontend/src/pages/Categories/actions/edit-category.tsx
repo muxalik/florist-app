@@ -12,7 +12,6 @@ import { Input } from '@/components/ui/input'
 import { categoryColumns } from '@/constants/categories/columns'
 import { Row } from '@tanstack/react-table'
 import Icons from '@/components/ui/icons'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -44,20 +43,10 @@ import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { useCategories } from '../store'
-
-const formSchema = z.object({
-  id: z.number(),
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название должно быть не менее 2 символов',
-    })
-    .max(50, {
-      message: 'Название должно быть не более 50 символов',
-    })
-    .max(50),
-  parentId: z.number().nullable(),
-})
+import {
+  EditCategorySchema,
+  editCategorySchema,
+} from '@/constants/categories/schema'
 
 interface EditCategoryProps {
   row: Row<Category>
@@ -106,8 +95,8 @@ function EditCategory({
     setImage(null)
   }
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<EditCategorySchema>({
+    resolver: zodResolver(editCategorySchema),
     defaultValues: {
       id: row.getValue('id'),
       name: row.getValue('name'),
@@ -115,7 +104,7 @@ function EditCategory({
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: EditCategorySchema) {
     const data: CategoryEditData = {
       ...values,
       image,

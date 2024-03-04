@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { categoryColumns } from '@/constants/categories/columns'
 import { Row } from '@tanstack/react-table'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -27,22 +26,10 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
 import { useCategories } from '../store'
-
-const formSchema = z.object({
-  id: z.number(),
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название должно быть не менее 2 символов',
-    })
-    .max(50, {
-      message: 'Название должно быть не более 50 символов',
-    })
-    .max(50),
-  parentId: z.number().nullable(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-})
+import {
+  ViewCategorySchema,
+  viewCategorySchema,
+} from '@/constants/categories/schema'
 
 interface ViewCategoryProps {
   row: Row<Category>
@@ -51,8 +38,8 @@ interface ViewCategoryProps {
 }
 
 function ViewCategory({ row, open, onOpenChange }: ViewCategoryProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ViewCategorySchema>({
+    resolver: zodResolver(viewCategorySchema),
     defaultValues: {
       id: row.getValue('id'),
       name: row.getValue('name'),

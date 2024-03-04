@@ -29,6 +29,7 @@ type CategoriesStore = {
 
   search: string
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void
+  resetSearch: () => void
 
   isLoading: boolean
 
@@ -111,6 +112,7 @@ export const useCategories = create<CategoriesStore>((set) => ({
   onSearch: (e: ChangeEvent<HTMLInputElement>) => {
     set({ search: e.target.value })
   },
+  resetSearch: () => set({ search: '' }),
 
   isLoading: false,
 

@@ -1,15 +1,50 @@
 import { z } from 'zod'
 
-// We're keeping a simple non-relational schema here.
-// IRL, you will have a schema for your data models.
-export const taskSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  image: z.string(),
+export const createCategorySchema = z.object({
+  name: z
+    .string()
+    .min(2, {
+      message: 'Название должно быть не менее 2 символов',
+    })
+    .max(50, {
+      message: 'Название должно быть не более 50 символов',
+    })
+    .max(50),
   parentId: z.number().nullable(),
-  parentName: z.string().nullable(),
+})
+
+export type CreateCategorySchema = z.infer<typeof createCategorySchema>
+
+export const editCategorySchema = z.object({
+  id: z.number(),
+  name: z
+    .string()
+    .min(2, {
+      message: 'Название должно быть не менее 2 символов',
+    })
+    .max(50, {
+      message: 'Название должно быть не более 50 символов',
+    })
+    .max(50),
+  parentId: z.number().nullable(),
+})
+
+export type EditCategorySchema = z.infer<typeof editCategorySchema>
+
+export const viewCategorySchema = z.object({
+  id: z.number(),
+  name: z
+    .string()
+    .min(2, {
+      message: 'Название должно быть не менее 2 символов',
+    })
+    .max(50, {
+      message: 'Название должно быть не более 50 символов',
+    })
+    .max(50),
+  parentId: z.number().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
 })
 
-export type Task = z.infer<typeof taskSchema>
+export type ViewCategorySchema = z.infer<typeof viewCategorySchema>

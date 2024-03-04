@@ -10,6 +10,7 @@ import downloadFromUrl from '@/utils/downloadFromUrl'
 import { useManufacturerFilters } from './filters/store'
 import { defaultManufacturerFilters } from '@/constants/manufacturers/filters'
 import ManufacturerFilters from './filters'
+import TableSearch from '@/components/TableSearch'
 
 export function ManufacturerToolbar<TData>({
   table,
@@ -27,16 +28,7 @@ export function ManufacturerToolbar<TData>({
     <div className='flex items-end gap-10 justify-between'>
       <div className='flex flex-col flex-1 gap-x-2 gap-y-3 items-start'>
         <div className='flex gap-2'>
-          <div className='relative'>
-            <Input
-              placeholder='Поиск...'
-              value={search}
-              onChange={onSearch}
-              className='h-8 w-[150px] lg:w-[250px] pl-8'
-            />
-            <Icons.search className='absolute top-1/2 left-3 -translate-y-1/2 text-gray-500 w-4 h-4' />
-          </div>
-
+          <TableSearch search={search} onSearch={onSearch} />
           <DataTableViewOptions table={table} columnNames={columnNames} />
         </div>
 

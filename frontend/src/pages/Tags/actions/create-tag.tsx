@@ -11,7 +11,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { tagColumns } from '@/constants/tags/columns'
 import Icons from '@/components/ui/icons'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -41,36 +40,24 @@ import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { useTags } from '../store'
 import { TagAddData } from '@/types/tag'
+import { CreateTagSchema, createTagSchema } from '@/constants/tags/schema'
 
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название должно быть не менее 2 символов',
-    })
-    .max(50, {
-      message: 'Название должно быть не более 50 символов',
-    })
-    .max(50),
-  colorId: z.number().nullable(),
-})
-
-function CreateTag() {
+const CreateTag = () => {
   const onAdd = useTags((state) => state.onAdd)
   const colors = useTags((state) => state.colors)
 
   const [open, setOpen] = useState(false)
   const [openColors, setOpenColors] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateTagSchema>({
+    resolver: zodResolver(createTagSchema),
     defaultValues: {
       name: '',
       colorId: null,
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: CreateTagSchema) {
     onAdd(values as TagAddData)
 
     setOpen(false)

@@ -1,6 +1,5 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { DataTableColumnHeader } from '@/components/ui/data-table/column-header'
-import { Badge } from '@/components/ui/badge'
 import { TagRowActions } from './row-actions'
 import { useTags } from './store'
 import { Tag } from '@/types/tag'

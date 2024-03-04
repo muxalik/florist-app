@@ -8,7 +8,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { tagColumns } from '@/constants/tags/columns'
 import { Row } from '@tanstack/react-table'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -24,23 +23,7 @@ import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tag } from '@/types/tag'
 import { useTags } from '../store'
-
-const formSchema = z.object({
-  id: z.number(),
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название должно быть не менее 2 символов',
-    })
-    .max(50, {
-      message: 'Название должно быть не более 50 символов',
-    })
-    .max(50),
-  colorId: z.number().nullable(),
-  productsCount: z.number(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-})
+import { ViewTagSchema, viewTagSchema } from '@/constants/tags/schema'
 
 interface ViewTagProps {
   row: Row<Tag>
@@ -49,8 +32,8 @@ interface ViewTagProps {
 }
 
 function ViewTag({ row, open, onOpenChange }: ViewTagProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ViewTagSchema>({
+    resolver: zodResolver(viewTagSchema),
     defaultValues: {
       id: row.getValue('id'),
       name: row.getValue('name'),

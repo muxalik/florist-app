@@ -34,18 +34,6 @@ export function ManufacturerToolbar<TData>({
 
         <div className='flex gap-x-2 gap-y-3'>
           <ManufacturerFilters />
-
-          {hasFiltersChanged && (
-            <Button
-              variant={'link'}
-              onClick={clearFilters}
-              size={'sm'}
-              className='underline'
-            >
-              <span>Сбросить все</span>
-              <Icons.close className='ml-1 w-4 h-4' />
-            </Button>
-          )}
         </div>
       </div>
       <div className='flex space-x-2'>

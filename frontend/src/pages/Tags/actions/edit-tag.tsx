@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Row } from '@tanstack/react-table'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -40,20 +39,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tag, TagEditData } from '@/types/tag'
 import { useTags } from '../store'
 import { tagColumns } from '@/constants/tags/columns'
-
-const formSchema = z.object({
-  id: z.number(),
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название должно быть не менее 2 символов',
-    })
-    .max(50, {
-      message: 'Название должно быть не более 50 символов',
-    })
-    .max(50),
-  colorId: z.number().nullable(),
-})
+import { EditTagSchema, editTagSchema } from '@/constants/tags/schema'
 
 interface EditTagProps {
   row: Row<Tag>
@@ -68,8 +54,8 @@ function EditTag({ row, open, onOpenChange, onCancel }: EditTagProps) {
 
   const [openColors, setOpenColors] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<EditTagSchema>({
+    resolver: zodResolver(editTagSchema),
     defaultValues: {
       id: row.getValue('id'),
       name: row.getValue('name'),
@@ -77,7 +63,7 @@ function EditTag({ row, open, onOpenChange, onCancel }: EditTagProps) {
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: EditTagSchema) {
     onSave(row.getValue('id'), values as TagEditData)
     onOpenChange(false)
   }

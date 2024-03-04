@@ -5,7 +5,7 @@ import { useManufacturerFilters } from './store'
 import _ from 'lodash'
 import { defaultCategoryFilters } from '@/constants/categories/filters'
 
-const CategoryImageFilter = () => {
+const ManufacturerImageFilter = () => {
   const filters = useManufacturerFilters((state) => state.filters)
   const onFormatsSelect = useManufacturerFilters(
     (state) => state.onFormatsSelect
@@ -31,4 +31,4 @@ const CategoryImageFilter = () => {
   )
 }
 
-export default CategoryImageFilter
+export default ManufacturerImageFilter

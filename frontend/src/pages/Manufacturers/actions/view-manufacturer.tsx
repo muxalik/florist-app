@@ -7,7 +7,6 @@ import {
 } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Row } from '@tanstack/react-table'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -22,23 +21,10 @@ import { Manufacturer } from '@/types/manufacturer'
 import { manufacturerColumns } from '@/constants/manufacturers/columns'
 import { Label } from '@/components/ui/label'
 import { preview } from '@/assets'
-
-const formSchema = z.object({
-  id: z.number(),
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название должно быть не менее 2 символов',
-    })
-    .max(50, {
-      message: 'Название должно быть не более 50 символов',
-    })
-    .max(50),
-  colorId: z.number().nullable(),
-  productsCount: z.number(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-})
+import {
+  ViewManufacturerSchema,
+  viewManufacturerSchema,
+} from '@/constants/manufacturers/schema'
 
 interface ViewTagProps {
   row: Row<Manufacturer>
@@ -47,14 +33,14 @@ interface ViewTagProps {
 }
 
 function ViewManufacturer({ row, open, onOpenChange }: ViewTagProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ViewManufacturerSchema>({
+    resolver: zodResolver(viewManufacturerSchema),
     defaultValues: {
       id: row.getValue('id'),
       name: row.getValue('name'),
       productsCount: row.getValue('productsCount'),
-      createdAt: row.getValue('createdAt') || 'Не задано',
-      updatedAt: row.getValue('updatedAt') || 'Не задано',
+      createdAt: row.getValue('createdAt'),
+      updatedAt: row.getValue('updatedAt'),
     },
   })
 

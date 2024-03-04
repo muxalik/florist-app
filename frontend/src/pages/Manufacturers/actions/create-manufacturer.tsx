@@ -11,7 +11,6 @@ import {
 import { Input } from '@/components/ui/input'
 import { tagColumns } from '@/constants/tags/columns'
 import Icons from '@/components/ui/icons'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -29,18 +28,10 @@ import { useManufacturers } from '../store'
 import { manufacturerColumns } from '@/constants/manufacturers/columns'
 import { Label } from '@/components/ui/label'
 import { preview } from '@/assets'
-
-const formSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название должно быть не менее 2 символов',
-    })
-    .max(50, {
-      message: 'Название должно быть не более 50 символов',
-    })
-    .max(50),
-})
+import {
+  CreateManufacturerSchema,
+  createManufacturerSchema,
+} from '@/constants/manufacturers/schema'
 
 const CreateManufacturer = () => {
   const onAdd = useManufacturers((state) => state.onAdd)
@@ -67,14 +58,14 @@ const CreateManufacturer = () => {
     fileInputRef.current!.value = ''
   }
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CreateManufacturerSchema>({
+    resolver: zodResolver(createManufacturerSchema),
     defaultValues: {
       name: '',
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: CreateManufacturerSchema) {
     onAdd({
       ...values,
       image,

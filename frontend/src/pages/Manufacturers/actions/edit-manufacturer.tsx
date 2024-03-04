@@ -9,7 +9,6 @@ import {
 } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Row } from '@tanstack/react-table'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import {
@@ -29,19 +28,10 @@ import { manufacturerColumns } from '@/constants/manufacturers/columns'
 import { preview } from '@/assets'
 import Icons from '@/components/ui/icons'
 import { Label } from '@/components/ui/label'
-
-const formSchema = z.object({
-  id: z.number(),
-  name: z
-    .string()
-    .min(2, {
-      message: 'Название должно быть не менее 2 символов',
-    })
-    .max(50, {
-      message: 'Название должно быть не более 50 символов',
-    })
-    .max(50),
-})
+import {
+  EditManufacturerSchema,
+  editManufacturerSchema,
+} from '@/constants/manufacturers/schema'
 
 interface EditManufacturerProps {
   row: Row<Manufacturer>
@@ -87,15 +77,15 @@ function EditManufacturer({
 
     setImage(null)
   }
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<EditManufacturerSchema>({
+    resolver: zodResolver(editManufacturerSchema),
     defaultValues: {
       id: row.getValue('id'),
       name: row.getValue('name'),
     },
   })
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: EditManufacturerSchema) {
     const data: ManufacturerEditData = {
       ...values,
       image,

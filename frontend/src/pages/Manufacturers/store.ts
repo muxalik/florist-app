@@ -27,6 +27,7 @@ type ManufacturersStore = {
 
   search: string
   onSearch: (e: ChangeEvent<HTMLInputElement>) => void
+  resetSearch: () => void
 
   isLoading: boolean
 
@@ -99,6 +100,7 @@ export const useManufacturers = create<ManufacturersStore>((set) => ({
   onSearch: (e: ChangeEvent<HTMLInputElement>) => {
     set({ search: e.target.value })
   },
+  resetSearch: () => set({ search: '' }),
 
   isLoading: false,
 

@@ -1,32 +1,33 @@
-import ManufacturerCreatedAtFilter from './created-at-filter'
+import TagCreatedAtFilter from './created-at-filter'
 import ManufacturerIdFilter from './id-filter'
-import ManufacturerImageFilter from './image-filter'
 import ManufacturerNameFilter from './name-filter'
-import ManufacturerProductsFilter from './products-filter'
+import ManufacturerProcuctsFilter from './products-filter'
+import { useManufacturerFilters } from './store'
 import ManufacturerUpdatedAtFilter from './updated-at-filter'
+import _ from 'lodash'
+import Filters from '@/components/Filters'
+import { defaultManufacturerFilters } from '@/constants/manufacturers/filters'
+import ManufacturerImageFilter from './image-filter'
 
 const ManufacturerFilters = () => {
+  const clearFilters = useManufacturerFilters((state) => state.clearFilters)
+  const filters = useManufacturerFilters((state) => state.filters)
+
+  const haveFiltersChanged = !_.isEqual(filters, defaultManufacturerFilters)
+
   return (
-    <ul className='flex gap-2 flex-wrap'>
-      <li key='id'>
-        <ManufacturerIdFilter />
-      </li>
-      <li key='image'>
-        <ManufacturerImageFilter />
-      </li>
-      <li key='name'>
-        <ManufacturerNameFilter />
-      </li>
-      <li key='productsCount'>
-        <ManufacturerProductsFilter />
-      </li>
-      <li key='createdAt'>
-        <ManufacturerCreatedAtFilter />
-      </li>
-      <li key='updatedAt'>
-        <ManufacturerUpdatedAtFilter />
-      </li>
-    </ul>
+    <Filters
+      filters={[
+        ManufacturerIdFilter,
+        ManufacturerImageFilter,
+        ManufacturerNameFilter,
+        ManufacturerProcuctsFilter,
+        TagCreatedAtFilter,
+        ManufacturerUpdatedAtFilter,
+      ]}
+      haveChanged={haveFiltersChanged}
+      reset={clearFilters}
+    />
   )
 }
 

@@ -93,7 +93,7 @@ const CreateManufacturer = () => {
           <div className='px-6 py-6 min-h-screen flex flex-col'>
             <SheetHeader className='mb-10'>
               <SheetTitle className='mb-2'>
-                Добавить новый производителя
+                Добавить нового производителя
               </SheetTitle>
               <SheetDescription>
                 Здесь вы можете создать производителя. Когда заполните все
